@@ -28,7 +28,10 @@ metadatos:
   - tecnica
   - coordinacion
   - composicion-corporal
-  # Aparecen en ejemplos de la spec pero no en la lista principal (revisar):
+  # Oficializados en docs/12 (D3):
   - disponibilidad-energetica
   - durabilidad
   - estrategia-nutricional
+
+# Regla de crecimiento (D3): un metadato nuevo requiere al menos una pregunta
+# que lo genere y al menos una pregunta que se active con él.

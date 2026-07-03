@@ -53,7 +53,10 @@ preguntas:
       - id: D
         texto: Aproximadamente 60 g/h
         metadatos: []
-        puntos: {D001: 1}            # spec: "+1 o 0 según contexto" — afinar regla contextual
+        puntos: {}
+        puntos_condicionales:        # docs/12, D2: "+1 o 0 según contexto"
+          - si: {duracion_fondo_h: ">4"}
+            puntos: {D001: 1}
       - id: E
         texto: Más de 60 g/h
         metadatos: []

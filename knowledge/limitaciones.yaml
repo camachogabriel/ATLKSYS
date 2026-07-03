@@ -3,41 +3,44 @@
 # Entrada al sistema: cómo el deportista describe su problema.
 # No es causa ni hipótesis. Objetivo Fase 2: 20 limitaciones.
 
+# areas_iniciales usa vocabulario unificado (docs/12, D5):
+# solo metadatos oficiales o códigos C/F/D/E.
+
 limitaciones:
   - codigo: LP001
     texto: Al final de los fondos se me apaga el motor
     tipo: fondo-largo
-    areas_iniciales: [nutricion, hidratacion, durabilidad, pacing, recuperacion, calor]
+    areas_iniciales: [nutricion, hidratacion, E001, pacing, recuperacion, calor]
 
   - codigo: LP002
     texto: Me falta el aire en las cuestas
     tipo: subida
-    areas_iniciales: [capacidad-aerobica, pacing, composicion-corporal, fuerza, intensidad-relativa]
+    areas_iniciales: [C001, pacing, composicion-corporal, C004, intensidad]
 
   - codigo: LP003
     texto: Se me queman las piernas
     tipo: fatiga-muscular-metabolica
-    areas_iniciales: [capacidad-glucolitica-oxidativa, fuerza, pacing, nutricion, cadencia]
+    areas_iniciales: [C002, C004, pacing, nutricion, tecnica]
 
   - codigo: LP004
     texto: No puedo responder ataques
     tipo: cambio-de-ritmo
-    areas_iniciales: [capacidad-anaerobica-alactica, capacidad-neuromuscular, fuerza, posicionamiento, fatiga-previa]
+    areas_iniciales: [C003, C005, C004, tecnica, recuperacion]
 
   - codigo: LP005
     texto: Me recupero lento entre esfuerzos
     tipo: recuperacion-intrasesion
-    areas_iniciales: [capacidad-aerobica, recuperacion, pacing, nutricion, fatiga-acumulada]
+    areas_iniciales: [C001, recuperacion, pacing, nutricion]
 
   - codigo: LP006
     texto: Me siento fuerte al inicio y exploto al final
     tipo: distribucion-de-esfuerzo
-    areas_iniciales: [pacing, nutricion, hidratacion, durabilidad, estrategia-de-entrenamiento]
+    areas_iniciales: [pacing, nutricion, hidratacion, E001, F005]
 
   - codigo: LP007
     texto: Rindo mucho peor en calor
     tipo: ambiente
-    areas_iniciales: [hidratacion, termorregulacion, adaptacion-al-calor, sodio, pacing]
+    areas_iniciales: [hidratacion, calor, D003, sodio, pacing]
 
 # Clasificación mínima requerida por limitación (esquema completo, a llenar):
 #   codigo, texto_usuario, tipo_esfuerzo, duracion, momento_aparicion,

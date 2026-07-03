@@ -1,0 +1,117 @@
+# AthleteTrainLab - Biblioteca de hipótesis v1.1
+# Fuente: docs/12-decisiones-de-logica.md (D6)
+# Las hipótesis son plantillas. Se activan cuando sus condiciones se cumplen
+# y ningún contraindicador está presente. score = Σ puntos positivos de elementos.
+
+hipotesis:
+  - codigo: H001
+    nombre: Estrategia nutricional insuficiente para fondos largos
+    texto: >
+      La limitación parece estar relacionada principalmente con una estrategia
+      nutricional insuficiente para fondos largos.
+    elementos: [D001, D002, F001, F002]
+    condiciones:
+      - {elemento: D001, confianza_minima: media}
+    contraindicadores:
+      - {elemento: D001, puntos_maximos: -3}
+    recomendacion: >
+      Diseñar estrategia de carbohidratos (60-90 g/h según duración) e
+      hidratación antes de atribuir la limitación a capacidad aeróbica.
+    informacion_faltante:
+      - Carbohidratos exactos por hora en el último fondo
+      - Síntomas finales (hambre, sueño, dolor de cabeza)
+
+  - codigo: H002
+    nombre: Durabilidad limitada
+    texto: >
+      El rendimiento cae con el paso de las horas aunque la nutrición sea
+      adecuada; la durabilidad parece ser el limitante.
+    elementos: [E001, C001, F005]
+    condiciones:
+      - {elemento: E001, confianza_minima: media}
+      - {elemento: D001, confianza_maxima: baja}   # si nutrición explica, gana H001
+    recomendacion: >
+      Aumentar volumen aeróbico progresivo y trabajo específico en fatiga.
+    informacion_faltante:
+      - Volumen semanal actual y progresión reciente
+
+  - codigo: H003
+    nombre: Pacing inadecuado
+    texto: >
+      La distribución del esfuerzo (salidas fuertes, no regular subidas)
+      parece explicar buena parte de la limitación.
+    elementos: [F006]
+    condiciones:
+      - {elemento: F006, confianza_minima: alta}
+    recomendacion: >
+      Practicar salidas controladas por potencia/RPE y regulación en subidas.
+    informacion_faltante:
+      - Datos de potencia/ritmo por tercios del esfuerzo
+
+  - codigo: H004
+    nombre: Base aeróbica insuficiente
+    texto: >
+      La evidencia apunta a una capacidad aeróbica por debajo de lo que exige
+      el tipo de esfuerzo.
+    elementos: [C001, D004, F005]
+    condiciones:
+      - {elemento: C001, confianza_minima: alta}
+    recomendacion: >
+      Bloque de base aeróbica con volumen progresivo y control de intensidad.
+    informacion_faltante:
+      - Frecuencia y duración típica de entrenamientos suaves
+
+  - codigo: H005
+    nombre: Limitación glucolítica-oxidativa
+    texto: >
+      Cuesta sostener intensidades cercanas al umbral; la capacidad
+      glucolítica oxidativa parece el limitante.
+    elementos: [C002]
+    condiciones:
+      - {elemento: C002, confianza_minima: alta}
+    recomendacion: >
+      Trabajo de umbral (intervalos 8-20 min) sobre base aeróbica existente.
+    informacion_faltante:
+      - Potencia sostenible 20-40 min reciente
+
+  - codigo: H006
+    nombre: Déficit explosivo / neuromuscular
+    texto: >
+      La respuesta a ataques y esfuerzos cortos está limitada por la vía
+      anaeróbica aláctica y/o la capacidad neuromuscular.
+    elementos: [C003, C005, C004]
+    condiciones:
+      - {elemento: C003, confianza_minima: media}
+    recomendacion: >
+      Sprints cortos, arrancadas y trabajo de fuerza-velocidad.
+    informacion_faltante:
+      - Potencia pico 5-15 s y contexto de los ataques
+
+  - codigo: H007
+    nombre: Hidratación / estrés térmico
+    texto: >
+      El rendimiento cae principalmente en calor; hidratación, sodio y
+      adaptación térmica parecen los limitantes.
+    elementos: [F002, D003, F009]
+    condiciones:
+      - {elemento: D003, confianza_minima: media}
+    recomendacion: >
+      Protocolo de hidratación con sodio y exposición progresiva al calor.
+    informacion_faltante:
+      - Líquido y sodio por hora, tasa de sudoración estimada
+
+  - codigo: H008
+    nombre: Recuperación insuficiente
+    texto: >
+      Fatiga acumulada, sueño o estrés impiden expresar las capacidades
+      existentes.
+    elementos: [F003]
+    condiciones:
+      - {elemento: F003, confianza_minima: alta}
+    recomendacion: >
+      Priorizar sueño y reducir carga 1-2 semanas antes de evaluar de nuevo.
+    informacion_faltante:
+      - Horas de sueño, HRV o sensación al despertar
+
+# Ranking (D6): principal = mayor score; secundarias = score >= 50% del
+# principal o confianza media en su elemento núcleo (primera condición).

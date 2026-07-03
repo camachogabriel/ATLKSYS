@@ -11,12 +11,20 @@ escala:
   -3: Evidencia moderada en contra
   -5: Evidencia fuerte en contra
 
-# Conversión puntos -> confianza (calibrar con casos reales):
+# Conversión puntos -> confianza (límites cerrados en docs/12, D8):
 confianza:
-  - {rango: [0, 3], nivel: baja}
+  - {rango: [null, 3], nivel: baja}
   - {rango: [4, 7], nivel: media}
   - {rango: [8, 12], nivel: alta}
   - {rango: [13, null], nivel: muy-alta}
+
+# Criterio de parada operativo (docs/12, D4):
+parada:
+  evidencia_suficiente: algún elemento con confianza alta y ninguna pregunta pendiente puede alterar el top-2
+  agotamiento: sin preguntas activadas por metadatos activos
+  profundidad_maxima: 25
+  usuario: puede detenerse en cualquier momento
+  resultado_preliminar: si nadie alcanza confianza alta, ofrecer "Afinar mi resultado"
 
 reglas:
   - Fase inicial genera metadatos; fase de afinación suma o resta puntos.
