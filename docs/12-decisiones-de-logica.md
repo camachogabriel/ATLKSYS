@@ -93,3 +93,9 @@ Se pospone a v1.2. Mientras tanto, cada objetivo se mapeará manualmente a 1-3 l
 | ≥13 | Muy alta |
 
 El ejemplo del cap. 3 (12 = Alta) es correcto; el del cap. 9 (13 = Alta) queda corregido a Muy alta.
+
+## D9. Selección de la siguiente pregunta (afinación)
+
+Candidatas = preguntas de afinación no respondidas cuyos `metadatos_requeridos` estén todos en los metadatos activos.
+
+Orden: mayor **impacto potencial** primero (máximo valor absoluto de puntos entre sus respuestas). Empate: código menor. Así el quiz pregunta primero lo que más puede mover el ranking, acortando la evaluación.

@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AthleteTrainLab — ¿Qué te está limitando?</title>
+<style>
+  :root {
+    --bg: #0d1117; --card: #161b22; --border: #30363d;
+    --acc: #2dd4bf; --acc2: #0ea5e9; --txt: #e6edf3; --dim: #8b949e;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: radial-gradient(1200px 600px at 70% -10%, #12303a 0%, var(--bg) 55%);
+    color: var(--txt); font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+    min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px;
+  }
+  .app { width: 100%; max-width: 560px; }
+  .progress { height: 4px; background: var(--border); border-radius: 2px; margin-bottom: 28px; overflow: hidden; }
+  .progress-fill { height: 100%; width: 0%; border-radius: 2px;
+    background: linear-gradient(90deg, var(--acc2), var(--acc)); transition: width .5s ease; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+    padding: 36px 32px; animation: in .35s ease; }
+  @keyframes in { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  .fase { color: var(--acc); font-size: 12px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 14px; }
+  h1 { font-size: 26px; line-height: 1.3; margin-bottom: 12px; }
+  h2 { font-size: 21px; line-height: 1.35; margin-bottom: 22px; font-weight: 600; }
+  p.sub { color: var(--dim); font-size: 15px; line-height: 1.55; margin-bottom: 24px; }
+  .opts { display: flex; flex-direction: column; gap: 10px; }
+  .opt { text-align: left; background: #1c2129; border: 1px solid var(--border); color: var(--txt);
+    padding: 15px 18px; border-radius: 10px; font-size: 15.5px; cursor: pointer; transition: all .15s; }
+  .opt:hover { border-color: var(--acc); background: #20303280; transform: translateX(3px); }
+  .btn { display: inline-block; background: linear-gradient(90deg, var(--acc2), var(--acc)); color: #04252b;
+    font-weight: 700; border: none; padding: 15px 34px; border-radius: 10px; font-size: 16px; cursor: pointer; }
+  .btn:disabled { opacity: .4; cursor: default; }
+  input[type=email] { width: 100%; background: #1c2129; border: 1px solid var(--border); color: var(--txt);
+    padding: 14px 16px; border-radius: 10px; font-size: 16px; margin-bottom: 16px; }
+  .spinner { width: 46px; height: 46px; border: 4px solid var(--border); border-top-color: var(--acc);
+    border-radius: 50%; margin: 26px auto; animation: spin 0.9s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .center { text-align: center; }
+  .badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+  .b-alta { background: #14532d; color: #86efac; } .b-media { background: #713f12; color: #fde047; }
+  .b-baja { background: #334155; color: #cbd5e1; }
+  .bar-row { margin-bottom: 14px; }
+  .bar-label { display: flex; justify-content: space-between; font-size: 13.5px; margin-bottom: 5px; color: var(--dim); }
+  .bar { height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--acc2), var(--acc)); transition: width 1s ease; }
+  .hyp { border: 1px solid var(--acc); border-radius: 12px; padding: 20px; margin: 18px 0; background: #10221f; }
+  .hyp.sec { border-color: var(--border); background: #1a1f27; }
+  .hyp h3 { font-size: 17px; margin-bottom: 8px; }
+  .hyp p { font-size: 14px; color: var(--dim); line-height: 1.5; }
+  .evid { font-size: 13.5px; color: var(--dim); margin-top: 20px; border-top: 1px solid var(--border); padding-top: 14px; }
+  .evid li { margin: 6px 0 6px 18px; }
+  .disclaimer { font-size: 12px; color: #6e7681; margin-top: 22px; line-height: 1.5; }
+  .link { background: none; border: none; color: var(--acc); cursor: pointer; font-size: 14px; margin-top: 14px; text-decoration: underline; }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="progress"><div class="progress-fill" id="pf"></div></div>
+  <div class="card" id="card"></div>
+</div>
+<script>
+const KB = {"preguntas": [{"codigo": "Q001", "texto": "¿Tienes una estrategia de alimentación para fondos largos?", "contexto": "fondos-largos", "tipo": "bateria-inicial", "condiciones_aparicion": ["LP001", "LP006"], "respuestas": [{"id": "A", "texto": "No, como cuando tengo hambre", "metadatos": ["nutricion", "carbohidratos", "fondos-largos"], "puntos": {}}, {"id": "B", "texto": "Sí, pero no siempre la cumplo", "metadatos": ["nutricion", "estrategia-nutricional"], "puntos": {}}, {"id": "C", "texto": "Sí, consumo carbohidratos de forma planificada", "metadatos": ["nutricion", "carbohidratos"], "puntos": {}}]}, {"codigo": "Q005", "texto": "¿Llevas un plan de hidratación en los fondos largos?", "contexto": "fondos-largos", "tipo": "bateria-inicial", "condiciones_aparicion": ["LP001", "LP006"], "respuestas": [{"id": "A", "texto": "No, tomo cuando tengo sed", "metadatos": ["hidratacion"], "puntos": {}}, {"id": "B", "texto": "Sí, pero solo agua", "metadatos": ["hidratacion", "sodio"], "puntos": {}}, {"id": "C", "texto": "Sí, con electrolitos o sodio", "metadatos": [], "puntos": {}}]}, {"codigo": "Q006", "texto": "¿El problema aparece más en días calurosos?", "contexto": "fondos-largos", "tipo": "bateria-inicial", "condiciones_aparicion": ["LP001", "LP006"], "respuestas": [{"id": "A", "texto": "Sí, claramente", "metadatos": ["calor", "hidratacion"], "puntos": {}}, {"id": "B", "texto": "No noto diferencia", "metadatos": [], "puntos": {}}]}, {"codigo": "Q007", "texto": "¿Cómo llegas de descanso a tus fondos largos?", "contexto": "fondos-largos", "tipo": "bateria-inicial", "condiciones_aparicion": ["LP001", "LP006"], "respuestas": [{"id": "A", "texto": "Duermo mal o llego con fatiga acumulada", "metadatos": ["sueno", "recuperacion"], "puntos": {}}, {"id": "B", "texto": "Descansado, sueño normal", "metadatos": [], "puntos": {}}]}, {"codigo": "Q008", "texto": "¿Cómo administras el esfuerzo durante el fondo?", "contexto": "fondos-largos", "tipo": "bateria-inicial", "condiciones_aparicion": ["LP001", "LP006"], "respuestas": [{"id": "A", "texto": "Salgo fuerte y aguanto lo que pueda", "metadatos": ["pacing"], "puntos": {}}, {"id": "B", "texto": "Controlado, regulo desde el inicio", "metadatos": [], "puntos": {}}, {"id": "C", "texto": "Voy con un grupo más fuerte que yo", "metadatos": ["pacing", "intensidad"], "puntos": {}}]}, {"codigo": "Q009", "texto": "En el momento en que \"se apaga el motor\", ¿qué sientes principalmente?", "contexto": "fondos-largos", "tipo": "bateria-inicial", "condiciones_aparicion": ["LP001", "LP006"], "respuestas": [{"id": "A", "texto": "Sin energía, vacío general", "metadatos": ["nutricion", "carbohidratos", "disponibilidad-energetica", "durabilidad"], "puntos": {}}, {"id": "B", "texto": "Falta de aire, respiración al límite", "metadatos": ["respiracion", "intensidad"], "puntos": {}}, {"id": "C", "texto": "Piernas cargadas o ardor muscular", "metadatos": ["piernas", "fatiga-muscular", "fuerza"], "puntos": {}}, {"id": "D", "texto": "Mareo, dolor de cabeza o sed extrema", "metadatos": ["hidratacion", "sodio", "calor"], "puntos": {}}]}, {"codigo": "Q002", "texto": "¿Cuántos gramos de carbohidratos consumes por hora durante un fondo largo?", "contexto": "fondos-largos", "tipo": "afinacion", "condiciones_aparicion": {"metadatos_requeridos": ["carbohidratos"]}, "respuestas": [{"id": "A", "texto": "No consumo", "metadatos": [], "puntos": {"D001": 5, "E001": 1}}, {"id": "B", "texto": "Sí, pero no calculo", "metadatos": [], "puntos": {"D002": 3}}, {"id": "C", "texto": "Aproximadamente 30 g/h", "metadatos": [], "puntos": {"D001": 3}}, {"id": "D", "texto": "Aproximadamente 60 g/h", "metadatos": [], "puntos": {}, "puntos_condicionales": [{"si": {"duracion_fondo_h": ">4"}, "puntos": {"D001": 1}}]}, {"id": "E", "texto": "Más de 60 g/h", "metadatos": [], "puntos": {"D001": -3}}]}, {"codigo": "Q003", "texto": "¿Qué sientes al terminar un fondo largo?", "contexto": "fondos-largos", "tipo": "afinacion", "condiciones_aparicion": {"metadatos_requeridos": ["disponibilidad-energetica"]}, "respuestas": [{"id": "A", "texto": "Hambre fuerte y/o sueño", "metadatos": [], "puntos": {"D001": 3}}, {"id": "B", "texto": "Piernas vacías pero sin hambre", "metadatos": ["fatiga-muscular"], "puntos": {"E001": 3, "D001": 1}}, {"id": "C", "texto": "Dolor de cabeza o sed extrema", "metadatos": ["hidratacion", "sodio"], "puntos": {"D003": 3}}, {"id": "D", "texto": "Cansancio normal, nada llamativo", "metadatos": [], "puntos": {"D001": -1}}]}, {"codigo": "Q004", "texto": "¿Cuánto líquido tomas por hora durante un fondo largo?", "contexto": "fondos-largos", "tipo": "afinacion", "condiciones_aparicion": {"metadatos_requeridos": ["hidratacion"]}, "respuestas": [{"id": "A", "texto": "Menos de medio bidón", "metadatos": ["sodio"], "puntos": {"F002": 3}}, {"id": "B", "texto": "Alrededor de un bidón", "metadatos": [], "puntos": {"F002": 0}}, {"id": "C", "texto": "Un bidón o más, con sodio/electrolitos", "metadatos": [], "puntos": {"F002": -3}}]}], "hipotesis": [{"codigo": "H001", "nombre": "Estrategia nutricional insuficiente para fondos largos", "texto": "La limitación parece estar relacionada principalmente con una estrategia nutricional insuficiente para fondos largos.\n", "elementos": ["D001", "D002", "F001", "F002"], "condiciones": [{"elemento": "D001", "confianza_minima": "media"}], "contraindicadores": [{"elemento": "D001", "puntos_maximos": -3}], "recomendacion": "Diseñar estrategia de carbohidratos (60-90 g/h según duración) e hidratación antes de atribuir la limitación a capacidad aeróbica.\n", "informacion_faltante": ["Carbohidratos exactos por hora en el último fondo", "Síntomas finales (hambre, sueño, dolor de cabeza)"]}, {"codigo": "H002", "nombre": "Durabilidad limitada", "texto": "El rendimiento cae con el paso de las horas aunque la nutrición sea adecuada; la durabilidad parece ser el limitante.\n", "elementos": ["E001", "C001", "F005"], "condiciones": [{"elemento": "E001", "confianza_minima": "media"}, {"elemento": "D001", "confianza_maxima": "baja"}], "recomendacion": "Aumentar volumen aeróbico progresivo y trabajo específico en fatiga.\n", "informacion_faltante": ["Volumen semanal actual y progresión reciente"]}, {"codigo": "H003", "nombre": "Pacing inadecuado", "texto": "La distribución del esfuerzo (salidas fuertes, no regular subidas) parece explicar buena parte de la limitación.\n", "elementos": ["F006"], "condiciones": [{"elemento": "F006", "confianza_minima": "alta"}], "recomendacion": "Practicar salidas controladas por potencia/RPE y regulación en subidas.\n", "informacion_faltante": ["Datos de potencia/ritmo por tercios del esfuerzo"]}, {"codigo": "H004", "nombre": "Base aeróbica insuficiente", "texto": "La evidencia apunta a una capacidad aeróbica por debajo de lo que exige el tipo de esfuerzo.\n", "elementos": ["C001", "D004", "F005"], "condiciones": [{"elemento": "C001", "confianza_minima": "alta"}], "recomendacion": "Bloque de base aeróbica con volumen progresivo y control de intensidad.\n", "informacion_faltante": ["Frecuencia y duración típica de entrenamientos suaves"]}, {"codigo": "H005", "nombre": "Limitación glucolítica-oxidativa", "texto": "Cuesta sostener intensidades cercanas al umbral; la capacidad glucolítica oxidativa parece el limitante.\n", "elementos": ["C002"], "condiciones": [{"elemento": "C002", "confianza_minima": "alta"}], "recomendacion": "Trabajo de umbral (intervalos 8-20 min) sobre base aeróbica existente.\n", "informacion_faltante": ["Potencia sostenible 20-40 min reciente"]}, {"codigo": "H006", "nombre": "Déficit explosivo / neuromuscular", "texto": "La respuesta a ataques y esfuerzos cortos está limitada por la vía anaeróbica aláctica y/o la capacidad neuromuscular.\n", "elementos": ["C003", "C005", "C004"], "condiciones": [{"elemento": "C003", "confianza_minima": "media"}], "recomendacion": "Sprints cortos, arrancadas y trabajo de fuerza-velocidad.\n", "informacion_faltante": ["Potencia pico 5-15 s y contexto de los ataques"]}, {"codigo": "H007", "nombre": "Hidratación / estrés térmico", "texto": "El rendimiento cae principalmente en calor; hidratación, sodio y adaptación térmica parecen los limitantes.\n", "elementos": ["F002", "D003", "F009"], "condiciones": [{"elemento": "D003", "confianza_minima": "media"}], "recomendacion": "Protocolo de hidratación con sodio y exposición progresiva al calor.\n", "informacion_faltante": ["Líquido y sodio por hora, tasa de sudoración estimada"]}, {"codigo": "H008", "nombre": "Recuperación insuficiente", "texto": "Fatiga acumulada, sueño o estrés impiden expresar las capacidades existentes.\n", "elementos": ["F003"], "condiciones": [{"elemento": "F003", "confianza_minima": "alta"}], "recomendacion": "Priorizar sueño y reducir carga 1-2 semanas antes de evaluar de nuevo.\n", "informacion_faltante": ["Horas de sueño, HRV o sensación al despertar"]}], "limitaciones": [{"codigo": "LP001", "texto": "Al final de los fondos se me apaga el motor", "tipo": "fondo-largo", "areas_iniciales": ["nutricion", "hidratacion", "E001", "pacing", "recuperacion", "calor"]}, {"codigo": "LP002", "texto": "Me falta el aire en las cuestas", "tipo": "subida", "areas_iniciales": ["C001", "pacing", "composicion-corporal", "C004", "intensidad"]}, {"codigo": "LP003", "texto": "Se me queman las piernas", "tipo": "fatiga-muscular-metabolica", "areas_iniciales": ["C002", "C004", "pacing", "nutricion", "tecnica"]}, {"codigo": "LP004", "texto": "No puedo responder ataques", "tipo": "cambio-de-ritmo", "areas_iniciales": ["C003", "C005", "C004", "tecnica", "recuperacion"]}, {"codigo": "LP005", "texto": "Me recupero lento entre esfuerzos", "tipo": "recuperacion-intrasesion", "areas_iniciales": ["C001", "recuperacion", "pacing", "nutricion"]}, {"codigo": "LP006", "texto": "Me siento fuerte al inicio y exploto al final", "tipo": "distribucion-de-esfuerzo", "areas_iniciales": ["pacing", "nutricion", "hidratacion", "E001", "F005"]}, {"codigo": "LP007", "texto": "Rindo mucho peor en calor", "tipo": "ambiente", "areas_iniciales": ["hidratacion", "calor", "D003", "sodio", "pacing"]}], "nombres": {"C001": "Capacidad aeróbica", "C002": "Capacidad glucolítica oxidativa", "C003": "Capacidad anaeróbica aláctica", "C004": "Fuerza", "C005": "Capacidad neuromuscular", "F001": "Nutrición", "F002": "Hidratación", "F003": "Recuperación", "F004": "Composición corporal", "F005": "Estrategia de entrenamiento", "F006": "Pacing", "F007": "Técnica", "F008": "Coordinación", "F009": "Ambiente", "F010": "Equipamiento", "E001": "Durabilidad", "E002": "Economía", "E003": "Rendimiento en subida", "E004": "Rendimiento en fondos largos", "E005": "Rendimiento en contrarreloj", "E006": "Recuperación entre esfuerzos", "D001": "Disponibilidad energética", "D002": "Estrategia nutricional", "D003": "Estrés térmico", "D004": "Base aeróbica"}};
+const NIVELES = ["baja","media","alta","muy-alta"];
+const MAX_PREGUNTAS = 25, META_ESTIMADA = 14;
+
+// ---------- estado de la evaluación ----------
+let ctx = {}, metadatos = new Set(), estado = {}, respondidas = new Set(),
+    evidencia = [], limitacion = null, nRespuestas = 0, modoAfinar = false;
+
+const $ = h => { document.getElementById("card").innerHTML = h; };
+const prog = () => { document.getElementById("pf").style.width =
+  Math.min(96, Math.round(100 * nRespuestas / META_ESTIMADA)) + "%"; };
+
+function confianza(p) { return p <= 3 ? "baja" : p <= 7 ? "media" : p <= 12 ? "alta" : "muy-alta"; }
+
+function cumple(cond) {
+  for (const [campo, expr] of Object.entries(cond)) {
+    const v = ctx[campo];
+    if (v == null) return false;
+    if (typeof expr === "string" && (expr[0] === ">" || expr[0] === "<")) {
+      const n = parseFloat(expr.slice(1));
+      if (expr[0] === ">" ? !(v > n) : !(v < n)) return false;
+    } else if (v !== expr) return false;
+  }
+  return true;
+}
+
+function efectos(r) {
+  const ef = {...(r.puntos || {})};
+  for (const pc of (r.puntos_condicionales || []))
+    if (cumple(pc.si)) for (const [k, v] of Object.entries(pc.puntos)) ef[k] = (ef[k] || 0) + v;
+  return ef;
+}
+
+function impacto(q) {
+  let m = 0;
+  for (const r of q.respuestas) {
+    for (const v of Object.values(r.puntos || {})) m = Math.max(m, Math.abs(v));
+    for (const pc of (r.puntos_condicionales || []))
+      for (const v of Object.values(pc.puntos)) m = Math.max(m, Math.abs(v));
+  }
+  return m;
+}
+
+function candidatas() {
+  return KB.preguntas.filter(q => q.tipo === "afinacion" && !respondidas.has(q.codigo) &&
+    (q.condiciones_aparicion.metadatos_requeridos || []).every(m => metadatos.has(m)))
+    .sort((a, b) => impacto(b) - impacto(a) || a.codigo.localeCompare(b.codigo));
+}
+
+function hayAlta() { return Object.values(estado).some(p => confianza(p) === "alta" || confianza(p) === "muy-alta"); }
+
+function evaluarHipotesis() {
+  const act = [];
+  for (const h of KB.hipotesis) {
+    let ok = true;
+    for (const c of (h.condiciones || [])) {
+      const nivel = NIVELES.indexOf(confianza(estado[c.elemento] || 0));
+      if (c.confianza_minima && nivel < NIVELES.indexOf(c.confianza_minima)) ok = false;
+      if (c.confianza_maxima && nivel > NIVELES.indexOf(c.confianza_maxima)) ok = false;
+    }
+    for (const c of (h.contraindicadores || []))
+      if ((estado[c.elemento] || 0) <= c.puntos_maximos) ok = false;
+    if (ok) act.push([h.elementos.reduce((s, e) => s + Math.max(estado[e] || 0, 0), 0), h]);
+  }
+  act.sort((a, b) => b[0] - a[0]);
+  return act;
+}
+
+// ---------- pantallas ----------
+function bienvenida() {
+  $(`<div class="center">
+    <div class="fase">AthleteTrainLab</div>
+    <h1>¿Qué te está limitando<br>en el deporte?</h1>
+    <p class="sub">Responde unas preguntas y nuestro motor de razonamiento identificará
+    la causa más probable de tu limitación — como lo haría un entrenador, no una calculadora.</p>
+    <button class="btn" onclick="pasoContexto(0)">Empezar análisis</button>
+    <p class="disclaimer">3-5 minutos · Sin registro para empezar</p>
+  </div>`);
+}
+
+const CONTEXTO = [
+  { campo: "edad", texto: "¿Cuál es tu edad?", opts: [["Menos de 30", 25], ["30-39", 35], ["40-49", 45], ["50 o más", 55]] },
+  { campo: "experiencia_anios", texto: "¿Cuánto llevas entrenando con regularidad?", opts: [["Menos de 1 año", 0.5], ["1-2 años", 1.5], ["2-5 años", 3], ["Más de 5 años", 6]] },
+  { campo: "frecuencia_sem", texto: "¿Cuántas veces entrenas por semana?", opts: [["1-2", 1.5], ["2-3", 2.5], ["4-5", 4.5], ["6 o más", 6]] },
+  { campo: "duracion_fondo_h", texto: "¿Cuánto suele durar tu salida larga?", opts: [["2-3 horas", 3], ["3-4 horas", 4], ["4-5 horas", 5], ["Más de 5 horas", 6]] },
+];
+
+function pasoContexto(i) {
+  if (i >= CONTEXTO.length) return pasoLimitacion();
+  const c = CONTEXTO[i];
+  $(`<div class="fase">Sobre ti · ${i + 1}/${CONTEXTO.length}</div>
+    <h2>${c.texto}</h2>
+    <div class="opts">${c.opts.map(([t, v]) =>
+      `<button class="opt" onclick='ctx["${c.campo}"]=${v};nRespuestas++;prog();pasoContexto(${i + 1})'>${t}</button>`).join("")}
+    </div>`);
+}
+
+function pasoLimitacion() {
+  const activas = new Set(["LP001", "LP006"]); // batería disponible en la demo
+  $(`<div class="fase">Tu limitación</div>
+    <h2>¿Cuál de estas frases te describe mejor?</h2>
+    <div class="opts">${KB.limitaciones.map(l => activas.has(l.codigo)
+      ? `<button class="opt" onclick='elegirLimitacion("${l.codigo}")'>${l.texto}</button>`
+      : `<button class="opt" style="opacity:.38;cursor:default">${l.texto} <span style="font-size:11px;color:var(--acc)">(próximamente)</span></button>`).join("")}
+    </div>`);
+}
+
+function elegirLimitacion(lp) {
+  limitacion = lp; nRespuestas++; prog();
+  colaBateria = KB.preguntas.filter(q => q.tipo === "bateria-inicial" &&
+    (q.condiciones_aparicion || []).includes(lp)).sort((a, b) => a.codigo.localeCompare(b.codigo));
+  pasoBateria();
+}
+
+let colaBateria = [];
+function pasoBateria() {
+  if (!colaBateria.length) return interludio("Identificando qué investigar…", pasoAfinacion);
+  const q = colaBateria.shift();
+  pantallaPregunta(q, "Caracterizando tu caso", r => {
+    (r.metadatos || []).forEach(m => metadatos.add(m));
+    respondidas.add(q.codigo); nRespuestas++; prog();
+    pasoBateria();
+  });
+}
+
+function pasoAfinacion() {
+  const cand = candidatas();
+  const parar = respondidas.size >= MAX_PREGUNTAS || !cand.length || (!modoAfinar && hayAlta());
+  if (parar) return interludio("Analizando la evidencia…", pasoEmail);
+  const q = cand[0];
+  pantallaPregunta(q, "Afinando el análisis", r => {
+    const ef = efectos(r);
+    for (const [k, v] of Object.entries(ef)) estado[k] = (estado[k] || 0) + v;
+    (r.metadatos || []).forEach(m => metadatos.add(m));
+    if (Object.keys(ef).length) evidencia.push({ q: q.texto, r: r.texto, ef });
+    respondidas.add(q.codigo); nRespuestas++; prog();
+    pasoAfinacion();
+  });
+}
+
+function pantallaPregunta(q, fase, alResponder) {
+  $(`<div class="fase">${fase}</div>
+    <h2>${q.texto}</h2>
+    <div class="opts">${q.respuestas.map((r, i) =>
+      `<button class="opt" data-i="${i}">${r.texto}</button>`).join("")}
+    </div>`);
+  document.querySelectorAll(".opt").forEach(b =>
+    b.onclick = () => alResponder(q.respuestas[+b.dataset.i]));
+}
+
+function interludio(msg, siguiente) {
+  $(`<div class="center"><div class="spinner"></div><h2>${msg}</h2>
+    <p class="sub">El motor está cruzando tus respuestas con la base de conocimiento.</p></div>`);
+  setTimeout(siguiente, 1400);
+}
+
+function pasoEmail() {
+  if (modoAfinar) return pasoResultado(); // ya dio el correo antes
+  $(`<div class="center">
+    <div class="fase">Análisis completado</div>
+    <h2>Tu resultado está listo</h2>
+    <p class="sub">Déjanos tu correo y te mostramos la hipótesis principal de tu limitación,
+    la evidencia que la sostiene y una recomendación inicial.</p>
+    <input type="email" id="email" placeholder="tu@correo.com">
+    <button class="btn" onclick="verResultado()">Ver mis resultados</button>
+    <p class="disclaimer">Demo: el correo no se envía a ningún servidor.</p>
+  </div>`);
+}
+
+function verResultado() {
+  const e = document.getElementById("email").value;
+  if (!/.+@.+\..+/.test(e)) { document.getElementById("email").style.borderColor = "#f87171"; return; }
+  ctx.email = e;
+  interludio("Generando tu informe…", pasoResultado);
+}
+
+function pasoResultado() {
+  const act = evaluarHipotesis();
+  const preliminar = !hayAlta();
+  const orden = Object.entries(estado).sort((a, b) => b[1] - a[1]).filter(([, p]) => p > 0);
+  const maxPts = 15;
+  const barras = orden.map(([cod, p]) => `
+    <div class="bar-row">
+      <div class="bar-label"><span>${KB.nombres[cod] || cod}</span>
+        <span class="badge b-${confianza(p).replace("muy-alta", "alta")}">${confianza(p)} · ${p} pts</span></div>
+      <div class="bar"><div class="bar-fill" style="width:${Math.min(100, p / maxPts * 100)}%"></div></div>
+    </div>`).join("");
+
+  let hyps = "";
+  if (!act.length) {
+    hyps = `<div class="hyp sec"><h3>Aún no hay una hipótesis clara</h3>
+      <p>La evidencia acumulada no es suficiente. Afinar el resultado con más preguntas puede aclararlo.</p></div>`;
+  } else {
+    act.forEach(([score, h], i) => {
+      const sec = i > 0;
+      if (sec && score < act[0][0] * 0.5) return;
+      hyps += `<div class="hyp${sec ? " sec" : ""}">
+        <div class="fase">${sec ? "Hipótesis secundaria" : "Hipótesis principal"}</div>
+        <h3>${h.nombre}</h3><p>${h.texto}</p>
+        ${sec ? "" : `<p style="margin-top:10px;color:var(--txt)"><strong>Recomendación:</strong> ${h.recomendacion}</p>`}
+      </div>`;
+    });
+  }
+
+  const evid = evidencia.map(e =>
+    `<li>"${e.r}" — ${Object.entries(e.ef).map(([k, v]) => `${KB.nombres[k] || k} ${v > 0 ? "+" : ""}${v}`).join(", ")}</li>`).join("");
+
+  $(`<div class="fase">Tu informe${preliminar ? " · preliminar" : ""}</div>
+    <h2>Esto es lo que encontramos</h2>
+    ${hyps}
+    <h3 style="font-size:15px;margin:24px 0 12px">Estado de conocimiento</h3>
+    ${barras || '<p class="sub">Sin evidencia puntuada aún.</p>'}
+    <div class="evid"><strong>Evidencia utilizada:</strong><ul>${evid || "<li>Solo caracterización inicial.</li>"}</ul></div>
+    ${candidatas().length ? `<button class="link" onclick="modoAfinar=true;pasoAfinacion()">Afinar mi resultado (más preguntas)</button>` : ""}
+    <p class="disclaimer">AthleteTrainLab genera hipótesis orientativas basadas en tus respuestas.
+    No es un diagnóstico médico ni fisiológico.</p>`);
+}
+
+bienvenida();
+</script>
+</body>
+</html>

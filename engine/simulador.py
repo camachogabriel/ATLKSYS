@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Simulador mínimo del motor de razonamiento ATL (v1.1).
+"""Simulador del motor de razonamiento ATL (v1.2) - flujo completo.
 
-Ejecuta un caso de validación contra la base de conocimiento:
-puntos -> confianza -> hipótesis activadas -> ranking -> resultado explicado.
+Limitación -> batería inicial -> metadatos -> afinación adaptativa (D9)
+-> criterio de parada (D4) -> hipótesis (D6) -> resultado explicado.
 
 Uso: python3 engine/simulador.py knowledge/casos/mhv-001.yaml
 """
@@ -13,6 +13,7 @@ import yaml
 
 RAIZ = Path(__file__).resolve().parent.parent
 NIVELES = ["baja", "media", "alta", "muy-alta"]
+MAX_PREGUNTAS = 25
 
 
 def cargar(nombre):
@@ -42,26 +43,6 @@ def nombres_elementos():
     return n
 
 
-def simular(respuestas_caso, contexto=None):
-    """respuestas_caso: lista de (codigo_pregunta, id_respuesta)."""
-    preguntas = {q["codigo"]: q for q in cargar("preguntas")["preguntas"]}
-    estado, traza = {}, []
-
-    for qc, rid in respuestas_caso:
-        q = preguntas[qc]
-        r = next(x for x in q["respuestas"] if x["id"] == rid)
-        efectos = dict(r.get("puntos") or {})
-        for pc in r.get("puntos_condicionales", []):
-            if _cumple(pc["si"], contexto or {}):
-                for k, v in pc["puntos"].items():
-                    efectos[k] = efectos.get(k, 0) + v
-        for k, v in efectos.items():
-            estado[k] = estado.get(k, 0) + v
-        traza.append((qc, q["texto"], r["texto"], efectos))
-
-    return estado, traza
-
-
 def _cumple(cond, ctx):
     for campo, expr in cond.items():
         val = ctx.get(campo)
@@ -75,13 +56,32 @@ def _cumple(cond, ctx):
     return True
 
 
+def _efectos(respuesta, contexto):
+    ef = dict(respuesta.get("puntos") or {})
+    for pc in respuesta.get("puntos_condicionales", []):
+        if _cumple(pc["si"], contexto or {}):
+            for k, v in pc["puntos"].items():
+                ef[k] = ef.get(k, 0) + v
+    return ef
+
+
+def _impacto(pregunta):
+    m = 0
+    for r in pregunta["respuestas"]:
+        for v in (r.get("puntos") or {}).values():
+            m = max(m, abs(v))
+        for pc in r.get("puntos_condicionales", []):
+            for v in pc["puntos"].values():
+                m = max(m, abs(v))
+    return m
+
+
 def evaluar_hipotesis(estado):
     activadas = []
     for h in cargar("hipotesis")["hipotesis"]:
         ok = True
         for c in h.get("condiciones", []):
-            pts = estado.get(c["elemento"], 0)
-            nivel = NIVELES.index(confianza(pts))
+            nivel = NIVELES.index(confianza(estado.get(c["elemento"], 0)))
             if "confianza_minima" in c and nivel < NIVELES.index(c["confianza_minima"]):
                 ok = False
             if "confianza_maxima" in c and nivel > NIVELES.index(c["confianza_maxima"]):
@@ -92,46 +92,97 @@ def evaluar_hipotesis(estado):
         if ok:
             score = sum(max(estado.get(e, 0), 0) for e in h["elementos"])
             activadas.append((score, h))
-    activadas.sort(key=lambda x: -x[0])
+    activadas.sort(key=lambda x: (-x[0], x[1]["codigo"]))
     return activadas
 
 
-def main(ruta_caso):
-    with open(ruta_caso) as f:
-        caso = yaml.safe_load(f)
-    nombres = nombres_elementos()
+def evaluacion_completa(limitacion, responder, contexto=None, verbose=True):
+    """Recorre el flujo completo.
 
-    # Respuestas de afinación del caso (formato: pregunta + id de respuesta)
-    respuestas = [(a["pregunta"], a.get("respuesta_id", "A")) for a in caso["afinacion"]]
-    estado, traza = simular(respuestas, caso.get("contexto"))
+    limitacion: código LP###.
+    responder: función (pregunta) -> id de respuesta elegida.
+    """
+    preguntas = cargar("preguntas")["preguntas"]
+    metadatos, estado, respondidas, traza = set(), {}, set(), []
 
-    print(f"=== {caso['codigo']}: {caso['consulta']} ===\n")
-    print("Afinación:")
-    for qc, qt, rt, ef in traza:
-        print(f"  {qc} {qt}\n    -> {rt}  {ef}")
+    # Fase batería inicial: preguntas del tipo asociadas a la limitación
+    bateria = [q for q in preguntas if q["tipo"] == "bateria-inicial"
+               and limitacion in (q.get("condiciones_aparicion") or [])]
+    for q in sorted(bateria, key=lambda x: x["codigo"]):
+        rid = responder(q)
+        r = next(x for x in q["respuestas"] if x["id"] == rid)
+        metadatos.update(r.get("metadatos", []))
+        respondidas.add(q["codigo"])
+        traza.append(("batería", q, r, {}))
 
-    print("\nEstado de conocimiento:")
-    for cod, pts in sorted(estado.items(), key=lambda x: -x[1]):
-        print(f"  {cod} {nombres.get(cod, cod):40s} {pts:+3d}  ({confianza(pts)})")
+    # Fase afinación adaptativa (D9 + D4)
+    while len(respondidas) < MAX_PREGUNTAS:
+        candidatas = [q for q in preguntas if q["tipo"] == "afinacion"
+                      and q["codigo"] not in respondidas
+                      and set(q["condiciones_aparicion"].get("metadatos_requeridos", []))
+                      <= metadatos]
+        if not candidatas:
+            parada = "agotamiento"
+            break
+        if any(confianza(p) in ("alta", "muy-alta") for p in estado.values()):
+            parada = "evidencia suficiente"
+            break
+        q = sorted(candidatas, key=lambda x: (-_impacto(x), x["codigo"]))[0]
+        rid = responder(q)
+        r = next(x for x in q["respuestas"] if x["id"] == rid)
+        ef = _efectos(r, contexto)
+        for k, v in ef.items():
+            estado[k] = estado.get(k, 0) + v
+        metadatos.update(r.get("metadatos", []))
+        respondidas.add(q["codigo"])
+        traza.append(("afinación", q, r, ef))
+    else:
+        parada = "profundidad máxima"
 
     activadas = evaluar_hipotesis(estado)
-    print("\nHipótesis activadas:")
-    if not activadas:
-        print("  (ninguna — resultado preliminar, ofrecer 'Afinar mi resultado')")
-    for i, (score, h) in enumerate(activadas):
-        rol = "PRINCIPAL" if i == 0 else (
-            "secundaria" if score >= activadas[0][0] * 0.5 else "descartada por ranking")
-        print(f"  [{rol}] {h['codigo']} {h['nombre']} (score {score})")
-        if i == 0:
-            print(f"    {h['texto'].strip()}")
-            print(f"    Recomendación: {h['recomendacion'].strip()}")
-            print(f"    Falta: {', '.join(h['informacion_faltante'])}")
+    preliminar = not any(confianza(p) in ("alta", "muy-alta") for p in estado.values())
 
-    esperada = caso.get("hipotesis", {}).get("principal", "")
-    if activadas and esperada:
-        print(f"\nEsperada por el caso: '{esperada}'")
-        print(f"Obtenida:             '{activadas[0][1]['nombre']}'")
+    if verbose:
+        nombres = nombres_elementos()
+        print(f"Limitación: {limitacion} | Preguntas: {len(respondidas)} | Parada: {parada}\n")
+        for fase, q, r, ef in traza:
+            extra = f"  {ef}" if ef else f"  metadatos: {r.get('metadatos')}" if r.get("metadatos") else ""
+            print(f"  [{fase}] {q['codigo']} {q['texto']}\n      -> {r['texto']}{extra}")
+        print(f"\nMetadatos activos: {sorted(metadatos)}")
+        print("\nEstado de conocimiento:")
+        for cod, pts in sorted(estado.items(), key=lambda x: -x[1]):
+            print(f"  {cod} {nombres.get(cod, cod):38s} {pts:+3d}  ({confianza(pts)})")
+        print(f"\nResultado{' PRELIMINAR' if preliminar else ''}:")
+        if not activadas:
+            print("  Sin hipótesis activadas -> ofrecer 'Afinar mi resultado'")
+        for i, (score, h) in enumerate(activadas):
+            rol = "PRINCIPAL" if i == 0 else (
+                "secundaria" if score >= activadas[0][0] * 0.5 else "no reportada")
+            print(f"  [{rol}] {h['codigo']} {h['nombre']} (score {score})")
+            if i == 0:
+                print(f"    Recomendación: {h['recomendacion'].strip()}")
+
+    return {"estado": estado, "metadatos": metadatos, "hipotesis": activadas,
+            "parada": parada, "preliminar": preliminar, "n_preguntas": len(respondidas)}
+
+
+def desde_caso(ruta):
+    with open(ruta) as f:
+        caso = yaml.safe_load(f)
+    guion = dict(caso.get("respuestas_guion", {}))
+
+    def responder(q):
+        return guion.get(q["codigo"], q["respuestas"][0]["id"])
+
+    print(f"=== {caso['codigo']}: {caso['consulta']} ===\n")
+    res = evaluacion_completa(caso["limitacion"], responder, caso.get("contexto"))
+    esperada = (caso.get("hipotesis") or {}).get("principal", "")
+    if esperada and res["hipotesis"]:
+        obtenida = res["hipotesis"][0][1]["nombre"]
+        print(f"\nEsperada: '{esperada}'\nObtenida: '{obtenida}'")
+        print("VALIDACIÓN:", "OK" if esperada == obtenida else "REVISAR")
+    return res
 
 
 if __name__ == "__main__":
-    main(sys.argv[1] if len(sys.argv) > 1 else RAIZ / "knowledge/casos/mhv-001.yaml")
+    desde_caso(sys.argv[1] if len(sys.argv) > 1 else RAIZ / "knowledge/casos/mhv-001.yaml")

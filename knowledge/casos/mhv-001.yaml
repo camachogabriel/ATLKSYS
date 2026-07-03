@@ -40,6 +40,19 @@ metadatos_activos:
   - pacing
   - durabilidad
 
+# Guion de respuestas para el simulador (flujo completo).
+# Refleja las respuestas simuladas de la spec:
+respuestas_guion:
+  Q001: A   # No tiene estrategia de alimentación
+  Q005: B   # Hidratación: solo agua
+  Q006: B   # Clima normal
+  Q007: B   # Durmió bien
+  Q008: A   # Exigido desde el inicio (pacing)
+  Q009: A   # Al apagarse: sin energía, vacío general
+  Q002: A   # Afinación: no consume carbohidratos
+  Q003: A   # Afinación: termina con hambre y sueño
+  Q004: B   # Afinación: ~un bidón por hora
+
 afinacion:
   - pregunta: Q002
     respuesta_id: A

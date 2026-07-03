@@ -31,6 +31,97 @@ preguntas:
         metadatos: [nutricion, carbohidratos]
         puntos: {}
 
+  - codigo: Q005
+    texto: ¿Llevas un plan de hidratación en los fondos largos?
+    contexto: fondos-largos
+    tipo: bateria-inicial
+    condiciones_aparicion: [LP001, LP006]
+    respuestas:
+      - id: A
+        texto: No, tomo cuando tengo sed
+        metadatos: [hidratacion]
+        puntos: {}
+      - id: B
+        texto: Sí, pero solo agua
+        metadatos: [hidratacion, sodio]
+        puntos: {}
+      - id: C
+        texto: Sí, con electrolitos o sodio
+        metadatos: []
+        puntos: {}
+
+  - codigo: Q006
+    texto: ¿El problema aparece más en días calurosos?
+    contexto: fondos-largos
+    tipo: bateria-inicial
+    condiciones_aparicion: [LP001, LP006]
+    respuestas:
+      - id: A
+        texto: Sí, claramente
+        metadatos: [calor, hidratacion]
+        puntos: {}
+      - id: B
+        texto: No noto diferencia
+        metadatos: []
+        puntos: {}
+
+  - codigo: Q007
+    texto: ¿Cómo llegas de descanso a tus fondos largos?
+    contexto: fondos-largos
+    tipo: bateria-inicial
+    condiciones_aparicion: [LP001, LP006]
+    respuestas:
+      - id: A
+        texto: Duermo mal o llego con fatiga acumulada
+        metadatos: [sueno, recuperacion]
+        puntos: {}
+      - id: B
+        texto: Descansado, sueño normal
+        metadatos: []
+        puntos: {}
+
+  - codigo: Q008
+    texto: ¿Cómo administras el esfuerzo durante el fondo?
+    contexto: fondos-largos
+    tipo: bateria-inicial
+    condiciones_aparicion: [LP001, LP006]
+    respuestas:
+      - id: A
+        texto: Salgo fuerte y aguanto lo que pueda
+        metadatos: [pacing]
+        puntos: {}
+      - id: B
+        texto: Controlado, regulo desde el inicio
+        metadatos: []
+        puntos: {}
+      - id: C
+        texto: Voy con un grupo más fuerte que yo
+        metadatos: [pacing, intensidad]
+        puntos: {}
+
+  - codigo: Q009
+    texto: En el momento en que "se apaga el motor", ¿qué sientes principalmente?
+    contexto: fondos-largos
+    tipo: bateria-inicial
+    condiciones_aparicion: [LP001, LP006]
+    respuestas:
+      - id: A
+        texto: Sin energía, vacío general
+        metadatos: [nutricion, carbohidratos, disponibilidad-energetica, durabilidad]
+        puntos: {}
+      - id: B
+        texto: Falta de aire, respiración al límite
+        metadatos: [respiracion, intensidad]
+        puntos: {}
+      - id: C
+        texto: Piernas cargadas o ardor muscular
+        metadatos: [piernas, fatiga-muscular, fuerza]
+        puntos: {}
+      - id: D
+        texto: Mareo, dolor de cabeza o sed extrema
+        metadatos: [hidratacion, sodio, calor]
+        puntos: {}
+
   - codigo: Q002
     texto: ¿Cuántos gramos de carbohidratos consumes por hora durante un fondo largo?
     contexto: fondos-largos
