@@ -42,8 +42,13 @@ metadatos_activos:
 
 afinacion:
   - pregunta: Q002
+    respuesta_id: A
     respuesta: No consume o consume muy poco
     puntos: {D001: 5, E001: 1}
+  - pregunta: Q003
+    respuesta_id: A
+    respuesta: Termina con hambre fuerte y sueño
+    puntos: {D001: 3}
 
 hipotesis:
   principal: Estrategia nutricional insuficiente para fondos largos

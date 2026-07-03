@@ -61,3 +61,47 @@ preguntas:
         texto: Más de 60 g/h
         metadatos: []
         puntos: {D001: -3}
+
+  - codigo: Q003
+    texto: ¿Qué sientes al terminar un fondo largo?
+    contexto: fondos-largos
+    tipo: afinacion
+    condiciones_aparicion:
+      metadatos_requeridos: [disponibilidad-energetica]
+    respuestas:
+      - id: A
+        texto: Hambre fuerte y/o sueño
+        metadatos: []
+        puntos: {D001: 3}
+      - id: B
+        texto: Piernas vacías pero sin hambre
+        metadatos: [fatiga-muscular]
+        puntos: {E001: 3, D001: 1}
+      - id: C
+        texto: Dolor de cabeza o sed extrema
+        metadatos: [hidratacion, sodio]
+        puntos: {D003: 3}
+      - id: D
+        texto: Cansancio normal, nada llamativo
+        metadatos: []
+        puntos: {D001: -1}
+
+  - codigo: Q004
+    texto: ¿Cuánto líquido tomas por hora durante un fondo largo?
+    contexto: fondos-largos
+    tipo: afinacion
+    condiciones_aparicion:
+      metadatos_requeridos: [hidratacion]
+    respuestas:
+      - id: A
+        texto: Menos de medio bidón
+        metadatos: [sodio]
+        puntos: {F002: 3}
+      - id: B
+        texto: Alrededor de un bidón
+        metadatos: []
+        puntos: {F002: 0}
+      - id: C
+        texto: Un bidón o más, con sodio/electrolitos
+        metadatos: []
+        puntos: {F002: -3}
