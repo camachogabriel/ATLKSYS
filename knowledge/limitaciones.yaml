@@ -1,0 +1,44 @@
+# AthleteTrainLab - Limitaciones percibidas v1.0
+# Fuente: docs/06-limitaciones-percibidas.md
+# Entrada al sistema: cómo el deportista describe su problema.
+# No es causa ni hipótesis. Objetivo Fase 2: 20 limitaciones.
+
+limitaciones:
+  - codigo: LP001
+    texto: Al final de los fondos se me apaga el motor
+    tipo: fondo-largo
+    areas_iniciales: [nutricion, hidratacion, durabilidad, pacing, recuperacion, calor]
+
+  - codigo: LP002
+    texto: Me falta el aire en las cuestas
+    tipo: subida
+    areas_iniciales: [capacidad-aerobica, pacing, composicion-corporal, fuerza, intensidad-relativa]
+
+  - codigo: LP003
+    texto: Se me queman las piernas
+    tipo: fatiga-muscular-metabolica
+    areas_iniciales: [capacidad-glucolitica-oxidativa, fuerza, pacing, nutricion, cadencia]
+
+  - codigo: LP004
+    texto: No puedo responder ataques
+    tipo: cambio-de-ritmo
+    areas_iniciales: [capacidad-anaerobica-alactica, capacidad-neuromuscular, fuerza, posicionamiento, fatiga-previa]
+
+  - codigo: LP005
+    texto: Me recupero lento entre esfuerzos
+    tipo: recuperacion-intrasesion
+    areas_iniciales: [capacidad-aerobica, recuperacion, pacing, nutricion, fatiga-acumulada]
+
+  - codigo: LP006
+    texto: Me siento fuerte al inicio y exploto al final
+    tipo: distribucion-de-esfuerzo
+    areas_iniciales: [pacing, nutricion, hidratacion, durabilidad, estrategia-de-entrenamiento]
+
+  - codigo: LP007
+    texto: Rindo mucho peor en calor
+    tipo: ambiente
+    areas_iniciales: [hidratacion, termorregulacion, adaptacion-al-calor, sodio, pacing]
+
+# Clasificación mínima requerida por limitación (esquema completo, a llenar):
+#   codigo, texto_usuario, tipo_esfuerzo, duracion, momento_aparicion,
+#   sensacion_principal, metadatos_iniciales, bateria_inicial

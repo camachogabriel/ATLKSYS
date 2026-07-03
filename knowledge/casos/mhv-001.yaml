@@ -1,0 +1,57 @@
+# Caso de validación MHV-001
+# Fuente: docs/10-casos-de-validacion.md
+
+codigo: MHV-001
+consulta: Al final de los fondos largos se me apaga el motor
+limitacion: LP001
+
+contexto:
+  edad: 43
+  peso_kg: 80
+  estatura_cm: 167
+  experiencia: mas de 2 años entrenando
+  frecuencia: 2-3 veces por semana
+
+clasificacion:
+  - fondo-largo
+  - fatiga-al-final
+  - posible-subida-al-final
+
+bateria_inicial:
+  - Estrategia de alimentación
+  - Estrategia de hidratación
+  - Clima
+  - Sueño
+  - Intensidad / pacing
+  - Síntomas finales
+
+respuestas_simuladas:
+  - No tiene estrategia nutricional
+  - Clima normal
+  - Durmió bien
+  - Se siente exigido desde el inicio de la subida final
+  - Termina con hambre y sueño
+
+metadatos_activos:
+  - nutricion
+  - carbohidratos
+  - fondos-largos
+  - disponibilidad-energetica
+  - pacing
+  - durabilidad
+
+afinacion:
+  - pregunta: Q002
+    respuesta: No consume o consume muy poco
+    puntos: {D001: 5, E001: 1}
+
+hipotesis:
+  principal: Estrategia nutricional insuficiente para fondos largos
+  contribuyentes:
+    - Mayor costo energético por composición corporal
+    - Posible pacing inadecuado
+    - Posible baja durabilidad si se confirma con más evidencia
+
+intervencion_inicial: >
+  Diseñar estrategia de carbohidratos e hidratación antes de concluir que la
+  limitación principal es baja capacidad aeróbica.

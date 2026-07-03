@@ -1,0 +1,19 @@
+# Caso de validación MHV-002
+codigo: MHV-002
+consulta: En la primera cuesta ya me falta el aire
+limitacion: LP002
+
+clasificacion:
+  - subida-temprana
+  - no-depende-de-fatiga-acumulada
+
+areas_iniciales:
+  - capacidad-aerobica
+  - intensidad-relativa
+  - composicion-corporal
+  - pacing
+  - fuerza
+
+diferencia_con_mhv001: >
+  La nutrición durante el esfuerzo pierde importancia inicial porque el
+  problema ocurre temprano.

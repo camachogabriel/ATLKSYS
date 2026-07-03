@@ -1,0 +1,34 @@
+# AthleteTrainLab - Metadatos v1.0
+# Fuente: docs/08-metadatos.md
+# Etiquetas que conectan respuestas con rutas de investigación.
+# Reglas: no suman puntos; pueden activar preguntas; una respuesta puede
+# generar varios; un metadato puede relacionarse con varias preguntas.
+# Metadatos = dirección. Puntos = fuerza de evidencia.
+
+metadatos:
+  - nutricion
+  - carbohidratos
+  - hidratacion
+  - sodio
+  - sueno
+  - recuperacion
+  - estres
+  - calor
+  - pacing
+  - intensidad
+  - respiracion
+  - piernas
+  - fatiga-muscular
+  - dolor-localizado
+  - fondos-largos
+  - subidas-largas
+  - sprint
+  - cambios-de-ritmo
+  - fuerza
+  - tecnica
+  - coordinacion
+  - composicion-corporal
+  # Aparecen en ejemplos de la spec pero no en la lista principal (revisar):
+  - disponibilidad-energetica
+  - durabilidad
+  - estrategia-nutricional

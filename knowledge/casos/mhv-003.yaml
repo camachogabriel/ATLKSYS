@@ -1,0 +1,11 @@
+# Caso de validación MHV-003
+codigo: MHV-003
+consulta: No puedo responder ataques
+limitacion: LP004
+
+areas_iniciales:
+  - capacidad-anaerobica-alactica
+  - capacidad-neuromuscular
+  - fuerza
+  - fatiga-previa
+  - posicionamiento

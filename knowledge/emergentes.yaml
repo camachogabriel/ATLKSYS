@@ -1,0 +1,38 @@
+# AthleteTrainLab - Capacidades emergentes v1.0
+# Fuente: docs/02-modelo-de-conocimiento.md (sección 9)
+# Manifestaciones funcionales que surgen de la interacción entre capacidades
+# y factores. No se entrenan directamente; se mejoran interviniendo sobre sus componentes.
+#
+# NOTA (lógica por afinar): la spec asigna puntos a objetivos como
+# "disponibilidad energética" y "durabilidad" que no tienen código C/F.
+# Aquí se les da código E### / D### para que el sistema de puntos tenga
+# destinos explícitos. Revisar en la fase de afinación de lógica.
+
+emergentes:
+  - codigo: E001
+    nombre: Durabilidad
+  - codigo: E002
+    nombre: Economía
+  - codigo: E003
+    nombre: Rendimiento en subida
+  - codigo: E004
+    nombre: Rendimiento en fondos largos
+  - codigo: E005
+    nombre: Rendimiento en contrarreloj
+  - codigo: E006
+    nombre: Recuperación entre esfuerzos
+
+# Estados derivados usados como destino de puntos en los ejemplos de la spec:
+estados_derivados:
+  - codigo: D001
+    nombre: Disponibilidad energética
+    relacionado_con: [F001, F002]
+  - codigo: D002
+    nombre: Estrategia nutricional
+    relacionado_con: [F001]
+  - codigo: D003
+    nombre: Estrés térmico
+    relacionado_con: [F009, F002]
+  - codigo: D004
+    nombre: Base aeróbica
+    relacionado_con: [C001]

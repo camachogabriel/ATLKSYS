@@ -1,0 +1,60 @@
+# AthleteTrainLab - Preguntas v1.0
+# Fuente: docs/07-sistema-de-preguntas.md
+# Objetivo Fase 2: 100 preguntas. Aquí están las definidas en la spec.
+#
+# Esquema por pregunta:
+#   codigo, texto, contexto, tipo (contexto|clasificacion|bateria-inicial|afinacion),
+#   condiciones_aparicion, respuestas[] (texto, metadatos[], puntos{destino: valor})
+#
+# Reglas:
+# - Toda pregunta debe modificar el estado de conocimiento o activar metadatos útiles.
+# - Batería inicial: genera metadatos, no puntos. Afinación: suma/resta puntos.
+# - No deben existir dos respuestas con exactamente el mismo efecto.
+
+preguntas:
+  - codigo: Q001
+    texto: ¿Tienes una estrategia de alimentación para fondos largos?
+    contexto: fondos-largos
+    tipo: bateria-inicial
+    condiciones_aparicion: [LP001, LP006]
+    respuestas:
+      - id: A
+        texto: No, como cuando tengo hambre
+        metadatos: [nutricion, carbohidratos, fondos-largos]
+        puntos: {}
+      - id: B
+        texto: Sí, pero no siempre la cumplo
+        metadatos: [nutricion, estrategia-nutricional]
+        puntos: {}
+      - id: C
+        texto: Sí, consumo carbohidratos de forma planificada
+        metadatos: [nutricion, carbohidratos]
+        puntos: {}
+
+  - codigo: Q002
+    texto: ¿Cuántos gramos de carbohidratos consumes por hora durante un fondo largo?
+    contexto: fondos-largos
+    tipo: afinacion
+    condiciones_aparicion:
+      metadatos_requeridos: [carbohidratos]
+    respuestas:
+      - id: A
+        texto: No consumo
+        metadatos: []
+        puntos: {D001: 5, E001: 1}   # disponibilidad energética +5, durabilidad +1
+      - id: B
+        texto: Sí, pero no calculo
+        metadatos: []
+        puntos: {D002: 3}            # estrategia nutricional +3
+      - id: C
+        texto: Aproximadamente 30 g/h
+        metadatos: []
+        puntos: {D001: 3}
+      - id: D
+        texto: Aproximadamente 60 g/h
+        metadatos: []
+        puntos: {D001: 1}            # spec: "+1 o 0 según contexto" — afinar regla contextual
+      - id: E
+        texto: Más de 60 g/h
+        metadatos: []
+        puntos: {D001: -3}

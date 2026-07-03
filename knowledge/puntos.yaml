@@ -1,0 +1,26 @@
+# AthleteTrainLab - Sistema de puntos v1.0
+# Fuente: docs/09-sistema-de-puntos.md
+# Los puntos representan evidencia acumulada. No son probabilidades ni diagnóstico.
+
+escala:
+  5: Evidencia muy fuerte a favor
+  3: Evidencia moderada
+  1: Evidencia leve
+  0: No modifica
+  -1: Evidencia leve en contra
+  -3: Evidencia moderada en contra
+  -5: Evidencia fuerte en contra
+
+# Conversión puntos -> confianza (calibrar con casos reales):
+confianza:
+  - {rango: [0, 3], nivel: baja}
+  - {rango: [4, 7], nivel: media}
+  - {rango: [8, 12], nivel: alta}
+  - {rango: [13, null], nivel: muy-alta}
+
+reglas:
+  - Fase inicial genera metadatos; fase de afinación suma o resta puntos.
+  - Una hipótesis no nace de una sola respuesta, sino del patrón acumulado.
+  - El resultado debe mostrar qué respuestas aportaron puntos relevantes.
+  - La ausencia de evidencia no es evidencia en contra.
+  - No se descarta una hipótesis sin evidencia contradictoria suficiente.

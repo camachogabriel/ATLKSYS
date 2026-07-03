@@ -1,0 +1,108 @@
+# AthleteTrainLab - Factores v1.0
+# Fuente: docs/05-factores.md
+# Un factor: elemento modificable, contextual o estratégico que afecta el
+# desarrollo o la expresión de una capacidad.
+
+factores:
+  - codigo: F001
+    nombre: Nutrición
+    descripcion: >
+      Influye sobre disponibilidad energética, recuperación, adaptación y
+      rendimiento en esfuerzos largos o intensos.
+    evidencias:
+      - Estrategia de alimentación
+      - Carbohidratos por hora
+      - Hambre al terminar
+      - Sueño o vacío energético
+      - Timing de comidas
+    limitaciones_relacionadas:
+      - Me apago al final del fondo
+      - Me da hambre fuerte
+      - Me cuesta sostener ritmo después de varias horas
+
+  - codigo: F002
+    nombre: Hidratación
+    descripcion: >
+      Afecta termorregulación, volumen plasmático, percepción del esfuerzo y
+      rendimiento, especialmente en calor.
+    evidencias:
+      - Líquido por hora
+      - Sodio
+      - Sed extrema
+      - Dolor de cabeza
+      - Calambres
+      - Orina oscura
+
+  - codigo: F003
+    nombre: Recuperación
+    descripcion: >
+      Incluye sueño, estrés, fatiga acumulada y capacidad de asimilar carga.
+    evidencias:
+      - Calidad de sueño
+      - Estrés laboral
+      - Fatiga al iniciar entrenamientos
+      - Bajo deseo de entrenar
+      - Rendimiento irregular
+
+  - codigo: F004
+    nombre: Composición corporal
+    descripcion: >
+      Modifica la relación entre energía producida y trabajo externo,
+      especialmente en subidas.
+    evidencias:
+      - Peso
+      - Estatura
+      - Contexto de subidas
+      - Cambios recientes de peso
+      - Hábitos nutricionales
+
+  - codigo: F005
+    nombre: Estrategia de entrenamiento
+    descripcion: >
+      Estructura, progresión, distribución de intensidad, especificidad y continuidad.
+    evidencias:
+      - Entrena siempre igual
+      - Mucha zona suave sin intensidad
+      - Mucha intensidad sin base
+      - Falta de progresión
+      - Falta de objetivos
+
+  - codigo: F006
+    nombre: Pacing
+    descripcion: >
+      Capacidad aprendida para distribuir el esfuerzo. Es factor porque se
+      aprende, practica y ajusta.
+    evidencias:
+      - Sale muy fuerte
+      - Explota al final
+      - No regula subidas
+      - Compite por encima de sus posibilidades al inicio
+
+  - codigo: F007
+    nombre: Técnica
+    descripcion: >
+      Habilidad aprendida que modifica la expresión de capacidades.
+    evidencias:
+      - Pedaleo poco fluido
+      - Mala posición
+      - Dolor localizado
+      - Pérdida de eficiencia bajo fatiga
+
+  - codigo: F008
+    nombre: Coordinación
+    descripcion: >
+      Habilidad de organizar el movimiento. En v1.0 se clasifica como factor
+      técnico, no como capacidad primaria.
+
+  - codigo: F009
+    nombre: Ambiente
+    descripcion: >
+      Calor, humedad, altitud, viento, terreno y condiciones externas.
+
+  - codigo: F010
+    nombre: Equipamiento
+    descripcion: >
+      Bicicleta, posición, desarrollos, presión de llantas y material.
+
+# Regla de intervención: la intervención se dirige al factor limitante
+# identificado, no a la capacidad de forma aislada.
