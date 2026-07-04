@@ -250,10 +250,26 @@ function pasoResultado() {
       <div class="bar"><div class="bar-fill" style="width:${Math.min(100, p / maxPts * 100)}%"></div></div>
     </div>`).join("");
 
+  const META_NOMBRES = { nutricion: "Nutrición", carbohidratos: "Carbohidratos", hidratacion: "Hidratación",
+    sodio: "Sodio", sueno: "Sueño", recuperacion: "Recuperación", calor: "Calor", pacing: "Dosificación del esfuerzo",
+    intensidad: "Intensidad", respiracion: "Respiración", "fatiga-muscular": "Fatiga muscular",
+    "disponibilidad-energetica": "Disponibilidad energética", durabilidad: "Durabilidad",
+    fuerza: "Fuerza", "cambios-de-ritmo": "Cambios de ritmo", piernas: "Piernas" };
   let hyps = "";
   if (!act.length) {
-    hyps = `<div class="hyp sec"><h3>Aún no hay una hipótesis clara</h3>
-      <p>La evidencia acumulada no es suficiente. Afinar el resultado con más preguntas puede aclararlo.</p></div>`;
+    const top = orden.slice(0, 3);
+    const rutas = [...metadatos].filter(m => META_NOMBRES[m]).slice(0, 5)
+      .map(m => META_NOMBRES[m]).join(" · ");
+    hyps = `<div class="hyp"><div class="fase">Resultado preliminar</div>
+      <h3>Todavía no hay una causa dominante — y eso también es información</h3>
+      <p>Ninguna área acumuló evidencia suficiente para señalarla como causa principal.
+      ${top.length ? "Las áreas con más señal hasta ahora: <strong>" +
+        top.map(([c, p]) => (KB.nombres[c] || c) + " (" + p + " pts)").join(", ") + "</strong>." :
+        "Rutas investigadas: <strong>" + (rutas || "caracterización inicial") + "</strong>."}</p>
+      <p style="margin-top:10px">Unas preguntas más pueden aclarar el patrón.</p>
+      ${candidatas().length ? `<div class="center" style="margin-top:16px">
+        <button class="btn" onclick="modoAfinar=true;pasoAfinacion()">Afinar mi resultado</button></div>` : ""}
+    </div>`;
   } else {
     act.forEach(([score, h], i) => {
       const sec = i > 0;

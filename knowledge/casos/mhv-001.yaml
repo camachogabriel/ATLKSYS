@@ -52,6 +52,10 @@ respuestas_guion:
   Q002: A   # Afinación: no consume carbohidratos
   Q003: A   # Afinación: termina con hambre y sueño
   Q004: B   # Afinación: ~un bidón por hora
+  Q010: B   # Pacing: algo más fuerte al inicio (contribuyente, no principal)
+  Q011: B   # A veces termina explotado
+  Q012: D   # Durabilidad: no sabría decir, nunca come bien en ruta
+  Q013: B   # Salidas largas 1-2 veces al mes
 
 afinacion:
   - pregunta: Q002

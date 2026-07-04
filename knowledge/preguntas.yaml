@@ -196,3 +196,311 @@ preguntas:
         texto: Un bidón o más, con sodio/electrolitos
         metadatos: []
         puntos: {F002: -3}
+
+  # --- Ruta pacing (H003 requiere F006 alta: Q010A+Q011A = 8) ---
+  - codigo: Q010
+    texto: Comparando el primer tercio con el final de tus fondos o eventos, ¿cómo va tu ritmo?
+    contexto: general
+    tipo: afinacion
+    condiciones_aparicion:
+      metadatos_requeridos: [pacing]
+    respuestas:
+      - id: A
+        texto: Salgo mucho más fuerte y al final me derrumbo
+        metadatos: []
+        puntos: {F006: 5, E001: 1}
+      - id: B
+        texto: Algo más fuerte al inicio
+        metadatos: []
+        puntos: {F006: 3}
+      - id: C
+        texto: Muy parejo, regulo bien
+        metadatos: []
+        puntos: {F006: -3}
+      - id: D
+        texto: No lo sé, no lo mido
+        metadatos: []
+        puntos: {}
+
+  - codigo: Q011
+    texto: ¿Con qué frecuencia terminas "explotado" por haber salido fuerte?
+    contexto: general
+    tipo: afinacion
+    condiciones_aparicion:
+      metadatos_requeridos: [pacing]
+    respuestas:
+      - id: A
+        texto: Casi siempre
+        metadatos: []
+        puntos: {F006: 3}
+      - id: B
+        texto: A veces
+        metadatos: []
+        puntos: {F006: 1}
+      - id: C
+        texto: Casi nunca
+        metadatos: []
+        puntos: {F006: -3}
+
+  # --- Ruta durabilidad (H002 requiere E001 media) ---
+  - codigo: Q012
+    texto: Cuando ya llevas muchas horas, ¿tu rendimiento cae aunque hayas comido y bebido bien?
+    contexto: fondos-largos
+    tipo: afinacion
+    condiciones_aparicion:
+      metadatos_requeridos: [durabilidad]
+    respuestas:
+      - id: A
+        texto: Sí, claramente
+        metadatos: []
+        puntos: {E001: 5}
+      - id: B
+        texto: Un poco
+        metadatos: []
+        puntos: {E001: 1}
+      - id: C
+        texto: No, si como bien termino fuerte
+        metadatos: []
+        puntos: {E001: -3, D001: 1}
+      - id: D
+        texto: No sabría decir, casi nunca como bien en ruta
+        metadatos: [nutricion, carbohidratos]
+        puntos: {D001: 1}
+
+  - codigo: Q013
+    texto: ¿Con qué frecuencia haces salidas de duración similar a tu fondo largo?
+    contexto: fondos-largos
+    tipo: afinacion
+    condiciones_aparicion:
+      metadatos_requeridos: [durabilidad]
+    respuestas:
+      - id: A
+        texto: Casi nunca, el fondo largo es excepcional
+        metadatos: []
+        puntos: {E001: 3, F005: 1}
+      - id: B
+        texto: 1-2 veces al mes
+        metadatos: []
+        puntos: {E001: 1}
+      - id: C
+        texto: Cada semana
+        metadatos: []
+        puntos: {E001: -1}
+
+  # --- Ruta piernas / metabólica (H005 requiere C002 alta: Q014A+Q015A = 8) ---
+  - codigo: Q014
+    texto: Cuando aprietas, ¿qué te frena primero?
+    contexto: general
+    tipo: afinacion
+    condiciones_aparicion:
+      metadatos_requeridos: [fatiga-muscular]
+    respuestas:
+      - id: A
+        texto: Las piernas, ardor o carga muscular
+        metadatos: []
+        puntos: {C002: 3, C004: 1}
+      - id: B
+        texto: La respiración
+        metadatos: [respiracion]
+        puntos: {C001: 3}
+      - id: C
+        texto: Ambas a la vez
+        metadatos: []
+        puntos: {C002: 1, C001: 1}
+
+  - codigo: Q015
+    texto: ¿El ardor de piernas aparece sobre todo en esfuerzos sostenidos de 20-40 minutos?
+    contexto: general
+    tipo: afinacion
+    condiciones_aparicion:
+      metadatos_requeridos: [fatiga-muscular]
+    respuestas:
+      - id: A
+        texto: Sí, justo en ese tipo de esfuerzo
+        metadatos: []
+        puntos: {C002: 5}
+      - id: B
+        texto: Más bien en arrancadas cortas e intensas
+        metadatos: [cambios-de-ritmo]
+        puntos: {C003: 3}
+      - id: C
+        texto: No, en cualquier momento
+        metadatos: []
+        puntos: {C002: -1}
+
+  # --- Ruta fuerza (alimenta H005/H006 vía C004) ---
+  - codigo: Q016
+    texto: ¿Cómo llevas pedalear con baja cadencia o subidas empinadas sentado?
+    contexto: general
+    tipo: afinacion
+    condiciones_aparicion:
+      metadatos_requeridos: [fuerza]
+    respuestas:
+      - id: A
+        texto: Muy mal, me cargo enseguida
+        metadatos: []
+        puntos: {C004: 3}
+      - id: B
+        texto: Normal
+        metadatos: []
+        puntos: {}
+      - id: C
+        texto: Es mi punto fuerte
+        metadatos: []
+        puntos: {C004: -3}
+
+  - codigo: Q017
+    texto: ¿Haces trabajo de fuerza (gimnasio) con regularidad?
+    contexto: general
+    tipo: afinacion
+    condiciones_aparicion:
+      metadatos_requeridos: [fuerza]
+    respuestas:
+      - id: A
+        texto: Nunca
+        metadatos: []
+        puntos: {C004: 1, F005: 1}
+      - id: B
+        texto: Solo a temporadas
+        metadatos: []
+        puntos: {}
+      - id: C
+        texto: Todo el año
+        metadatos: []
+        puntos: {C004: -1}
+
+  # --- Ruta respiración / aeróbica (H004 requiere C001 alta: Q018A+Q019A = 8) ---
+  - codigo: Q018
+    texto: ¿A qué intensidad te falta el aire?
+    contexto: general
+    tipo: afinacion
+    condiciones_aparicion:
+      metadatos_requeridos: [respiracion]
+    respuestas:
+      - id: A
+        texto: En ritmos que deberían ser cómodos
+        metadatos: []
+        puntos: {C001: 5}
+      - id: B
+        texto: Solo cuando aprieto fuerte
+        metadatos: []
+        puntos: {C001: 1}
+      - id: C
+        texto: Solo en esfuerzos máximos
+        metadatos: []
+        puntos: {C001: -1}
+
+  - codigo: Q019
+    texto: En tus salidas suaves, ¿puedes mantener una conversación?
+    contexto: general
+    tipo: afinacion
+    condiciones_aparicion:
+      metadatos_requeridos: [respiracion]
+    respuestas:
+      - id: A
+        texto: No, casi siempre voy al límite
+        metadatos: [pacing, intensidad]
+        puntos: {C001: 3, F005: 3}
+      - id: B
+        texto: Sí, sin problema
+        metadatos: []
+        puntos: {C001: -1}
+
+  # --- Ruta recuperación (H008 requiere F003 alta: Q021A+Q020A = 8) ---
+  - codigo: Q020
+    texto: ¿Cuántas horas duermes en promedio?
+    contexto: general
+    tipo: afinacion
+    condiciones_aparicion:
+      metadatos_requeridos: [sueno]
+    respuestas:
+      - id: A
+        texto: Menos de 6
+        metadatos: [recuperacion]
+        puntos: {F003: 3}
+      - id: B
+        texto: 6-7
+        metadatos: []
+        puntos: {F003: 1}
+      - id: C
+        texto: Más de 7
+        metadatos: []
+        puntos: {F003: -1}
+
+  - codigo: Q021
+    texto: ¿Cómo llegas normalmente a tus entrenamientos?
+    contexto: general
+    tipo: afinacion
+    condiciones_aparicion:
+      metadatos_requeridos: [recuperacion]
+    respuestas:
+      - id: A
+        texto: Casi siempre cansado o sin ganas
+        metadatos: []
+        puntos: {F003: 5}
+      - id: B
+        texto: A veces cansado
+        metadatos: []
+        puntos: {F003: 1}
+      - id: C
+        texto: Fresco y con ganas
+        metadatos: []
+        puntos: {F003: -3}
+
+  - codigo: Q022
+    texto: ¿Tu rendimiento es irregular, con días buenos y malos sin patrón claro?
+    contexto: general
+    tipo: afinacion
+    condiciones_aparicion:
+      metadatos_requeridos: [recuperacion]
+    respuestas:
+      - id: A
+        texto: Sí, muy irregular
+        metadatos: []
+        puntos: {F003: 3}
+      - id: B
+        texto: Bastante estable
+        metadatos: []
+        puntos: {F003: -1}
+
+  # --- Ruta calor (H007 requiere D003 media) ---
+  - codigo: Q023
+    texto: En días calurosos, ¿qué síntomas tienes?
+    contexto: general
+    tipo: afinacion
+    condiciones_aparicion:
+      metadatos_requeridos: [calor]
+    respuestas:
+      - id: A
+        texto: Calambres, dolor de cabeza o escalofríos
+        metadatos: [sodio, hidratacion]
+        puntos: {D003: 5, F002: 1}
+      - id: B
+        texto: Solo rindo menos, sin síntomas claros
+        metadatos: []
+        puntos: {D003: 1}
+      - id: C
+        texto: El calor no me afecta especialmente
+        metadatos: []
+        puntos: {D003: -3}
+
+  # --- Ruta explosiva (H006 requiere C003 media: Q015B+Q024A = 6) ---
+  - codigo: Q024
+    texto: Cuando hay un ataque o sprint corto, ¿cómo respondes?
+    contexto: general
+    tipo: afinacion
+    condiciones_aparicion:
+      metadatos_requeridos: [cambios-de-ritmo]
+    respuestas:
+      - id: A
+        texto: No tengo chispa, no puedo acelerar
+        metadatos: []
+        puntos: {C003: 3, C005: 1}
+      - id: B
+        texto: Respondo el primero, pero no los siguientes
+        metadatos: []
+        puntos: {C001: 1}
+      - id: C
+        texto: Es mi punto fuerte
+        metadatos: []
+        puntos: {C003: -3}
