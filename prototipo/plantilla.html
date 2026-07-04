@@ -68,7 +68,8 @@ const MAX_PREGUNTAS = 25, META_ESTIMADA = 14;
 
 // ---------- estado de la evaluación ----------
 let ctx = {}, metadatos = new Set(), estado = {}, respondidas = new Set(),
-    evidencia = [], limitacion = null, nRespuestas = 0, modoAfinar = false;
+    evidencia = [], limitacion = null, nRespuestas = 0, modoAfinar = false,
+    modo = "limitacion", objetivo = null;
 
 const $ = h => { document.getElementById("card").innerHTML = h; };
 const prog = () => { document.getElementById("pf").style.width =
@@ -137,9 +138,24 @@ function bienvenida() {
     <h1>¿Qué te está limitando<br>en el deporte?</h1>
     <p class="sub">Responde unas preguntas y nuestro motor de razonamiento identificará
     la causa más probable de tu limitación — como lo haría un entrenador, no una calculadora.</p>
-    <button class="btn" onclick="pasoContexto(0)">Empezar análisis</button>
+    <button class="btn" onclick="pasoModo()">Empezar análisis</button>
     <p class="disclaimer">3-5 minutos · Sin registro para empezar</p>
   </div>`);
+}
+
+function pasoModo() {
+  $(`<div class="fase">Para empezar</div>
+    <h2>¿Qué te trae por aquí?</h2>
+    <div class="opts">
+      <button class="opt" onclick='modo="limitacion";nRespuestas++;prog();pasoContexto(0)'>
+        <strong>Algo me está frenando</strong><br>
+        <span style="color:var(--dim);font-size:13.5px">Molestias, fatiga, pulso muy alto, no rindo como espero…</span>
+      </button>
+      <button class="opt" onclick='modo="objetivo";nRespuestas++;prog();pasoContexto(0)'>
+        <strong>Quiero mejorar algo concreto</strong><br>
+        <span style="color:var(--dim);font-size:13.5px">Subir más rápido, ser más explosivo, terminar los fondos más fuerte…</span>
+      </button>
+    </div>`);
 }
 
 const CONTEXTO = [
@@ -150,7 +166,7 @@ const CONTEXTO = [
 ];
 
 function pasoContexto(i) {
-  if (i >= CONTEXTO.length) return pasoLimitacion();
+  if (i >= CONTEXTO.length) return modo === "objetivo" ? pasoObjetivo() : pasoLimitacion();
   const c = CONTEXTO[i];
   $(`<div class="fase">Sobre ti · ${i + 1}/${CONTEXTO.length}</div>
     <h2>${c.texto}</h2>
@@ -167,6 +183,21 @@ function pasoLimitacion() {
       ? `<button class="opt" onclick='elegirLimitacion("${l.codigo}")'>${l.texto}</button>`
       : `<button class="opt" style="opacity:.38;cursor:default">${l.texto} <span style="font-size:11px;color:var(--acc)">(próximamente)</span></button>`).join("")}
     </div>`);
+}
+
+function pasoObjetivo() {
+  const activas = new Set(["LP001", "LP006"]);
+  $(`<div class="fase">Tu objetivo</div>
+    <h2>¿Qué quieres mejorar?</h2>
+    <div class="opts">${KB.objetivos.map(o => activas.has(o.limitacion_asociada)
+      ? `<button class="opt" onclick='elegirObjetivo("${o.codigo}")'>${o.texto}</button>`
+      : `<button class="opt" style="opacity:.38;cursor:default">${o.texto} <span style="font-size:11px;color:var(--acc)">(próximamente)</span></button>`).join("")}
+    </div>`);
+}
+
+function elegirObjetivo(cod) {
+  objetivo = KB.objetivos.find(o => o.codigo === cod);
+  elegirLimitacion(objetivo.limitacion_asociada);
 }
 
 function elegirLimitacion(lp) {
@@ -255,29 +286,45 @@ function pasoResultado() {
     intensidad: "Intensidad", respiracion: "Respiración", "fatiga-muscular": "Fatiga muscular",
     "disponibilidad-energetica": "Disponibilidad energética", durabilidad: "Durabilidad",
     fuerza: "Fuerza", "cambios-de-ritmo": "Cambios de ritmo", piernas: "Piernas" };
+  const esObj = modo === "objetivo";
   let hyps = "";
   if (!act.length) {
     const top = orden.slice(0, 3);
     const rutas = [...metadatos].filter(m => META_NOMBRES[m]).slice(0, 5)
       .map(m => META_NOMBRES[m]).join(" · ");
-    hyps = `<div class="hyp"><div class="fase">Resultado preliminar</div>
-      <h3>Todavía no hay una causa dominante — y eso también es información</h3>
-      <p>Ninguna área acumuló evidencia suficiente para señalarla como causa principal.
-      ${top.length ? "Las áreas con más señal hasta ahora: <strong>" +
-        top.map(([c, p]) => (KB.nombres[c] || c) + " (" + p + " pts)").join(", ") + "</strong>." :
-        "Rutas investigadas: <strong>" + (rutas || "caracterización inicial") + "</strong>."}</p>
-      <p style="margin-top:10px">Unas preguntas más pueden aclarar el patrón.</p>
-      ${candidatas().length ? `<div class="center" style="margin-top:16px">
-        <button class="btn" onclick="modoAfinar=true;pasoAfinacion()">Afinar mi resultado</button></div>` : ""}
-    </div>`;
+    const senal = top.length ? "<strong>" +
+      top.map(([c, p]) => (KB.nombres[c] || c) + " (" + p + " pts)").join(", ") + "</strong>" :
+      "<strong>" + (rutas || "caracterización inicial") + "</strong>";
+    hyps = esObj
+      ? `<div class="hyp"><div class="fase">Resultado preliminar</div>
+        <h3>No hay un freno claro — buena señal</h3>
+        <p>Tu base parece equilibrada para «${objetivo.texto.toLowerCase()}».
+        Las áreas con más margen de mejora según tus respuestas: ${senal}.</p>
+        <p style="margin-top:10px">Unas preguntas más pueden precisar tu mayor palanca.</p>
+        ${candidatas().length ? `<div class="center" style="margin-top:16px">
+          <button class="btn" onclick="modoAfinar=true;pasoAfinacion()">Precisar mi palanca</button></div>` : ""}
+      </div>`
+      : `<div class="hyp"><div class="fase">Resultado preliminar</div>
+        <h3>Todavía no hay una causa dominante — y eso también es información</h3>
+        <p>Ninguna área acumuló evidencia suficiente para señalarla como causa principal.
+        Las áreas con más señal hasta ahora: ${senal}.</p>
+        <p style="margin-top:10px">Unas preguntas más pueden aclarar el patrón.</p>
+        ${candidatas().length ? `<div class="center" style="margin-top:16px">
+          <button class="btn" onclick="modoAfinar=true;pasoAfinacion()">Afinar mi resultado</button></div>` : ""}
+      </div>`;
   } else {
     act.forEach(([score, h], i) => {
       const sec = i > 0;
       if (sec && score < act[0][0] * 0.5) return;
+      const etiqueta = esObj ? (sec ? "Palanca secundaria" : "Tu mayor palanca de mejora")
+                             : (sec ? "Hipótesis secundaria" : "Hipótesis principal");
+      const cuerpo = esObj
+        ? `Para «${objetivo.texto.toLowerCase()}», tu mayor margen está aquí según tus respuestas.`
+        : h.texto;
       hyps += `<div class="hyp${sec ? " sec" : ""}">
-        <div class="fase">${sec ? "Hipótesis secundaria" : "Hipótesis principal"}</div>
-        <h3>${h.nombre}</h3><p>${h.texto}</p>
-        ${sec ? "" : `<p style="margin-top:10px;color:var(--txt)"><strong>Recomendación:</strong> ${h.recomendacion}</p>`}
+        <div class="fase">${etiqueta}</div>
+        <h3>${h.nombre}</h3><p>${cuerpo}</p>
+        ${sec ? "" : `<p style="margin-top:10px;color:var(--txt)"><strong>${esObj ? "Por dónde empezar" : "Recomendación"}:</strong> ${h.recomendacion}</p>`}
       </div>`;
     });
   }

@@ -81,7 +81,12 @@ Algoritmo:
 
 ## D7. Análisis por objetivo
 
-Se pospone a v1.2. Mientras tanto, cada objetivo se mapeará manualmente a 1-3 limitaciones LP### mediante una tabla `objetivos.yaml` (aún no creada). El motor no cambia.
+Implementado en v1.1 con mapeo simple: `knowledge/objetivos.yaml` define objetivos O### que apuntan a la limitación LP### cuya batería investiga lo mismo (ej. O001 "Terminar los fondos más fuerte" → LP001). El motor, la batería y las hipótesis son idénticos; cambian dos cosas:
+
+1. **Puerta de entrada**: pantalla inicial "¿Qué te trae por aquí?" → algo me frena (limitación) / quiero mejorar algo (objetivo).
+2. **Copy del resultado**: en modo objetivo la hipótesis se presenta como "tu mayor palanca de mejora" en vez de "tu limitación probable", y el resultado sin causa dominante se presenta en positivo ("no hay un freno claro; estas son tus áreas con más margen").
+
+Cada objetivo declara además `capacidades_determinantes` (informativo, para el informe). Mapeo 1-a-N objetivo→limitaciones queda para cuando un objetivo real no encaje en una sola LP.
 
 ## D8. Escala de confianza (límites cerrados)
 

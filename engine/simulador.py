@@ -96,12 +96,20 @@ def evaluar_hipotesis(estado):
     return activadas
 
 
+def resolver_objetivo(codigo):
+    """Traduce un objetivo O### a su limitación asociada (D7)."""
+    o = next(x for x in cargar("objetivos")["objetivos"] if x["codigo"] == codigo)
+    return o["limitacion_asociada"]
+
+
 def evaluacion_completa(limitacion, responder, contexto=None, verbose=True):
     """Recorre el flujo completo.
 
-    limitacion: código LP###.
+    limitacion: código LP### (u O###, que se traduce vía resolver_objetivo).
     responder: función (pregunta) -> id de respuesta elegida.
     """
+    if limitacion.startswith("O"):
+        limitacion = resolver_objetivo(limitacion)
     preguntas = cargar("preguntas")["preguntas"]
     metadatos, estado, respondidas, traza = set(), {}, set(), []
 

@@ -30,6 +30,7 @@ def main():
         "preguntas": cargar("preguntas")["preguntas"],
         "hipotesis": cargar("hipotesis")["hipotesis"],
         "limitaciones": cargar("limitaciones")["limitaciones"],
+        "objetivos": cargar("objetivos")["objetivos"],
         "nombres": nombres,
     }
     plantilla = (RAIZ / "prototipo/plantilla.html").read_text()
