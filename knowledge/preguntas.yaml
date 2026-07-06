@@ -16,7 +16,7 @@ preguntas:
     texto: ¿Tienes una estrategia de alimentación para fondos largos?
     contexto: fondos-largos
     tipo: bateria-inicial
-    condiciones_aparicion: [LP001, LP006]
+    tipos: [fondo-largo, distribucion-de-esfuerzo]
     respuestas:
       - id: A
         texto: No, como cuando tengo hambre
@@ -35,7 +35,7 @@ preguntas:
     texto: ¿Llevas un plan de hidratación en los fondos largos?
     contexto: fondos-largos
     tipo: bateria-inicial
-    condiciones_aparicion: [LP001, LP006]
+    tipos: [fondo-largo, distribucion-de-esfuerzo]
     respuestas:
       - id: A
         texto: No, tomo cuando tengo sed
@@ -54,7 +54,7 @@ preguntas:
     texto: ¿El problema aparece más en días calurosos?
     contexto: fondos-largos
     tipo: bateria-inicial
-    condiciones_aparicion: [LP001, LP006]
+    tipos: [fondo-largo, distribucion-de-esfuerzo]
     respuestas:
       - id: A
         texto: Sí, claramente
@@ -69,7 +69,7 @@ preguntas:
     texto: ¿Cómo llegas de descanso a tus fondos largos?
     contexto: fondos-largos
     tipo: bateria-inicial
-    condiciones_aparicion: [LP001, LP006]
+    tipos: [fondo-largo, distribucion-de-esfuerzo]
     respuestas:
       - id: A
         texto: Duermo mal o llego con fatiga acumulada
@@ -84,7 +84,7 @@ preguntas:
     texto: ¿Cómo administras el esfuerzo durante el fondo?
     contexto: fondos-largos
     tipo: bateria-inicial
-    condiciones_aparicion: [LP001, LP006]
+    tipos: [fondo-largo, distribucion-de-esfuerzo]
     respuestas:
       - id: A
         texto: Salgo fuerte y aguanto lo que pueda
@@ -103,7 +103,7 @@ preguntas:
     texto: En el momento en que "se apaga el motor", ¿qué sientes principalmente?
     contexto: fondos-largos
     tipo: bateria-inicial
-    condiciones_aparicion: [LP001, LP006]
+    tipos: [fondo-largo, distribucion-de-esfuerzo]
     respuestas:
       - id: A
         texto: Sin energía, vacío general
@@ -541,3 +541,547 @@ preguntas:
         texto: Es mi punto fuerte
         metadatos: []
         puntos: {C003: -3}
+
+  # ============ Afinación para rutas nuevas ============
+
+  # --- Ruta composición corporal (H010 requiere F004 media: Q027A+Q028A = 6) ---
+  - codigo: Q027
+    texto: ¿Cómo ha cambiado tu peso en los últimos meses?
+    contexto: general
+    tipo: afinacion
+    condiciones_aparicion:
+      metadatos_requeridos: [composicion-corporal]
+    respuestas:
+      - id: A
+        texto: Ha subido notablemente
+        metadatos: []
+        puntos: {F004: 3}
+      - id: B
+        texto: Estable
+        metadatos: []
+        puntos: {}
+      - id: C
+        texto: Ha bajado
+        metadatos: []
+        puntos: {F004: -1}
+
+  - codigo: Q028
+    texto: ¿En llano rindes claramente mejor que cuando la carretera pica hacia arriba?
+    contexto: general
+    tipo: afinacion
+    condiciones_aparicion:
+      metadatos_requeridos: [composicion-corporal]
+    respuestas:
+      - id: A
+        texto: Sí, en llano voy bien y subiendo me hundo
+        metadatos: []
+        puntos: {F004: 3}
+      - id: B
+        texto: También en llano voy justo
+        metadatos: [respiracion]
+        puntos: {C001: 3}
+      - id: C
+        texto: Subo razonablemente para mi nivel
+        metadatos: []
+        puntos: {F004: -3}
+
+  # --- Ruta técnica / posicionamiento ---
+  - codigo: Q029
+    texto: ¿Dónde estás colocado cuando el ritmo se rompe?
+    contexto: general
+    tipo: afinacion
+    condiciones_aparicion:
+      metadatos_requeridos: [tecnica]
+    respuestas:
+      - id: A
+        texto: Atrás, donde me pilla
+        metadatos: []
+        puntos: {F007: 3}
+      - id: B
+        texto: Suelo pelear la posición adelante
+        metadatos: []
+        puntos: {F007: -1}
+
+  # --- Ruta recuperación entre esfuerzos ---
+  - codigo: Q030
+    texto: Tras un esfuerzo fuerte, ¿cuánto tardas en poder repetir otro parecido?
+    contexto: general
+    tipo: afinacion
+    condiciones_aparicion:
+      metadatos_requeridos: [intensidad]
+    respuestas:
+      - id: A
+        texto: Mucho más que otros de mi nivel
+        metadatos: []
+        puntos: {C001: 5, E006: 1}
+      - id: B
+        texto: Lo normal
+        metadatos: []
+        puntos: {}
+      - id: C
+        texto: Me recupero rápido
+        metadatos: []
+        puntos: {C001: -3}
+
+  # --- Ruta adaptación al calor ---
+  - codigo: Q031
+    texto: ¿Estás expuesto con regularidad al calor entrenando?
+    contexto: general
+    tipo: afinacion
+    condiciones_aparicion:
+      metadatos_requeridos: [calor]
+    respuestas:
+      - id: A
+        texto: No, siempre lo evito
+        metadatos: []
+        puntos: {D003: 3}
+      - id: B
+        texto: A veces
+        metadatos: []
+        puntos: {D003: 1}
+      - id: C
+        texto: Sí, estoy bastante adaptado
+        metadatos: []
+        puntos: {D003: -3}
+
+  # --- Ruta sprint (H006 requiere C003 media: Q024A+Q046A = 6) ---
+  - codigo: Q046
+    texto: Tu sprint corto (5-10 s), comparado con compañeros de tu nivel, es…
+    contexto: general
+    tipo: afinacion
+    condiciones_aparicion:
+      metadatos_requeridos: [sprint]
+    respuestas:
+      - id: A
+        texto: Claramente peor
+        metadatos: []
+        puntos: {C003: 3, C005: 1}
+      - id: B
+        texto: Parecido
+        metadatos: []
+        puntos: {}
+      - id: C
+        texto: Mejor
+        metadatos: []
+        puntos: {C003: -3}
+
+  # ============ Batería LP002 - Subida (tipo: subida) ============
+  - codigo: Q032
+    texto: ¿En qué tipo de subida te falta el aire?
+    contexto: subida
+    tipo: bateria-inicial
+    tipos: [subida]
+    respuestas:
+      - id: A
+        texto: Cortas y empinadas
+        metadatos: [fuerza, intensidad]
+        puntos: {}
+      - id: B
+        texto: Largas, de 20 minutos o más
+        metadatos: [subidas-largas, respiracion]
+        puntos: {}
+      - id: C
+        texto: En todas
+        metadatos: [respiracion, intensidad]
+        puntos: {}
+
+  - codigo: Q033
+    texto: ¿Cuándo aparece el problema?
+    contexto: subida
+    tipo: bateria-inicial
+    tipos: [subida]
+    respuestas:
+      - id: A
+        texto: Desde la primera cuesta del día
+        metadatos: [respiracion, intensidad]
+        puntos: {}
+      - id: B
+        texto: Solo al final de salidas largas
+        metadatos: [nutricion, carbohidratos, durabilidad, fondos-largos]
+        puntos: {}
+      - id: C
+        texto: Depende del día
+        metadatos: [recuperacion]
+        puntos: {}
+
+  - codigo: Q034
+    texto: Subiendo, ¿qué se rinde primero?
+    contexto: subida
+    tipo: bateria-inicial
+    tipos: [subida]
+    respuestas:
+      - id: A
+        texto: La respiración
+        metadatos: [respiracion]
+        puntos: {}
+      - id: B
+        texto: Las piernas
+        metadatos: [piernas, fatiga-muscular, fuerza]
+        puntos: {}
+      - id: C
+        texto: Ambas a la vez
+        metadatos: [respiracion, fatiga-muscular]
+        puntos: {}
+
+  - codigo: Q035
+    texto: ¿Cómo entras a las subidas?
+    contexto: subida
+    tipo: bateria-inicial
+    tipos: [subida]
+    respuestas:
+      - id: A
+        texto: Fuerte, y me voy apagando
+        metadatos: [pacing]
+        puntos: {}
+      - id: B
+        texto: A ritmo constante
+        metadatos: []
+        puntos: {}
+      - id: C
+        texto: Siguiendo a otros más fuertes que yo
+        metadatos: [pacing, intensidad]
+        puntos: {}
+
+  - codigo: Q036
+    texto: ¿Sientes que tu peso actual te penaliza al subir?
+    contexto: subida
+    tipo: bateria-inicial
+    tipos: [subida]
+    respuestas:
+      - id: A
+        texto: Sí, claramente
+        metadatos: [composicion-corporal]
+        puntos: {}
+      - id: B
+        texto: No especialmente
+        metadatos: []
+        puntos: {}
+      - id: C
+        texto: No lo sé
+        metadatos: []
+        puntos: {}
+
+  # ============ Batería LP003 - Piernas (tipo: fatiga-muscular-metabolica) ============
+  - codigo: Q037
+    texto: ¿En qué momento se te queman las piernas?
+    contexto: general
+    tipo: bateria-inicial
+    tipos: [fatiga-muscular-metabolica]
+    respuestas:
+      - id: A
+        texto: En esfuerzos sostenidos de 20-40 minutos
+        metadatos: [fatiga-muscular, intensidad]
+        puntos: {}
+      - id: B
+        texto: En arrancadas y cambios de ritmo
+        metadatos: [cambios-de-ritmo, fatiga-muscular]
+        puntos: {}
+      - id: C
+        texto: Con baja cadencia o pendientes duras
+        metadatos: [fuerza, piernas]
+        puntos: {}
+      - id: D
+        texto: En casi cualquier esfuerzo
+        metadatos: [fatiga-muscular, recuperacion]
+        puntos: {}
+
+  - codigo: Q038
+    texto: ¿Qué cadencia sueles llevar?
+    contexto: general
+    tipo: bateria-inicial
+    tipos: [fatiga-muscular-metabolica]
+    respuestas:
+      - id: A
+        texto: Baja, me gusta empujar desarrollo
+        metadatos: [fuerza, tecnica]
+        puntos: {}
+      - id: B
+        texto: Media-alta
+        metadatos: []
+        puntos: {}
+      - id: C
+        texto: No lo sé, no la mido
+        metadatos: [tecnica]
+        puntos: {}
+
+  - codigo: Q039
+    texto: ¿Llegas descansado a tus entrenamientos?
+    contexto: general
+    tipo: bateria-inicial
+    tipos: [fatiga-muscular-metabolica]
+    respuestas:
+      - id: A
+        texto: Muchas veces no
+        metadatos: [recuperacion, sueno]
+        puntos: {}
+      - id: B
+        texto: Normalmente sí
+        metadatos: []
+        puntos: {}
+
+  - codigo: Q040
+    texto: ¿Consumes carbohidratos antes y durante los entrenamientos exigentes?
+    contexto: general
+    tipo: bateria-inicial
+    tipos: [fatiga-muscular-metabolica]
+    respuestas:
+      - id: A
+        texto: No, casi nunca
+        metadatos: [nutricion, carbohidratos]
+        puntos: {}
+      - id: B
+        texto: Sí, habitualmente
+        metadatos: []
+        puntos: {}
+
+  - codigo: Q041
+    texto: ¿Haces trabajo de fuerza?
+    contexto: general
+    tipo: bateria-inicial
+    tipos: [fatiga-muscular-metabolica]
+    respuestas:
+      - id: A
+        texto: Nunca
+        metadatos: [fuerza]
+        puntos: {}
+      - id: B
+        texto: Con regularidad
+        metadatos: []
+        puntos: {}
+
+  # ============ Batería LP004 - Ataques (tipo: cambio-de-ritmo) ============
+  - codigo: Q042
+    texto: Cuando hay un ataque, ¿qué te pasa exactamente?
+    contexto: general
+    tipo: bateria-inicial
+    tipos: [cambio-de-ritmo]
+    respuestas:
+      - id: A
+        texto: No tengo chispa para acelerar
+        metadatos: [cambios-de-ritmo, sprint]
+        puntos: {}
+      - id: B
+        texto: Acelero, pero me apago a los pocos segundos
+        metadatos: [cambios-de-ritmo, intensidad]
+        puntos: {}
+      - id: C
+        texto: Respondo el primero, pero no los siguientes
+        metadatos: [recuperacion, intensidad]
+        puntos: {}
+
+  - codigo: Q043
+    texto: ¿Dónde sueles ir cuando se pone rápido?
+    contexto: general
+    tipo: bateria-inicial
+    tipos: [cambio-de-ritmo]
+    respuestas:
+      - id: A
+        texto: Atrás, reacciono tarde
+        metadatos: [tecnica]
+        puntos: {}
+      - id: B
+        texto: Adelante, bien colocado
+        metadatos: []
+        puntos: {}
+
+  - codigo: Q044
+    texto: ¿Cómo llegas al momento de los ataques?
+    contexto: general
+    tipo: bateria-inicial
+    tipos: [cambio-de-ritmo]
+    respuestas:
+      - id: A
+        texto: Ya voy al límite antes de que ataquen
+        metadatos: [intensidad, pacing]
+        puntos: {}
+      - id: B
+        texto: Relativamente fresco
+        metadatos: []
+        puntos: {}
+
+  - codigo: Q045
+    texto: ¿Haces sprints o trabajo explosivo en tus entrenamientos?
+    contexto: general
+    tipo: bateria-inicial
+    tipos: [cambio-de-ritmo]
+    respuestas:
+      - id: A
+        texto: Nunca
+        metadatos: [sprint, fuerza]
+        puntos: {}
+      - id: B
+        texto: A veces
+        metadatos: []
+        puntos: {}
+      - id: C
+        texto: Regularmente
+        metadatos: []
+        puntos: {}
+
+  # ============ Batería LP005 - Recuperación entre esfuerzos (tipo: recuperacion-intrasesion) ============
+  - codigo: Q047
+    texto: ¿Entre qué tipo de esfuerzos te cuesta recuperar?
+    contexto: general
+    tipo: bateria-inicial
+    tipos: [recuperacion-intrasesion]
+    respuestas:
+      - id: A
+        texto: Intervalos o series
+        metadatos: [intensidad]
+        puntos: {}
+      - id: B
+        texto: Subidas repetidas
+        metadatos: [piernas, fatiga-muscular]
+        puntos: {}
+      - id: C
+        texto: Arrancones en grupo
+        metadatos: [cambios-de-ritmo, intensidad]
+        puntos: {}
+
+  - codigo: Q048
+    texto: Después del esfuerzo, ¿qué tarda más en volver a la normalidad?
+    contexto: general
+    tipo: bateria-inicial
+    tipos: [recuperacion-intrasesion]
+    respuestas:
+      - id: A
+        texto: La respiración y el pulso
+        metadatos: [respiracion]
+        puntos: {}
+      - id: B
+        texto: Las piernas
+        metadatos: [piernas, fatiga-muscular]
+        puntos: {}
+      - id: C
+        texto: Ambos
+        metadatos: [respiracion, fatiga-muscular]
+        puntos: {}
+
+  - codigo: Q049
+    texto: ¿Cómo es tu semana de descanso y sueño?
+    contexto: general
+    tipo: bateria-inicial
+    tipos: [recuperacion-intrasesion]
+    respuestas:
+      - id: A
+        texto: Duermo poco o mal
+        metadatos: [sueno, recuperacion]
+        puntos: {}
+      - id: B
+        texto: Bien en general
+        metadatos: []
+        puntos: {}
+
+  - codigo: Q050
+    texto: ¿Comes o bebes algo durante las sesiones exigentes?
+    contexto: general
+    tipo: bateria-inicial
+    tipos: [recuperacion-intrasesion]
+    respuestas:
+      - id: A
+        texto: No, nada
+        metadatos: [nutricion, carbohidratos]
+        puntos: {}
+      - id: B
+        texto: Sí
+        metadatos: []
+        puntos: {}
+
+  - codigo: Q051
+    texto: ¿Cuánta parte de tu semana es realmente suave?
+    contexto: general
+    tipo: bateria-inicial
+    tipos: [recuperacion-intrasesion]
+    respuestas:
+      - id: A
+        texto: Casi nada, todo va fuerte
+        metadatos: [intensidad]
+        puntos: {}
+      - id: B
+        texto: La mayoría es suave
+        metadatos: []
+        puntos: {}
+
+  # ============ Batería LP007 - Calor (tipo: ambiente) ============
+  - codigo: Q052
+    texto: En calor, ¿qué notas primero?
+    contexto: ambiente
+    tipo: bateria-inicial
+    tipos: [ambiente]
+    respuestas:
+      - id: A
+        texto: Calambres
+        metadatos: [sodio, hidratacion]
+        puntos: {}
+      - id: B
+        texto: Dolor de cabeza o mareo
+        metadatos: [hidratacion, calor]
+        puntos: {}
+      - id: C
+        texto: Solo que rindo menos
+        metadatos: [calor]
+        puntos: {}
+
+  - codigo: Q053
+    texto: ¿Cuánto bebes en salidas calurosas?
+    contexto: ambiente
+    tipo: bateria-inicial
+    tipos: [ambiente]
+    respuestas:
+      - id: A
+        texto: Poco, cuando me acuerdo
+        metadatos: [hidratacion]
+        puntos: {}
+      - id: B
+        texto: Bastante, pero solo agua
+        metadatos: [sodio, hidratacion]
+        puntos: {}
+      - id: C
+        texto: Bastante, con electrolitos
+        metadatos: [calor]
+        puntos: {}
+
+  - codigo: Q054
+    texto: ¿Entrenas habitualmente en horas de calor?
+    contexto: ambiente
+    tipo: bateria-inicial
+    tipos: [ambiente]
+    respuestas:
+      - id: A
+        texto: No, lo evito siempre
+        metadatos: [calor]
+        puntos: {}
+      - id: B
+        texto: Sí, a menudo
+        metadatos: []
+        puntos: {}
+
+  - codigo: Q055
+    texto: ¿Notas marcas blancas de sal en la ropa o el casco?
+    contexto: ambiente
+    tipo: bateria-inicial
+    tipos: [ambiente]
+    respuestas:
+      - id: A
+        texto: Sí, siempre
+        metadatos: [sodio]
+        puntos: {}
+      - id: B
+        texto: No, o no me he fijado
+        metadatos: []
+        puntos: {}
+
+  - codigo: Q056
+    texto: ¿El bajón en calor es progresivo o desde el inicio?
+    contexto: ambiente
+    tipo: bateria-inicial
+    tipos: [ambiente]
+    respuestas:
+      - id: A
+        texto: Progresivo, a medida que pasa el tiempo
+        metadatos: [hidratacion, durabilidad]
+        puntos: {}
+      - id: B
+        texto: Desde el inicio, el calor me anula
+        metadatos: [calor]
+        puntos: {}

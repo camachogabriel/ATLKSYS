@@ -27,9 +27,9 @@ Consulta → Clasificación → Batería inicial → Metadatos → Afinación �
 ## Estado
 
 - [x] Fase 1 — Especificación del sistema
-- [ ] Fase 2 — Base de conocimiento mínima (5 capacidades ✓, 10 factores ✓, 20 limitaciones [7/20], 100 preguntas [2/100], 30 casos [3/30])
-- [ ] Fase 3 — Prototipo funcional (motor)
-- [ ] Fase 4 — Interfaz pública
+- [ ] Fase 2 — Base de conocimiento mínima (5 capacidades ✓, 10 factores ✓, 20 limitaciones [7/20 con batería completa], 100 preguntas [56/100], 11 hipótesis, 30 casos [3/30])
+- [x] Fase 3 — Prototipo funcional (`engine/simulador.py` + motor JS en `prototipo/`)
+- [ ] Fase 4 — Interfaz pública (prototipo quiz publicado en GitHub Pages; falta captura de leads y logging)
 - [ ] Fase 5+ — Monetización, integraciones, IA asistida
 
 Ver `NOTAS-LOGICA.md` para puntos abiertos detectados al estructurar la base de conocimiento.

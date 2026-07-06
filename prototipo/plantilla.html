@@ -257,22 +257,18 @@ function pasoContexto(i) {
 }
 
 function pasoLimitacion() {
-  const activas = new Set(["LP001", "LP006"]); // batería disponible en la demo
   $(`<div class="fase">Tu limitación</div>
     <h2>¿Cuál de estas frases te describe mejor?</h2>
-    <div class="opts">${KB.limitaciones.map(l => activas.has(l.codigo)
-      ? `<button class="opt" onclick='elegirLimitacion("${l.codigo}")'>${l.texto}</button>`
-      : `<button class="opt" style="opacity:.38;cursor:default">${l.texto} <span style="font-size:11px;color:var(--acc)">(próximamente)</span></button>`).join("")}
+    <div class="opts">${KB.limitaciones.map(l =>
+      `<button class="opt" onclick='elegirLimitacion("${l.codigo}")'>${l.texto}</button>`).join("")}
     </div>`);
 }
 
 function pasoObjetivo() {
-  const activas = new Set(["LP001", "LP006"]);
   $(`<div class="fase">Tu objetivo</div>
     <h2>Me gustaría poder mejorar en:</h2>
-    <div class="opts">${KB.objetivos.map(o => activas.has(o.limitacion_asociada)
-      ? `<button class="opt" onclick='elegirObjetivo("${o.codigo}")'>${o.texto}</button>`
-      : `<button class="opt" style="opacity:.38;cursor:default">${o.texto} <span style="font-size:11px;color:var(--acc)">(próximamente)</span></button>`).join("")}
+    <div class="opts">${KB.objetivos.map(o =>
+      `<button class="opt" onclick='elegirObjetivo("${o.codigo}")'>${o.texto}</button>`).join("")}
     </div>
     <p class="disclaimer" style="text-align:center;margin-top:20px">Este sistema ayuda a deportistas
     que buscan mejorar, de la mano de la ciencia y de más de 10 años de experiencia de AthleteTrainLab.</p>`);
@@ -285,8 +281,9 @@ function elegirObjetivo(cod) {
 
 function elegirLimitacion(lp) {
   limitacion = lp; nRespuestas++; prog();
+  const tipoLim = KB.limitaciones.find(l => l.codigo === lp).tipo;
   colaBateria = KB.preguntas.filter(q => q.tipo === "bateria-inicial" &&
-    (q.condiciones_aparicion || []).includes(lp)).sort((a, b) => a.codigo.localeCompare(b.codigo));
+    (q.tipos || []).includes(tipoLim)).sort((a, b) => a.codigo.localeCompare(b.codigo));
   pasoBateria();
 }
 

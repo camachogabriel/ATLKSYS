@@ -104,3 +104,7 @@ El ejemplo del cap. 3 (12 = Alta) es correcto; el del cap. 9 (13 = Alta) queda c
 Candidatas = preguntas de afinación no respondidas cuyos `metadatos_requeridos` estén todos en los metadatos activos.
 
 Orden: mayor **impacto potencial** primero (máximo valor absoluto de puntos entre sus respuestas). Empate: código menor. Así el quiz pregunta primero lo que más puede mover el ranking, acortando la evaluación.
+
+## D10. Batería por tipo de problema
+
+Las preguntas de batería inicial declaran `tipos: [...]` y se seleccionan por el `tipo` de la limitación elegida, no por código LP. Esto cumple la spec original ("la batería depende del tipo de problema") y permite que varias limitaciones compartan batería sin duplicar preguntas. Tipos v1: fondo-largo, distribucion-de-esfuerzo, subida, fatiga-muscular-metabolica, cambio-de-ritmo, recuperacion-intrasesion, ambiente.

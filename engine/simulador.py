@@ -113,9 +113,11 @@ def evaluacion_completa(limitacion, responder, contexto=None, verbose=True):
     preguntas = cargar("preguntas")["preguntas"]
     metadatos, estado, respondidas, traza = set(), {}, set(), []
 
-    # Fase batería inicial: preguntas del tipo asociadas a la limitación
+    # Fase batería inicial: seleccionada por el tipo de la limitación (D10)
+    lim = next(x for x in cargar("limitaciones")["limitaciones"]
+               if x["codigo"] == limitacion)
     bateria = [q for q in preguntas if q["tipo"] == "bateria-inicial"
-               and limitacion in (q.get("condiciones_aparicion") or [])]
+               and lim["tipo"] in (q.get("tipos") or [])]
     for q in sorted(bateria, key=lambda x: x["codigo"]):
         rid = responder(q)
         r = next(x for x in q["respuestas"] if x["id"] == rid)
