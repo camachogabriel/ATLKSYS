@@ -54,6 +54,12 @@
   .evid li { margin: 6px 0 6px 18px; }
   .disclaimer { font-size: 12px; color: #6e7681; margin-top: 22px; line-height: 1.5; }
   .link { background: none; border: none; color: var(--acc); cursor: pointer; font-size: 14px; margin-top: 14px; text-decoration: underline; }
+  #dbg { position: fixed; top: 10px; right: 10px; width: 280px; max-height: 92vh; overflow-y: auto;
+    background: #0a0e13ee; border: 1px solid #2dd4bf55; border-radius: 10px; padding: 12px;
+    font-family: ui-monospace, Menlo, monospace; font-size: 11px; line-height: 1.5; color: #9fe8dd; z-index: 99; }
+  #dbg hr { border: none; border-top: 1px solid #30363d; margin: 8px 0; }
+  #dbg b { color: #2dd4bf; }
+  @media (max-width: 900px) { #dbg { position: static; width: auto; max-height: none; margin-top: 16px; } }
 </style>
 </head>
 <body>
@@ -72,7 +78,28 @@ let ctx = {}, metadatos = new Set(), estado = {}, respondidas = new Set(),
     evidencia = [], limitacion = null, nRespuestas = 0, modoAfinar = false,
     modo = "limitacion", objetivo = null, recorrido = [], revision = null;
 
-const $ = h => { document.getElementById("card").innerHTML = h; };
+const DEBUG = typeof location !== "undefined" && new URLSearchParams(location.search).has("debug");
+let debugLog = [];
+
+const $ = h => { document.getElementById("card").innerHTML = h; debugRender(); };
+
+function debugRender() {
+  if (!DEBUG) return;
+  let el = document.getElementById("dbg");
+  if (!el) { el = document.createElement("div"); el.id = "dbg"; document.body.appendChild(el); }
+  const est = Object.entries(estado).sort((a, b) => b[1] - a[1])
+    .map(([k, v]) => `${k} ${(KB.nombres[k] || k)}: <b>${v > 0 ? "+" : ""}${v}</b> (${confianza(v)})`).join("<br>");
+  const cand = limitacion ? candidatas().map(q => `${q.codigo}(±${impacto(q)})`).join(" ") : "-";
+  const hyp = evaluarHipotesis().map(([s, h], i) =>
+    `${i === 0 ? "★" : "·"} ${h.codigo} ${h.nombre.slice(0, 34)} <b>${s}</b>`).join("<br>") || "ninguna activada";
+  el.innerHTML = `<b>DEBUG</b> · modo: ${modo}${objetivo ? " " + objetivo.codigo : ""} · lim: ${limitacion || "-"} · resp: ${respondidas.size}
+    <hr><b>metadatos activos (${metadatos.size})</b><br>${[...metadatos].sort().join(", ") || "-"}
+    <hr><b>estado de conocimiento</b><br>${est || "sin puntos"}
+    <hr><b>últimos efectos</b><br>${debugLog.slice(-5).join("<br>") || "-"}
+    <hr><b>candidatas (orden D9)</b><br>${cand || "agotadas"}
+    <hr><b>hipótesis (live)</b><br>${hyp}
+    <hr><b>parada</b> · alta alcanzada: ${hayAlta() ? "SÍ" : "no"} · ${respondidas.size}/${MAX_PREGUNTAS}`;
+}
 const prog = () => { document.getElementById("pf").style.width =
   Math.min(96, Math.round(100 * nRespuestas / META_ESTIMADA)) + "%"; };
 
@@ -267,6 +294,7 @@ function pasoBateria() {
   const q = colaBateria.shift();
   pantallaPregunta(q, "Caracterizando tu caso", r => {
     (r.metadatos || []).forEach(m => metadatos.add(m));
+    if (DEBUG) debugLog.push(`${q.codigo}${r.id} → ${(r.metadatos || []).join(", ") || "sin metadatos"}`);
     respondidas.add(q.codigo); recorrido.push(q.codigo.substring(1) + r.id); nRespuestas++; prog();
     pasoBateria();
   });
@@ -282,6 +310,7 @@ function pasoAfinacion() {
     for (const [k, v] of Object.entries(ef)) estado[k] = (estado[k] || 0) + v;
     (r.metadatos || []).forEach(m => metadatos.add(m));
     if (Object.keys(ef).length) evidencia.push({ q: q.texto, r: r.texto, ef });
+    if (DEBUG) debugLog.push(`${q.codigo}${r.id} → ${Object.entries(ef).map(([k, v]) => k + (v > 0 ? "+" : "") + v).join(" ") || "0"}`);
     respondidas.add(q.codigo); recorrido.push(q.codigo.substring(1) + r.id); nRespuestas++; prog();
     pasoAfinacion();
   });
