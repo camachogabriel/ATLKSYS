@@ -33,8 +33,11 @@ def main():
         "objetivos": cargar("objetivos")["objetivos"],
         "nombres": nombres,
     }
+    import datetime
+    kbver = datetime.date.today().strftime("%Y.%m.%d")
     plantilla = (RAIZ / "prototipo/plantilla.html").read_text()
-    salida = plantilla.replace("__DATA__", json.dumps(data, ensure_ascii=False))
+    salida = (plantilla.replace("__DATA__", json.dumps(data, ensure_ascii=False))
+              .replace("__KBVER__", kbver))
     (RAIZ / "prototipo/quiz.html").write_text(salida)
     print(f"quiz.html generado ({len(salida)//1024} KB)")
 

@@ -63,13 +63,14 @@
 </div>
 <script>
 const KB = __DATA__;
+const KBVER = "__KBVER__";
 const NIVELES = ["baja","media","alta","muy-alta"];
 const MAX_PREGUNTAS = 25, META_ESTIMADA = 14;
 
 // ---------- estado de la evaluación ----------
 let ctx = {}, metadatos = new Set(), estado = {}, respondidas = new Set(),
     evidencia = [], limitacion = null, nRespuestas = 0, modoAfinar = false,
-    modo = "limitacion", objetivo = null;
+    modo = "limitacion", objetivo = null, recorrido = [], revision = null;
 
 const $ = h => { document.getElementById("card").innerHTML = h; };
 const prog = () => { document.getElementById("pf").style.width =
@@ -141,7 +142,57 @@ function bienvenida() {
     — y por dónde empezar.</p>
     <button class="btn" onclick="pasoModo()">Descubrir qué me frena</button>
     <p class="disclaimer">3 minutos · Gratis · Sin registro para empezar</p>
+    <button class="link" onclick="pasoCodigoRevision()">¿Tienes un código de evaluación?</button>
   </div>`);
+}
+
+// ---------- código de evaluación (autocontenido, sin servidor) ----------
+function generarCodigo() {
+  const payload = [modo[0], objetivo ? objetivo.codigo : "", limitacion,
+    [ctx.edad, ctx.experiencia_anios, ctx.frecuencia_sem, ctx.duracion_fondo_h].join(","),
+    recorrido.join("."), KBVER].join("|");
+  return "ATL1-" + btoa(payload).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+
+function pasoCodigoRevision() {
+  $(`<div class="fase">Revisión de evaluación</div>
+    <h2>Pega el código de evaluación</h2>
+    <p class="sub">Reconstruye el recorrido completo: qué se respondió, qué puntos generó
+    cada respuesta y cómo se llegó a la hipótesis.</p>
+    <input type="email" id="cod" placeholder="ATL1-..." style="font-family:monospace">
+    <div class="center"><button class="btn" onclick="revisarCodigo()">Revisar</button></div>
+    <button class="link" onclick="bienvenida()">Volver</button>`);
+}
+
+function revisarCodigo() {
+  const code = document.getElementById("cod").value.trim();
+  try {
+    const p = atob(code.replace(/^ATL1-/, "").replace(/-/g, "+").replace(/_/g, "/")).split("|");
+    modo = p[0] === "o" ? "objetivo" : "limitacion";
+    objetivo = p[1] ? KB.objetivos.find(o => o.codigo === p[1]) : null;
+    limitacion = p[2];
+    const cv = p[3].split(",").map(Number);
+    ctx = { edad: cv[0], experiencia_anios: cv[1], frecuencia_sem: cv[2], duracion_fondo_h: cv[3] };
+    metadatos = new Set(); estado = {}; respondidas = new Set(); evidencia = [];
+    revision = { ver: p[5] || "?", traza: [] };
+    for (const tok of p[4].split(".").filter(Boolean)) {
+      const q = KB.preguntas.find(x => x.codigo === "Q" + tok.slice(0, 3));
+      const r = q.respuestas.find(x => x.id === tok.slice(3));
+      let ef = {};
+      if (q.tipo === "afinacion") {
+        ef = efectos(r);
+        for (const [k, v] of Object.entries(ef)) estado[k] = (estado[k] || 0) + v;
+        if (Object.keys(ef).length) evidencia.push({ q: q.texto, r: r.texto, ef });
+      }
+      (r.metadatos || []).forEach(m => metadatos.add(m));
+      respondidas.add(q.codigo);
+      revision.traza.push({ tipo: q.tipo, cod: q.codigo, q: q.texto, r: r.texto, ef, metas: r.metadatos || [] });
+    }
+    document.getElementById("pf").style.width = "100%";
+    pasoResultado();
+  } catch (e) {
+    document.getElementById("cod").style.borderColor = "#f87171";
+  }
 }
 
 function pasoModo() {
@@ -189,11 +240,13 @@ function pasoLimitacion() {
 function pasoObjetivo() {
   const activas = new Set(["LP001", "LP006"]);
   $(`<div class="fase">Tu objetivo</div>
-    <h2>¿Qué quieres mejorar?</h2>
+    <h2>Me gustaría poder mejorar en:</h2>
     <div class="opts">${KB.objetivos.map(o => activas.has(o.limitacion_asociada)
       ? `<button class="opt" onclick='elegirObjetivo("${o.codigo}")'>${o.texto}</button>`
       : `<button class="opt" style="opacity:.38;cursor:default">${o.texto} <span style="font-size:11px;color:var(--acc)">(próximamente)</span></button>`).join("")}
-    </div>`);
+    </div>
+    <p class="disclaimer" style="text-align:center;margin-top:20px">Este sistema ayuda a deportistas
+    que buscan mejorar, de la mano de la ciencia y de más de 10 años de experiencia de AthleteTrainLab.</p>`);
 }
 
 function elegirObjetivo(cod) {
@@ -214,7 +267,7 @@ function pasoBateria() {
   const q = colaBateria.shift();
   pantallaPregunta(q, "Caracterizando tu caso", r => {
     (r.metadatos || []).forEach(m => metadatos.add(m));
-    respondidas.add(q.codigo); nRespuestas++; prog();
+    respondidas.add(q.codigo); recorrido.push(q.codigo.substring(1) + r.id); nRespuestas++; prog();
     pasoBateria();
   });
 }
@@ -229,7 +282,7 @@ function pasoAfinacion() {
     for (const [k, v] of Object.entries(ef)) estado[k] = (estado[k] || 0) + v;
     (r.metadatos || []).forEach(m => metadatos.add(m));
     if (Object.keys(ef).length) evidencia.push({ q: q.texto, r: r.texto, ef });
-    respondidas.add(q.codigo); nRespuestas++; prog();
+    respondidas.add(q.codigo); recorrido.push(q.codigo.substring(1) + r.id); nRespuestas++; prog();
     pasoAfinacion();
   });
 }
@@ -333,13 +386,31 @@ function pasoResultado() {
   const evid = evidencia.map(e =>
     `<li>"${e.r}" — ${Object.entries(e.ef).map(([k, v]) => `${KB.nombres[k] || k} ${v > 0 ? "+" : ""}${v}`).join(", ")}</li>`).join("");
 
-  $(`<div class="fase">Tu informe${preliminar ? " · preliminar" : ""}</div>
-    <h2>Esto es lo que encontramos</h2>
+  let extra = "";
+  if (revision) {
+    const trz = revision.traza.map(t =>
+      `<li><strong>${t.cod}</strong> ${t.q}<br>→ ${t.r}
+       ${Object.keys(t.ef).length ? " · <em>" + Object.entries(t.ef).map(([k, v]) => `${KB.nombres[k] || k} ${v > 0 ? "+" : ""}${v}`).join(", ") + "</em>" : ""}
+       ${t.metas.length ? ` · <span style="color:var(--acc)">${t.metas.join(", ")}</span>` : ""}</li>`).join("");
+    extra = `<div class="evid"><strong>Recorrido completo (revisión):</strong><ul>${trz}</ul>
+      <p style="margin-top:10px">Código generado con base de conocimiento ${revision.ver}
+      ${revision.ver !== KBVER ? `· <strong>revisado con ${KBVER} — la lógica pudo cambiar</strong>` : "· misma versión actual"}</p></div>`;
+  } else {
+    const codigo = generarCodigo();
+    extra = `<div class="evid"><strong>Tu código de evaluación</strong>
+      <p style="margin:8px 0">Guárdalo o compártelo con tu entrenador: permite revisar exactamente cómo se llegó a este resultado.</p>
+      <code id="codev" style="display:block;background:#1c2129;border:1px solid var(--border);border-radius:8px;padding:10px;font-size:11.5px;word-break:break-all">${codigo}</code>
+      <button class="link" onclick="navigator.clipboard.writeText(document.getElementById('codev').textContent);this.textContent='¡Copiado!'">Copiar código</button></div>`;
+  }
+  $(`<div class="fase">${revision ? "Revisión de evaluación" : "Tu informe"}${preliminar ? " · preliminar" : ""}</div>
+    <h2>${revision ? "Cómo se llegó a este resultado" : "Esto es lo que encontramos"}</h2>
     ${hyps}
     <h3 style="font-size:15px;margin:24px 0 12px">Estado de conocimiento</h3>
     ${barras || '<p class="sub">Sin evidencia puntuada aún.</p>'}
     <div class="evid"><strong>Evidencia utilizada:</strong><ul>${evid || "<li>Solo caracterización inicial.</li>"}</ul></div>
-    ${candidatas().length ? `<button class="link" onclick="modoAfinar=true;pasoAfinacion()">Afinar mi resultado (más preguntas)</button>` : ""}
+    ${extra}
+    ${!revision && candidatas().length ? `<button class="link" onclick="modoAfinar=true;pasoAfinacion()">Afinar mi resultado (más preguntas)</button>` : ""}
+    ${revision ? `<button class="link" onclick="location.reload()">Salir de la revisión</button>` : ""}
     <p class="disclaimer">AthleteTrainLab genera hipótesis orientativas basadas en tus respuestas.
     No es un diagnóstico médico ni fisiológico.</p>`);
 }

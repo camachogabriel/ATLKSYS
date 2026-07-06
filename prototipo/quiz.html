@@ -63,13 +63,14 @@
 </div>
 <script>
 const KB = {"preguntas": [{"codigo": "Q001", "texto": "¿Tienes una estrategia de alimentación para fondos largos?", "contexto": "fondos-largos", "tipo": "bateria-inicial", "condiciones_aparicion": ["LP001", "LP006"], "respuestas": [{"id": "A", "texto": "No, como cuando tengo hambre", "metadatos": ["nutricion", "carbohidratos", "fondos-largos"], "puntos": {}}, {"id": "B", "texto": "Sí, pero no siempre la cumplo", "metadatos": ["nutricion", "estrategia-nutricional"], "puntos": {}}, {"id": "C", "texto": "Sí, consumo carbohidratos de forma planificada", "metadatos": ["nutricion", "carbohidratos"], "puntos": {}}]}, {"codigo": "Q005", "texto": "¿Llevas un plan de hidratación en los fondos largos?", "contexto": "fondos-largos", "tipo": "bateria-inicial", "condiciones_aparicion": ["LP001", "LP006"], "respuestas": [{"id": "A", "texto": "No, tomo cuando tengo sed", "metadatos": ["hidratacion"], "puntos": {}}, {"id": "B", "texto": "Sí, pero solo agua", "metadatos": ["hidratacion", "sodio"], "puntos": {}}, {"id": "C", "texto": "Sí, con electrolitos o sodio", "metadatos": [], "puntos": {}}]}, {"codigo": "Q006", "texto": "¿El problema aparece más en días calurosos?", "contexto": "fondos-largos", "tipo": "bateria-inicial", "condiciones_aparicion": ["LP001", "LP006"], "respuestas": [{"id": "A", "texto": "Sí, claramente", "metadatos": ["calor", "hidratacion"], "puntos": {}}, {"id": "B", "texto": "No noto diferencia", "metadatos": [], "puntos": {}}]}, {"codigo": "Q007", "texto": "¿Cómo llegas de descanso a tus fondos largos?", "contexto": "fondos-largos", "tipo": "bateria-inicial", "condiciones_aparicion": ["LP001", "LP006"], "respuestas": [{"id": "A", "texto": "Duermo mal o llego con fatiga acumulada", "metadatos": ["sueno", "recuperacion"], "puntos": {}}, {"id": "B", "texto": "Descansado, sueño normal", "metadatos": [], "puntos": {}}]}, {"codigo": "Q008", "texto": "¿Cómo administras el esfuerzo durante el fondo?", "contexto": "fondos-largos", "tipo": "bateria-inicial", "condiciones_aparicion": ["LP001", "LP006"], "respuestas": [{"id": "A", "texto": "Salgo fuerte y aguanto lo que pueda", "metadatos": ["pacing"], "puntos": {}}, {"id": "B", "texto": "Controlado, regulo desde el inicio", "metadatos": [], "puntos": {}}, {"id": "C", "texto": "Voy con un grupo más fuerte que yo", "metadatos": ["pacing", "intensidad"], "puntos": {}}]}, {"codigo": "Q009", "texto": "En el momento en que \"se apaga el motor\", ¿qué sientes principalmente?", "contexto": "fondos-largos", "tipo": "bateria-inicial", "condiciones_aparicion": ["LP001", "LP006"], "respuestas": [{"id": "A", "texto": "Sin energía, vacío general", "metadatos": ["nutricion", "carbohidratos", "disponibilidad-energetica", "durabilidad"], "puntos": {}}, {"id": "B", "texto": "Falta de aire, respiración al límite", "metadatos": ["respiracion", "intensidad"], "puntos": {}}, {"id": "C", "texto": "Piernas cargadas o ardor muscular", "metadatos": ["piernas", "fatiga-muscular", "fuerza"], "puntos": {}}, {"id": "D", "texto": "Mareo, dolor de cabeza o sed extrema", "metadatos": ["hidratacion", "sodio", "calor"], "puntos": {}}]}, {"codigo": "Q002", "texto": "¿Cuántos gramos de carbohidratos consumes por hora durante un fondo largo?", "contexto": "fondos-largos", "tipo": "afinacion", "condiciones_aparicion": {"metadatos_requeridos": ["carbohidratos"]}, "respuestas": [{"id": "A", "texto": "No consumo", "metadatos": [], "puntos": {"D001": 5, "E001": 1}}, {"id": "B", "texto": "Sí, pero no calculo", "metadatos": [], "puntos": {"D002": 3}}, {"id": "C", "texto": "Aproximadamente 30 g/h", "metadatos": [], "puntos": {"D001": 3}}, {"id": "D", "texto": "Aproximadamente 60 g/h", "metadatos": [], "puntos": {}, "puntos_condicionales": [{"si": {"duracion_fondo_h": ">4"}, "puntos": {"D001": 1}}]}, {"id": "E", "texto": "Más de 60 g/h", "metadatos": [], "puntos": {"D001": -3}}]}, {"codigo": "Q003", "texto": "¿Qué sientes al terminar un fondo largo?", "contexto": "fondos-largos", "tipo": "afinacion", "condiciones_aparicion": {"metadatos_requeridos": ["disponibilidad-energetica"]}, "respuestas": [{"id": "A", "texto": "Hambre fuerte y/o sueño", "metadatos": [], "puntos": {"D001": 3}}, {"id": "B", "texto": "Piernas vacías pero sin hambre", "metadatos": ["fatiga-muscular"], "puntos": {"E001": 3, "D001": 1}}, {"id": "C", "texto": "Dolor de cabeza o sed extrema", "metadatos": ["hidratacion", "sodio"], "puntos": {"D003": 3}}, {"id": "D", "texto": "Cansancio normal, nada llamativo", "metadatos": [], "puntos": {"D001": -1}}]}, {"codigo": "Q004", "texto": "¿Cuánto líquido tomas por hora durante un fondo largo?", "contexto": "fondos-largos", "tipo": "afinacion", "condiciones_aparicion": {"metadatos_requeridos": ["hidratacion"]}, "respuestas": [{"id": "A", "texto": "Menos de medio bidón", "metadatos": ["sodio"], "puntos": {"F002": 3}}, {"id": "B", "texto": "Alrededor de un bidón", "metadatos": [], "puntos": {"F002": 0}}, {"id": "C", "texto": "Un bidón o más, con sodio/electrolitos", "metadatos": [], "puntos": {"F002": -3}}]}, {"codigo": "Q010", "texto": "Comparando el primer tercio con el final de tus fondos o eventos, ¿cómo va tu ritmo?", "contexto": "general", "tipo": "afinacion", "condiciones_aparicion": {"metadatos_requeridos": ["pacing"]}, "respuestas": [{"id": "A", "texto": "Salgo mucho más fuerte y al final me derrumbo", "metadatos": [], "puntos": {"F006": 5, "E001": 1}}, {"id": "B", "texto": "Algo más fuerte al inicio", "metadatos": [], "puntos": {"F006": 3}}, {"id": "C", "texto": "Muy parejo, regulo bien", "metadatos": [], "puntos": {"F006": -3}}, {"id": "D", "texto": "No lo sé, no lo mido", "metadatos": [], "puntos": {}}]}, {"codigo": "Q011", "texto": "¿Con qué frecuencia terminas \"explotado\" por haber salido fuerte?", "contexto": "general", "tipo": "afinacion", "condiciones_aparicion": {"metadatos_requeridos": ["pacing"]}, "respuestas": [{"id": "A", "texto": "Casi siempre", "metadatos": [], "puntos": {"F006": 3}}, {"id": "B", "texto": "A veces", "metadatos": [], "puntos": {"F006": 1}}, {"id": "C", "texto": "Casi nunca", "metadatos": [], "puntos": {"F006": -3}}]}, {"codigo": "Q012", "texto": "Cuando ya llevas muchas horas, ¿tu rendimiento cae aunque hayas comido y bebido bien?", "contexto": "fondos-largos", "tipo": "afinacion", "condiciones_aparicion": {"metadatos_requeridos": ["durabilidad"]}, "respuestas": [{"id": "A", "texto": "Sí, claramente", "metadatos": [], "puntos": {"E001": 5}}, {"id": "B", "texto": "Un poco", "metadatos": [], "puntos": {"E001": 1}}, {"id": "C", "texto": "No, si como bien termino fuerte", "metadatos": [], "puntos": {"E001": -3, "D001": 1}}, {"id": "D", "texto": "No sabría decir, casi nunca como bien en ruta", "metadatos": ["nutricion", "carbohidratos"], "puntos": {"D001": 1}}]}, {"codigo": "Q013", "texto": "¿Con qué frecuencia haces salidas de duración similar a tu fondo largo?", "contexto": "fondos-largos", "tipo": "afinacion", "condiciones_aparicion": {"metadatos_requeridos": ["durabilidad"]}, "respuestas": [{"id": "A", "texto": "Casi nunca, el fondo largo es excepcional", "metadatos": [], "puntos": {"E001": 3, "F005": 1}}, {"id": "B", "texto": "1-2 veces al mes", "metadatos": [], "puntos": {"E001": 1}}, {"id": "C", "texto": "Cada semana", "metadatos": [], "puntos": {"E001": -1}}]}, {"codigo": "Q014", "texto": "Cuando aprietas, ¿qué te frena primero?", "contexto": "general", "tipo": "afinacion", "condiciones_aparicion": {"metadatos_requeridos": ["fatiga-muscular"]}, "respuestas": [{"id": "A", "texto": "Las piernas, ardor o carga muscular", "metadatos": [], "puntos": {"C002": 3, "C004": 1}}, {"id": "B", "texto": "La respiración", "metadatos": ["respiracion"], "puntos": {"C001": 3}}, {"id": "C", "texto": "Ambas a la vez", "metadatos": [], "puntos": {"C002": 1, "C001": 1}}]}, {"codigo": "Q015", "texto": "¿El ardor de piernas aparece sobre todo en esfuerzos sostenidos de 20-40 minutos?", "contexto": "general", "tipo": "afinacion", "condiciones_aparicion": {"metadatos_requeridos": ["fatiga-muscular"]}, "respuestas": [{"id": "A", "texto": "Sí, justo en ese tipo de esfuerzo", "metadatos": [], "puntos": {"C002": 5}}, {"id": "B", "texto": "Más bien en arrancadas cortas e intensas", "metadatos": ["cambios-de-ritmo"], "puntos": {"C003": 3}}, {"id": "C", "texto": "No, en cualquier momento", "metadatos": [], "puntos": {"C002": -1}}]}, {"codigo": "Q016", "texto": "¿Cómo llevas pedalear con baja cadencia o subidas empinadas sentado?", "contexto": "general", "tipo": "afinacion", "condiciones_aparicion": {"metadatos_requeridos": ["fuerza"]}, "respuestas": [{"id": "A", "texto": "Muy mal, me cargo enseguida", "metadatos": [], "puntos": {"C004": 3}}, {"id": "B", "texto": "Normal", "metadatos": [], "puntos": {}}, {"id": "C", "texto": "Es mi punto fuerte", "metadatos": [], "puntos": {"C004": -3}}]}, {"codigo": "Q017", "texto": "¿Haces trabajo de fuerza (gimnasio) con regularidad?", "contexto": "general", "tipo": "afinacion", "condiciones_aparicion": {"metadatos_requeridos": ["fuerza"]}, "respuestas": [{"id": "A", "texto": "Nunca", "metadatos": [], "puntos": {"C004": 1, "F005": 1}}, {"id": "B", "texto": "Solo a temporadas", "metadatos": [], "puntos": {}}, {"id": "C", "texto": "Todo el año", "metadatos": [], "puntos": {"C004": -1}}]}, {"codigo": "Q018", "texto": "¿A qué intensidad te falta el aire?", "contexto": "general", "tipo": "afinacion", "condiciones_aparicion": {"metadatos_requeridos": ["respiracion"]}, "respuestas": [{"id": "A", "texto": "En ritmos que deberían ser cómodos", "metadatos": [], "puntos": {"C001": 5}}, {"id": "B", "texto": "Solo cuando aprieto fuerte", "metadatos": [], "puntos": {"C001": 1}}, {"id": "C", "texto": "Solo en esfuerzos máximos", "metadatos": [], "puntos": {"C001": -1}}]}, {"codigo": "Q019", "texto": "En tus salidas suaves, ¿puedes mantener una conversación?", "contexto": "general", "tipo": "afinacion", "condiciones_aparicion": {"metadatos_requeridos": ["respiracion"]}, "respuestas": [{"id": "A", "texto": "No, casi siempre voy al límite", "metadatos": ["pacing", "intensidad"], "puntos": {"C001": 3, "F005": 3}}, {"id": "B", "texto": "Sí, sin problema", "metadatos": [], "puntos": {"C001": -1}}]}, {"codigo": "Q020", "texto": "¿Cuántas horas duermes en promedio?", "contexto": "general", "tipo": "afinacion", "condiciones_aparicion": {"metadatos_requeridos": ["sueno"]}, "respuestas": [{"id": "A", "texto": "Menos de 6", "metadatos": ["recuperacion"], "puntos": {"F003": 3}}, {"id": "B", "texto": "6-7", "metadatos": [], "puntos": {"F003": 1}}, {"id": "C", "texto": "Más de 7", "metadatos": [], "puntos": {"F003": -1}}]}, {"codigo": "Q021", "texto": "¿Cómo llegas normalmente a tus entrenamientos?", "contexto": "general", "tipo": "afinacion", "condiciones_aparicion": {"metadatos_requeridos": ["recuperacion"]}, "respuestas": [{"id": "A", "texto": "Casi siempre cansado o sin ganas", "metadatos": [], "puntos": {"F003": 5}}, {"id": "B", "texto": "A veces cansado", "metadatos": [], "puntos": {"F003": 1}}, {"id": "C", "texto": "Fresco y con ganas", "metadatos": [], "puntos": {"F003": -3}}]}, {"codigo": "Q022", "texto": "¿Tu rendimiento es irregular, con días buenos y malos sin patrón claro?", "contexto": "general", "tipo": "afinacion", "condiciones_aparicion": {"metadatos_requeridos": ["recuperacion"]}, "respuestas": [{"id": "A", "texto": "Sí, muy irregular", "metadatos": [], "puntos": {"F003": 3}}, {"id": "B", "texto": "Bastante estable", "metadatos": [], "puntos": {"F003": -1}}]}, {"codigo": "Q023", "texto": "En días calurosos, ¿qué síntomas tienes?", "contexto": "general", "tipo": "afinacion", "condiciones_aparicion": {"metadatos_requeridos": ["calor"]}, "respuestas": [{"id": "A", "texto": "Calambres, dolor de cabeza o escalofríos", "metadatos": ["sodio", "hidratacion"], "puntos": {"D003": 5, "F002": 1}}, {"id": "B", "texto": "Solo rindo menos, sin síntomas claros", "metadatos": [], "puntos": {"D003": 1}}, {"id": "C", "texto": "El calor no me afecta especialmente", "metadatos": [], "puntos": {"D003": -3}}]}, {"codigo": "Q024", "texto": "Cuando hay un ataque o sprint corto, ¿cómo respondes?", "contexto": "general", "tipo": "afinacion", "condiciones_aparicion": {"metadatos_requeridos": ["cambios-de-ritmo"]}, "respuestas": [{"id": "A", "texto": "No tengo chispa, no puedo acelerar", "metadatos": [], "puntos": {"C003": 3, "C005": 1}}, {"id": "B", "texto": "Respondo el primero, pero no los siguientes", "metadatos": [], "puntos": {"C001": 1}}, {"id": "C", "texto": "Es mi punto fuerte", "metadatos": [], "puntos": {"C003": -3}}]}], "hipotesis": [{"codigo": "H001", "nombre": "Estrategia nutricional insuficiente para fondos largos", "texto": "La limitación parece estar relacionada principalmente con una estrategia nutricional insuficiente para fondos largos.\n", "elementos": ["D001", "D002", "F001", "F002"], "condiciones": [{"elemento": "D001", "confianza_minima": "media"}], "contraindicadores": [{"elemento": "D001", "puntos_maximos": -3}], "recomendacion": "Diseñar estrategia de carbohidratos (60-90 g/h según duración) e hidratación antes de atribuir la limitación a capacidad aeróbica.\n", "informacion_faltante": ["Carbohidratos exactos por hora en el último fondo", "Síntomas finales (hambre, sueño, dolor de cabeza)"]}, {"codigo": "H002", "nombre": "Durabilidad limitada", "texto": "El rendimiento cae con el paso de las horas aunque la nutrición sea adecuada; la durabilidad parece ser el limitante.\n", "elementos": ["E001", "C001", "F005"], "condiciones": [{"elemento": "E001", "confianza_minima": "media"}, {"elemento": "D001", "confianza_maxima": "baja"}], "recomendacion": "Aumentar volumen aeróbico progresivo y trabajo específico en fatiga.\n", "informacion_faltante": ["Volumen semanal actual y progresión reciente"]}, {"codigo": "H003", "nombre": "Pacing inadecuado", "texto": "La distribución del esfuerzo (salidas fuertes, no regular subidas) parece explicar buena parte de la limitación.\n", "elementos": ["F006"], "condiciones": [{"elemento": "F006", "confianza_minima": "alta"}], "recomendacion": "Practicar salidas controladas por potencia/RPE y regulación en subidas.\n", "informacion_faltante": ["Datos de potencia/ritmo por tercios del esfuerzo"]}, {"codigo": "H004", "nombre": "Base aeróbica insuficiente", "texto": "La evidencia apunta a una capacidad aeróbica por debajo de lo que exige el tipo de esfuerzo.\n", "elementos": ["C001", "D004", "F005"], "condiciones": [{"elemento": "C001", "confianza_minima": "alta"}], "recomendacion": "Bloque de base aeróbica con volumen progresivo y control de intensidad.\n", "informacion_faltante": ["Frecuencia y duración típica de entrenamientos suaves"]}, {"codigo": "H005", "nombre": "Limitación glucolítica-oxidativa", "texto": "Cuesta sostener intensidades cercanas al umbral; la capacidad glucolítica oxidativa parece el limitante.\n", "elementos": ["C002"], "condiciones": [{"elemento": "C002", "confianza_minima": "alta"}], "recomendacion": "Trabajo de umbral (intervalos 8-20 min) sobre base aeróbica existente.\n", "informacion_faltante": ["Potencia sostenible 20-40 min reciente"]}, {"codigo": "H006", "nombre": "Déficit explosivo / neuromuscular", "texto": "La respuesta a ataques y esfuerzos cortos está limitada por la vía anaeróbica aláctica y/o la capacidad neuromuscular.\n", "elementos": ["C003", "C005", "C004"], "condiciones": [{"elemento": "C003", "confianza_minima": "media"}], "recomendacion": "Sprints cortos, arrancadas y trabajo de fuerza-velocidad.\n", "informacion_faltante": ["Potencia pico 5-15 s y contexto de los ataques"]}, {"codigo": "H007", "nombre": "Hidratación / estrés térmico", "texto": "El rendimiento cae principalmente en calor; hidratación, sodio y adaptación térmica parecen los limitantes.\n", "elementos": ["F002", "D003", "F009"], "condiciones": [{"elemento": "D003", "confianza_minima": "media"}], "recomendacion": "Protocolo de hidratación con sodio y exposición progresiva al calor.\n", "informacion_faltante": ["Líquido y sodio por hora, tasa de sudoración estimada"]}, {"codigo": "H008", "nombre": "Recuperación insuficiente", "texto": "Fatiga acumulada, sueño o estrés impiden expresar las capacidades existentes.\n", "elementos": ["F003"], "condiciones": [{"elemento": "F003", "confianza_minima": "alta"}], "recomendacion": "Priorizar sueño y reducir carga 1-2 semanas antes de evaluar de nuevo.\n", "informacion_faltante": ["Horas de sueño, HRV o sensación al despertar"]}], "limitaciones": [{"codigo": "LP001", "texto": "Al final de los fondos se me apaga el motor", "tipo": "fondo-largo", "areas_iniciales": ["nutricion", "hidratacion", "E001", "pacing", "recuperacion", "calor"]}, {"codigo": "LP002", "texto": "Me falta el aire en las cuestas", "tipo": "subida", "areas_iniciales": ["C001", "pacing", "composicion-corporal", "C004", "intensidad"]}, {"codigo": "LP003", "texto": "Se me queman las piernas", "tipo": "fatiga-muscular-metabolica", "areas_iniciales": ["C002", "C004", "pacing", "nutricion", "tecnica"]}, {"codigo": "LP004", "texto": "No puedo responder ataques", "tipo": "cambio-de-ritmo", "areas_iniciales": ["C003", "C005", "C004", "tecnica", "recuperacion"]}, {"codigo": "LP005", "texto": "Me recupero lento entre esfuerzos", "tipo": "recuperacion-intrasesion", "areas_iniciales": ["C001", "recuperacion", "pacing", "nutricion"]}, {"codigo": "LP006", "texto": "Me siento fuerte al inicio y exploto al final", "tipo": "distribucion-de-esfuerzo", "areas_iniciales": ["pacing", "nutricion", "hidratacion", "E001", "F005"]}, {"codigo": "LP007", "texto": "Rindo mucho peor en calor", "tipo": "ambiente", "areas_iniciales": ["hidratacion", "calor", "D003", "sodio", "pacing"]}], "objetivos": [{"codigo": "O001", "texto": "Terminar los fondos más fuerte", "limitacion_asociada": "LP001", "capacidades_determinantes": ["C001", "E001", "D001", "F006"]}, {"codigo": "O002", "texto": "Subir más rápido", "limitacion_asociada": "LP002", "capacidades_determinantes": ["C001", "C002", "F004", "F006"]}, {"codigo": "O003", "texto": "Ser más explosivo, responder ataques", "limitacion_asociada": "LP004", "capacidades_determinantes": ["C003", "C005", "C004"]}, {"codigo": "O004", "texto": "Sostener ritmos fuertes más tiempo", "limitacion_asociada": "LP003", "capacidades_determinantes": ["C002", "C001", "F006"]}, {"codigo": "O005", "texto": "Rendir mejor en calor", "limitacion_asociada": "LP007", "capacidades_determinantes": ["F002", "D003", "F009"]}], "nombres": {"C001": "Capacidad aeróbica", "C002": "Capacidad glucolítica oxidativa", "C003": "Capacidad anaeróbica aláctica", "C004": "Fuerza", "C005": "Capacidad neuromuscular", "F001": "Nutrición", "F002": "Hidratación", "F003": "Recuperación", "F004": "Composición corporal", "F005": "Estrategia de entrenamiento", "F006": "Pacing", "F007": "Técnica", "F008": "Coordinación", "F009": "Ambiente", "F010": "Equipamiento", "E001": "Durabilidad", "E002": "Economía", "E003": "Rendimiento en subida", "E004": "Rendimiento en fondos largos", "E005": "Rendimiento en contrarreloj", "E006": "Recuperación entre esfuerzos", "D001": "Disponibilidad energética", "D002": "Estrategia nutricional", "D003": "Estrés térmico", "D004": "Base aeróbica"}};
+const KBVER = "2026.07.05";
 const NIVELES = ["baja","media","alta","muy-alta"];
 const MAX_PREGUNTAS = 25, META_ESTIMADA = 14;
 
 // ---------- estado de la evaluación ----------
 let ctx = {}, metadatos = new Set(), estado = {}, respondidas = new Set(),
     evidencia = [], limitacion = null, nRespuestas = 0, modoAfinar = false,
-    modo = "limitacion", objetivo = null;
+    modo = "limitacion", objetivo = null, recorrido = [], revision = null;
 
 const $ = h => { document.getElementById("card").innerHTML = h; };
 const prog = () => { document.getElementById("pf").style.width =
@@ -141,7 +142,57 @@ function bienvenida() {
     — y por dónde empezar.</p>
     <button class="btn" onclick="pasoModo()">Descubrir qué me frena</button>
     <p class="disclaimer">3 minutos · Gratis · Sin registro para empezar</p>
+    <button class="link" onclick="pasoCodigoRevision()">¿Tienes un código de evaluación?</button>
   </div>`);
+}
+
+// ---------- código de evaluación (autocontenido, sin servidor) ----------
+function generarCodigo() {
+  const payload = [modo[0], objetivo ? objetivo.codigo : "", limitacion,
+    [ctx.edad, ctx.experiencia_anios, ctx.frecuencia_sem, ctx.duracion_fondo_h].join(","),
+    recorrido.join("."), KBVER].join("|");
+  return "ATL1-" + btoa(payload).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+
+function pasoCodigoRevision() {
+  $(`<div class="fase">Revisión de evaluación</div>
+    <h2>Pega el código de evaluación</h2>
+    <p class="sub">Reconstruye el recorrido completo: qué se respondió, qué puntos generó
+    cada respuesta y cómo se llegó a la hipótesis.</p>
+    <input type="email" id="cod" placeholder="ATL1-..." style="font-family:monospace">
+    <div class="center"><button class="btn" onclick="revisarCodigo()">Revisar</button></div>
+    <button class="link" onclick="bienvenida()">Volver</button>`);
+}
+
+function revisarCodigo() {
+  const code = document.getElementById("cod").value.trim();
+  try {
+    const p = atob(code.replace(/^ATL1-/, "").replace(/-/g, "+").replace(/_/g, "/")).split("|");
+    modo = p[0] === "o" ? "objetivo" : "limitacion";
+    objetivo = p[1] ? KB.objetivos.find(o => o.codigo === p[1]) : null;
+    limitacion = p[2];
+    const cv = p[3].split(",").map(Number);
+    ctx = { edad: cv[0], experiencia_anios: cv[1], frecuencia_sem: cv[2], duracion_fondo_h: cv[3] };
+    metadatos = new Set(); estado = {}; respondidas = new Set(); evidencia = [];
+    revision = { ver: p[5] || "?", traza: [] };
+    for (const tok of p[4].split(".").filter(Boolean)) {
+      const q = KB.preguntas.find(x => x.codigo === "Q" + tok.slice(0, 3));
+      const r = q.respuestas.find(x => x.id === tok.slice(3));
+      let ef = {};
+      if (q.tipo === "afinacion") {
+        ef = efectos(r);
+        for (const [k, v] of Object.entries(ef)) estado[k] = (estado[k] || 0) + v;
+        if (Object.keys(ef).length) evidencia.push({ q: q.texto, r: r.texto, ef });
+      }
+      (r.metadatos || []).forEach(m => metadatos.add(m));
+      respondidas.add(q.codigo);
+      revision.traza.push({ tipo: q.tipo, cod: q.codigo, q: q.texto, r: r.texto, ef, metas: r.metadatos || [] });
+    }
+    document.getElementById("pf").style.width = "100%";
+    pasoResultado();
+  } catch (e) {
+    document.getElementById("cod").style.borderColor = "#f87171";
+  }
 }
 
 function pasoModo() {
@@ -189,11 +240,13 @@ function pasoLimitacion() {
 function pasoObjetivo() {
   const activas = new Set(["LP001", "LP006"]);
   $(`<div class="fase">Tu objetivo</div>
-    <h2>¿Qué quieres mejorar?</h2>
+    <h2>Me gustaría poder mejorar en:</h2>
     <div class="opts">${KB.objetivos.map(o => activas.has(o.limitacion_asociada)
       ? `<button class="opt" onclick='elegirObjetivo("${o.codigo}")'>${o.texto}</button>`
       : `<button class="opt" style="opacity:.38;cursor:default">${o.texto} <span style="font-size:11px;color:var(--acc)">(próximamente)</span></button>`).join("")}
-    </div>`);
+    </div>
+    <p class="disclaimer" style="text-align:center;margin-top:20px">Este sistema ayuda a deportistas
+    que buscan mejorar, de la mano de la ciencia y de más de 10 años de experiencia de AthleteTrainLab.</p>`);
 }
 
 function elegirObjetivo(cod) {
@@ -214,7 +267,7 @@ function pasoBateria() {
   const q = colaBateria.shift();
   pantallaPregunta(q, "Caracterizando tu caso", r => {
     (r.metadatos || []).forEach(m => metadatos.add(m));
-    respondidas.add(q.codigo); nRespuestas++; prog();
+    respondidas.add(q.codigo); recorrido.push(q.codigo.substring(1) + r.id); nRespuestas++; prog();
     pasoBateria();
   });
 }
@@ -229,7 +282,7 @@ function pasoAfinacion() {
     for (const [k, v] of Object.entries(ef)) estado[k] = (estado[k] || 0) + v;
     (r.metadatos || []).forEach(m => metadatos.add(m));
     if (Object.keys(ef).length) evidencia.push({ q: q.texto, r: r.texto, ef });
-    respondidas.add(q.codigo); nRespuestas++; prog();
+    respondidas.add(q.codigo); recorrido.push(q.codigo.substring(1) + r.id); nRespuestas++; prog();
     pasoAfinacion();
   });
 }
@@ -333,13 +386,31 @@ function pasoResultado() {
   const evid = evidencia.map(e =>
     `<li>"${e.r}" — ${Object.entries(e.ef).map(([k, v]) => `${KB.nombres[k] || k} ${v > 0 ? "+" : ""}${v}`).join(", ")}</li>`).join("");
 
-  $(`<div class="fase">Tu informe${preliminar ? " · preliminar" : ""}</div>
-    <h2>Esto es lo que encontramos</h2>
+  let extra = "";
+  if (revision) {
+    const trz = revision.traza.map(t =>
+      `<li><strong>${t.cod}</strong> ${t.q}<br>→ ${t.r}
+       ${Object.keys(t.ef).length ? " · <em>" + Object.entries(t.ef).map(([k, v]) => `${KB.nombres[k] || k} ${v > 0 ? "+" : ""}${v}`).join(", ") + "</em>" : ""}
+       ${t.metas.length ? ` · <span style="color:var(--acc)">${t.metas.join(", ")}</span>` : ""}</li>`).join("");
+    extra = `<div class="evid"><strong>Recorrido completo (revisión):</strong><ul>${trz}</ul>
+      <p style="margin-top:10px">Código generado con base de conocimiento ${revision.ver}
+      ${revision.ver !== KBVER ? `· <strong>revisado con ${KBVER} — la lógica pudo cambiar</strong>` : "· misma versión actual"}</p></div>`;
+  } else {
+    const codigo = generarCodigo();
+    extra = `<div class="evid"><strong>Tu código de evaluación</strong>
+      <p style="margin:8px 0">Guárdalo o compártelo con tu entrenador: permite revisar exactamente cómo se llegó a este resultado.</p>
+      <code id="codev" style="display:block;background:#1c2129;border:1px solid var(--border);border-radius:8px;padding:10px;font-size:11.5px;word-break:break-all">${codigo}</code>
+      <button class="link" onclick="navigator.clipboard.writeText(document.getElementById('codev').textContent);this.textContent='¡Copiado!'">Copiar código</button></div>`;
+  }
+  $(`<div class="fase">${revision ? "Revisión de evaluación" : "Tu informe"}${preliminar ? " · preliminar" : ""}</div>
+    <h2>${revision ? "Cómo se llegó a este resultado" : "Esto es lo que encontramos"}</h2>
     ${hyps}
     <h3 style="font-size:15px;margin:24px 0 12px">Estado de conocimiento</h3>
     ${barras || '<p class="sub">Sin evidencia puntuada aún.</p>'}
     <div class="evid"><strong>Evidencia utilizada:</strong><ul>${evid || "<li>Solo caracterización inicial.</li>"}</ul></div>
-    ${candidatas().length ? `<button class="link" onclick="modoAfinar=true;pasoAfinacion()">Afinar mi resultado (más preguntas)</button>` : ""}
+    ${extra}
+    ${!revision && candidatas().length ? `<button class="link" onclick="modoAfinar=true;pasoAfinacion()">Afinar mi resultado (más preguntas)</button>` : ""}
+    ${revision ? `<button class="link" onclick="location.reload()">Salir de la revisión</button>` : ""}
     <p class="disclaimer">AthleteTrainLab genera hipótesis orientativas basadas en tus respuestas.
     No es un diagnóstico médico ni fisiológico.</p>`);
 }
