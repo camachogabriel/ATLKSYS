@@ -113,5 +113,26 @@ hipotesis:
     informacion_faltante:
       - Horas de sueño, HRV o sensación al despertar
 
+  - codigo: H009
+    nombre: Entrenamiento sin estructura, siempre en zona media
+    texto: >
+      El patrón apunta a una distribución de intensidad invertida: casi todo
+      el entrenamiento en zona media-fuerte, poca base realmente suave y una
+      recuperación que no sostiene la carga. Ninguna pieza está muy mal,
+      pero el conjunto limita.
+    elementos: [F005, F003, F006, C001]
+    condiciones:
+      - {elemento: F005, confianza_minima: media}
+      - {elemento: F003, confianza_minima: media}
+    recomendacion: >
+      Reordenar la semana: la mayoría de las salidas realmente suaves (poder
+      conversar), una sola sesión de calidad planificada, y proteger el
+      sueño. Reevaluar en 6-8 semanas.
+    informacion_faltante:
+      - Distribución real de zonas en una semana típica
+      - Horas de sueño y sensación al despertar
+
 # Ranking (D6): principal = mayor score; secundarias = score >= 50% del
 # principal o confianza media en su elemento núcleo (primera condición).
+# H009 es la primera hipótesis combinada (dos condiciones en media, ninguna
+# alta): nace del caso revisado el 2026-07-05.

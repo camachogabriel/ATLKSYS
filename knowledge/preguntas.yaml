@@ -484,6 +484,43 @@ preguntas:
         metadatos: []
         puntos: {D003: -3}
 
+  # --- Ruta estructura de entrenamiento (H009 requiere F005 media + F003 media) ---
+  - codigo: Q025
+    texto: ¿Tus entrenamientos siguen algún plan o estructura?
+    contexto: general
+    tipo: afinacion
+    condiciones_aparicion:
+      metadatos_requeridos: [intensidad]
+    respuestas:
+      - id: A
+        texto: No, salgo a rodar según me sienta
+        metadatos: []
+        puntos: {F005: 3}
+      - id: B
+        texto: Algo, repito rutinas que conozco
+        metadatos: []
+        puntos: {F005: 1}
+      - id: C
+        texto: Sí, sigo un plan con progresión
+        metadatos: []
+        puntos: {F005: -3}
+
+  - codigo: Q026
+    texto: ¿Tus salidas se parecen mucho entre sí (misma ruta, mismo ritmo, misma duración)?
+    contexto: general
+    tipo: afinacion
+    condiciones_aparicion:
+      metadatos_requeridos: [intensidad]
+    respuestas:
+      - id: A
+        texto: Sí, casi siempre lo mismo
+        metadatos: []
+        puntos: {F005: 3}
+      - id: B
+        texto: No, varío duración e intensidad
+        metadatos: []
+        puntos: {F005: -1}
+
   # --- Ruta explosiva (H006 requiere C003 media: Q015B+Q024A = 6) ---
   - codigo: Q024
     texto: Cuando hay un ataque o sprint corto, ¿cómo respondes?
