@@ -54,6 +54,9 @@
   .evid li { margin: 6px 0 6px 18px; }
   .disclaimer { font-size: 12px; color: #6e7681; margin-top: 22px; line-height: 1.5; }
   .link { background: none; border: none; color: var(--acc); cursor: pointer; font-size: 14px; margin-top: 14px; text-decoration: underline; }
+  .backbtn { background: none; border: none; color: var(--dim); cursor: pointer; font-size: 13.5px;
+    padding: 0; margin-bottom: 14px; display: block; }
+  .backbtn:hover { color: var(--acc); }
   #dbg { position: fixed; top: 10px; right: 10px; width: 280px; max-height: 92vh; overflow-y: auto;
     background: #0a0e13ee; border: 1px solid #2dd4bf55; border-radius: 10px; padding: 12px;
     font-family: ui-monospace, Menlo, monospace; font-size: 11px; line-height: 1.5; color: #9fe8dd; z-index: 99; }
@@ -83,7 +86,40 @@ const DEBUG = typeof location !== "undefined" &&
 let debugLog = [];
 if (DEBUG) document.title = "[DEBUG] " + document.title;
 
-const $ = h => { document.getElementById("card").innerHTML = h; debugRender(); };
+// ---------- historial para el botón atrás ----------
+let historial = [], permitirAtras = false;
+
+function snap(driver) {
+  historial.push({ driver, st: {
+    ctx: { ...ctx }, metadatos: [...metadatos], estado: { ...estado },
+    respondidas: [...respondidas], evidencia: evidencia.map(e => ({ ...e })),
+    recorrido: [...recorrido], nRespuestas, limitacion, modo,
+    objetivo: objetivo ? objetivo.codigo : null,
+    colaBateria: colaBateria.map(q => q.codigo), modoAfinar, debugLog: [...debugLog]
+  }});
+}
+
+function atras() {
+  if (historial.length < 2) return;
+  historial.pop();                // pantalla actual
+  const h = historial.pop();      // anterior (se re-agrega al re-render)
+  const s = h.st;
+  ctx = { ...s.ctx }; metadatos = new Set(s.metadatos); estado = { ...s.estado };
+  respondidas = new Set(s.respondidas); evidencia = [...s.evidencia];
+  recorrido = [...s.recorrido]; nRespuestas = s.nRespuestas; limitacion = s.limitacion;
+  modo = s.modo; objetivo = s.objetivo ? KB.objetivos.find(o => o.codigo === s.objetivo) : null;
+  colaBateria = s.colaBateria.map(c => KB.preguntas.find(q => q.codigo === c));
+  modoAfinar = s.modoAfinar; debugLog = [...s.debugLog];
+  prog();
+  h.driver();
+}
+
+const $ = h => {
+  const boton = (permitirAtras && historial.length > 1)
+    ? '<button class="backbtn" onclick="atras()">← Atrás</button>' : "";
+  document.getElementById("card").innerHTML = boton + h;
+  debugRender();
+};
 
 function debugRender() {
   if (!DEBUG) return;
@@ -163,6 +199,7 @@ function evaluarHipotesis() {
 
 // ---------- pantallas ----------
 function bienvenida() {
+  permitirAtras = false; snap(bienvenida);
   $(`<div class="center">
     <div class="fase">AthleteTrainLab</div>
     <h1>Tu mayor ganancia no está<br>en entrenar más.</h1>
@@ -184,6 +221,7 @@ function generarCodigo() {
 }
 
 function pasoCodigoRevision() {
+  permitirAtras = false;
   $(`<div class="fase">Revisión de evaluación</div>
     <h2>Pega el código de evaluación</h2>
     <p class="sub">Reconstruye el recorrido completo: qué se respondió, qué puntos generó
@@ -225,6 +263,7 @@ function revisarCodigo() {
 }
 
 function pasoModo() {
+  permitirAtras = true; snap(pasoModo);
   $(`<div class="fase">Para empezar</div>
     <h2>¿Qué te trae por aquí?</h2>
     <div class="opts">
@@ -248,6 +287,7 @@ const CONTEXTO = [
 
 function pasoContexto(i) {
   if (i >= CONTEXTO.length) return modo === "objetivo" ? pasoObjetivo() : pasoLimitacion();
+  permitirAtras = true; snap(() => pasoContexto(i));
   const c = CONTEXTO[i];
   $(`<div class="fase">Sobre ti · ${i + 1}/${CONTEXTO.length}</div>
     <h2>${c.texto}</h2>
@@ -257,6 +297,7 @@ function pasoContexto(i) {
 }
 
 function pasoLimitacion() {
+  permitirAtras = true; snap(pasoLimitacion);
   $(`<div class="fase">Tu limitación</div>
     <h2>¿Cuál de estas frases te describe mejor?</h2>
     <div class="opts">${KB.limitaciones.map(l =>
@@ -265,6 +306,7 @@ function pasoLimitacion() {
 }
 
 function pasoObjetivo() {
+  permitirAtras = true; snap(pasoObjetivo);
   $(`<div class="fase">Tu objetivo</div>
     <h2>Me gustaría poder mejorar en:</h2>
     <div class="opts">${KB.objetivos.map(o =>
@@ -290,6 +332,7 @@ function elegirLimitacion(lp) {
 let colaBateria = [];
 function pasoBateria() {
   if (!colaBateria.length) return interludio("Identificando qué investigar…", pasoAfinacion);
+  permitirAtras = true; snap(pasoBateria);
   const q = colaBateria.shift();
   pantallaPregunta(q, "Caracterizando tu caso", r => {
     (r.metadatos || []).forEach(m => metadatos.add(m));
@@ -303,6 +346,7 @@ function pasoAfinacion() {
   const cand = candidatas();
   const parar = respondidas.size >= MAX_PREGUNTAS || !cand.length || (!modoAfinar && hayAlta());
   if (parar) return interludio("Analizando la evidencia…", pasoEmail);
+  permitirAtras = true; snap(pasoAfinacion);
   const q = cand[0];
   pantallaPregunta(q, "Afinando el análisis", r => {
     const ef = efectos(r);
@@ -326,6 +370,7 @@ function pantallaPregunta(q, fase, alResponder) {
 }
 
 function interludio(msg, siguiente) {
+  permitirAtras = false;
   $(`<div class="center"><div class="spinner"></div><h2>${msg}</h2>
     <p class="sub">El motor está cruzando tus respuestas con la base de conocimiento.</p></div>`);
   setTimeout(siguiente, 1400);
@@ -333,6 +378,7 @@ function interludio(msg, siguiente) {
 
 function pasoEmail() {
   if (modoAfinar) return pasoResultado(); // ya dio el correo antes
+  permitirAtras = true; snap(pasoEmail);
   $(`<div class="center">
     <div class="fase">Análisis completado</div>
     <h2>Tu resultado está listo</h2>
@@ -352,6 +398,7 @@ function verResultado() {
 }
 
 function pasoResultado() {
+  permitirAtras = false;
   const act = evaluarHipotesis();
   const preliminar = !hayAlta();
   const orden = Object.entries(estado).sort((a, b) => b[1] - a[1]).filter(([, p]) => p > 0);
