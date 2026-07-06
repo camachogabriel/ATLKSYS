@@ -78,8 +78,10 @@ let ctx = {}, metadatos = new Set(), estado = {}, respondidas = new Set(),
     evidencia = [], limitacion = null, nRespuestas = 0, modoAfinar = false,
     modo = "limitacion", objetivo = null, recorrido = [], revision = null;
 
-const DEBUG = typeof location !== "undefined" && new URLSearchParams(location.search).has("debug");
+const DEBUG = typeof location !== "undefined" &&
+  (new URLSearchParams(location.search).has("debug") || location.hash === "#debug");
 let debugLog = [];
+if (DEBUG) document.title = "[DEBUG] " + document.title;
 
 const $ = h => { document.getElementById("card").innerHTML = h; debugRender(); };
 
@@ -92,7 +94,7 @@ function debugRender() {
   const cand = limitacion ? candidatas().map(q => `${q.codigo}(±${impacto(q)})`).join(" ") : "-";
   const hyp = evaluarHipotesis().map(([s, h], i) =>
     `${i === 0 ? "★" : "·"} ${h.codigo} ${h.nombre.slice(0, 34)} <b>${s}</b>`).join("<br>") || "ninguna activada";
-  el.innerHTML = `<b>DEBUG</b> · modo: ${modo}${objetivo ? " " + objetivo.codigo : ""} · lim: ${limitacion || "-"} · resp: ${respondidas.size}
+  el.innerHTML = `<b>🔧 MODO DEBUG ACTIVO</b> (v ${KBVER})<br>modo: ${modo}${objetivo ? " " + objetivo.codigo : ""} · lim: ${limitacion || "-"} · resp: ${respondidas.size}
     <hr><b>metadatos activos (${metadatos.size})</b><br>${[...metadatos].sort().join(", ") || "-"}
     <hr><b>estado de conocimiento</b><br>${est || "sin puntos"}
     <hr><b>últimos efectos</b><br>${debugLog.slice(-5).join("<br>") || "-"}
