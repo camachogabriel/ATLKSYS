@@ -1,4 +1,33 @@
-// AthleteTrainLab - Edge Function: enviar reporte por correo
+#!/usr/bin/env python3
+"""Genera supabase/functions/enviar-reporte/index.ts desde knowledge/servicios.yaml.
+
+Única fuente de verdad = servicios.yaml. Tras editar el catálogo:
+    python3 supabase/build_function.py
+    # y redeplegar la función (vía MCP o `supabase functions deploy enviar-reporte`)
+"""
+import json
+from pathlib import Path
+import yaml
+
+RAIZ = Path(__file__).resolve().parent.parent
+
+
+def main():
+    cat = yaml.safe_load(open(RAIZ / "knowledge/servicios.yaml"))["servicios"]
+    servicios, reglas, siempre = {}, {}, []
+    for s in cat:
+        cod = s["codigo"]
+        servicios[cod] = {"nombre": s["nombre"], "gancho": " ".join(s["gancho"].split()),
+                          "prioridad": s.get("prioridad", 5)}
+        if s.get("siempre"):
+            siempre.append(cod)
+        for h in s.get("activar_si", {}).get("hipotesis", []):
+            reglas.setdefault(h, []).append(cod)
+
+    data = json.dumps({"SERVICIOS": servicios, "REGLAS": reglas, "SIEMPRE": siempre},
+                      ensure_ascii=False, indent=2)
+
+    ts = '''// AthleteTrainLab - Edge Function: enviar reporte por correo
 // GENERADO por supabase/build_function.py desde knowledge/servicios.yaml.
 // No editar a mano el bloque de datos; edita el YAML y regenera.
 //
@@ -7,76 +36,7 @@
 
 import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
 
-const CATALOGO = {
-  "SERVICIOS": {
-    "SV_BIKEFIT": {
-      "nombre": "Estudio de posición (Bike Fit)",
-      "gancho": "Tu evaluación apunta a que la posición o la técnica te están sobrecargando. Un bike fit corrige eso y suele desbloquear rendimiento y comodidad de inmediato.",
-      "prioridad": 1
-    },
-    "SV_COACHING": {
-      "nombre": "Planes de entrenamiento / coaching",
-      "gancho": "Tu mayor margen está en cómo entrenas. Un plan estructurado con progresión (y acompañamiento) convierte el esfuerzo que ya haces en mejora real.",
-      "prioridad": 1
-    },
-    "SV_NUTRICION": {
-      "nombre": "Asesoría nutricional",
-      "gancho": "La energía disponible parece tu limitante. Una estrategia de alimentación e hidratación bien diseñada cambia por completo cómo terminas los fondos.",
-      "prioridad": 1
-    },
-    "SV_FISIOLOGIA": {
-      "nombre": "Valoración fisiológica y tests",
-      "gancho": "Para afinar de verdad conviene medir: umbrales, metabolismo y respuesta cardíaca. Una valoración fisiológica te da los números para entrenar con precisión.",
-      "prioridad": 2
-    },
-    "SV_CONTACTO": {
-      "nombre": "Habla con nosotros (análisis personalizado)",
-      "gancho": "¿Quieres que revisemos tu caso a fondo? Escríbenos y te damos una orientación personalizada según tu evaluación.",
-      "prioridad": 9
-    }
-  },
-  "REGLAS": {
-    "H015": [
-      "SV_BIKEFIT"
-    ],
-    "H009": [
-      "SV_COACHING"
-    ],
-    "H012": [
-      "SV_COACHING"
-    ],
-    "H002": [
-      "SV_COACHING"
-    ],
-    "H008": [
-      "SV_COACHING"
-    ],
-    "H001": [
-      "SV_NUTRICION"
-    ],
-    "H007": [
-      "SV_NUTRICION"
-    ],
-    "H004": [
-      "SV_FISIOLOGIA"
-    ],
-    "H005": [
-      "SV_FISIOLOGIA"
-    ],
-    "H013": [
-      "SV_FISIOLOGIA"
-    ],
-    "H010": [
-      "SV_FISIOLOGIA"
-    ],
-    "H006": [
-      "SV_FISIOLOGIA"
-    ]
-  },
-  "SIEMPRE": [
-    "SV_CONTACTO"
-  ]
-};
+const CATALOGO = __DATA__;
 const { SERVICIOS, REGLAS, SIEMPRE } = CATALOGO;
 
 function serviciosPara(hip: string | null): string[] {
@@ -115,3 +75,12 @@ serve(async (req) => {
     return new Response("error: " + (e as Error).message, { status: 500 });
   }
 });
+'''
+    ts = ts.replace("__DATA__", data)
+    out = RAIZ / "supabase/functions/enviar-reporte/index.ts"
+    out.write_text(ts)
+    print(f"index.ts generado ({len(servicios)} servicios, {len(reglas)} hipótesis mapeadas)")
+
+
+if __name__ == "__main__":
+    main()

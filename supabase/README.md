@@ -11,7 +11,14 @@ Quiz (GitHub Pages)  --insert-->  tabla evaluaciones  --webhook INSERT-->  Edge 
 
 ## Catálogo de servicios
 
-`knowledge/servicios.yaml` mapea hipótesis → servicio (bike fit, coaching, nutrición, valoración fisiológica, contacto). `engine/reporte.py` prueba ese emparejamiento en local. La Edge Function lleva un espejo del mapeo (mantener en sync con el YAML).
+`knowledge/servicios.yaml` es la **única fuente de verdad** del mapeo hipótesis → servicio (bike fit, coaching, nutrición, valoración fisiológica, contacto). `engine/reporte.py` prueba el emparejamiento en local. El `index.ts` de la función **se genera** desde el YAML:
+
+```
+python3 supabase/build_function.py     # regenera functions/enviar-reporte/index.ts
+# luego redeplegar la función (MCP o `supabase functions deploy enviar-reporte`)
+```
+
+No editar el bloque de datos del `index.ts` a mano: editar el YAML y regenerar.
 
 ## Pasos manuales pendientes (los hace Gabriel)
 
