@@ -229,3 +229,10 @@ Antes de la batería, un bloque corto de preguntas `tipo: perfil` se hace a todo
 - Q074 "¿Sigues un plan de entrenamiento?" → estructura (F005); "no, hago lo que puedo" abre `intensidad`.
 
 Estos puntos no disparan hipótesis por sí solos (H001 exige D001 media; H012 exige F005 alta), pero suman al score y a la confianza, de modo que la evaluación converge con menos preguntas de afinación. Se registran en el código de evaluación y el replay los reproduce. Flujo: contexto → modo → limitación/objetivo → **perfil** → batería → afinación → informe.
+
+## D21. Perfil de recuperación + limitación de estancamiento
+
+- **Perfil (Q075):** recuperación y sueño → F003, junto a nutrición (Q073) y plan (Q074). El estrés NO va en perfil; se investiga como afinación dentro del estancamiento.
+- **LP009 "Entreno pero siento que no mejoro"** (tipo `estancamiento`) + O008 "Volver a progresar". Su batería (Q076-Q079) separa las causas típicas de una meseta: entrenamiento monótono/sin progresión → F005; muy intenso sin días suaves + mal descanso → F003 (sobrecarga); molestia localizada → técnica; y cuánto tiempo lleva constante.
+- **Afinación nueva:** Q081 estrés → F003; Q082 mismo estímulo por años → F005; Q083 molestia con el gesto → F007.
+- **Hipótesis:** H008 ampliada a "recuperación insuficiente / sobrecarga" (incluye exceso de intensidad sin recuperar); H015 "molestia/sobrecarga localizada" → revisar posición/bike fit y valorar fisioterapia (derivación, no diagnóstico). El estancamiento por falta de estructura ya lo cubren H009/H012.

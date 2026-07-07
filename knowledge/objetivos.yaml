@@ -50,3 +50,9 @@ objetivos:
     dimension_fitness: eficiencia cardiovascular
     limitacion_asociada: LP008
     capacidades_determinantes: [C001, E002, F003]
+
+  - codigo: O008
+    texto: Volver a progresar / romper el estancamiento
+    dimension_fitness: progresión del rendimiento
+    limitacion_asociada: LP009
+    capacidades_determinantes: [F005, F003, C001]

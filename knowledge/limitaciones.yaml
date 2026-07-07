@@ -47,6 +47,11 @@ limitaciones:
     tipo: respuesta-cardiaca
     areas_iniciales: [C001, pulso, calor, recuperacion, respiracion]
 
+  - codigo: LP009
+    texto: Entreno pero siento que no mejoro
+    tipo: estancamiento
+    areas_iniciales: [F005, F003, intensidad, recuperacion, dolor-localizado]
+
 # Clasificación mínima requerida por limitación (esquema completo, a llenar):
 #   codigo, texto_usuario, tipo_esfuerzo, duracion, momento_aparicion,
 #   sensacion_principal, metadatos_iniciales, bateria_inicial

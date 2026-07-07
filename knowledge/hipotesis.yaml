@@ -110,17 +110,37 @@ hipotesis:
       - Líquido y sodio por hora, tasa de sudoración estimada
 
   - codigo: H008
-    nombre: Recuperación insuficiente
+    nombre: Recuperación insuficiente / sobrecarga
     texto: >
-      Fatiga acumulada, sueño o estrés impiden expresar las capacidades
-      existentes.
-    elementos: [F003]
+      Fatiga acumulada, falta de sueño, estrés o demasiada intensidad sin
+      días suaves impiden expresar las capacidades existentes. Entrenas, pero
+      no asimilas: sin recuperación no hay adaptación, y por eso no mejoras.
+    elementos: [F003, F005]
     condiciones:
       - {elemento: F003, confianza_minima: alta}
     recomendacion: >
-      Priorizar sueño y reducir carga 1-2 semanas antes de evaluar de nuevo.
+      Priorizar sueño y bajar la carga/intensidad 1-2 semanas (descarga);
+      reducir estrés donde se pueda y asegurar días realmente suaves entre
+      los duros. Reevaluar tras ese periodo.
     informacion_faltante:
       - Horas de sueño, HRV o sensación al despertar
+      - Distribución de intensidad y días de descanso reales
+
+  - codigo: H015
+    nombre: Molestia o sobrecarga localizada
+    texto: >
+      Hay una molestia en una zona concreta que aparece con el gesto de
+      pedaleo o la posición. Más que un límite fisiológico, apunta a técnica,
+      posición en la bici o una sobrecarga puntual que conviene atender.
+    elementos: [F007]
+    condiciones:
+      - {elemento: F007, confianza_minima: alta}
+    recomendacion: >
+      Revisar posición y ajuste de la bici (bike fit) y la técnica de pedaleo;
+      si la molestia persiste o duele, valorar con un fisioterapeuta antes de
+      seguir cargando. Es orientación, no un diagnóstico.
+    informacion_faltante:
+      - Zona exacta, cuándo aparece y si duele en reposo
 
   - codigo: H009
     nombre: Entrenamiento sin estructura, siempre en zona media

@@ -55,6 +55,24 @@ preguntas:
         metadatos: [intensidad]
         puntos: {F005: 3}
 
+  - codigo: Q075
+    texto: ¿Sueles llegar descansado y con buen sueño a tus entrenamientos?
+    contexto: general
+    tipo: perfil
+    respuestas:
+      - id: A
+        texto: Sí, duermo bien y llego con energía
+        metadatos: []
+        puntos: {F003: -3}
+      - id: B
+        texto: Más o menos, depende de la semana
+        metadatos: []
+        puntos: {}
+      - id: C
+        texto: No, suelo dormir poco o llegar cansado
+        metadatos: [recuperacion, sueno]
+        puntos: {F003: 3}
+
   - codigo: Q001
     texto: ¿Tienes una estrategia de alimentación para fondos largos?
     contexto: fondos-largos
@@ -963,6 +981,129 @@ preguntas:
         texto: Se mantiene parecido de inicio a fin
         metadatos: []
         puntos: {F006: -1}
+
+  # ============ Batería LP009 - Estancamiento (tipo: estancamiento) ============
+  - codigo: Q076
+    texto: ¿Cómo ha sido tu entrenamiento en los últimos meses?
+    texto_objetivo: Para volver a progresar, ¿cómo describirías tu entrenamiento de los últimos meses?
+    contexto: general
+    tipo: bateria-inicial
+    tipos: [estancamiento]
+    respuestas:
+      - id: A
+        texto: Siempre parecido, sin progresión clara
+        metadatos: [intensidad]
+        puntos: {}
+      - id: B
+        texto: Muy intenso casi siempre, con pocos días suaves
+        metadatos: [intensidad, recuperacion]
+        puntos: {}
+      - id: C
+        texto: Variado y con progresión
+        metadatos: []
+        puntos: {}
+
+  - codigo: Q077
+    texto: ¿Cómo están tu descanso y tu estrés últimamente?
+    contexto: general
+    tipo: bateria-inicial
+    tipos: [estancamiento]
+    respuestas:
+      - id: A
+        texto: Duermo mal o estoy bastante estresado
+        metadatos: [recuperacion, sueno]
+        puntos: {}
+      - id: B
+        texto: Bien en general
+        metadatos: []
+        puntos: {}
+
+  - codigo: Q078
+    texto: ¿Tienes alguna molestia o sobrecarga muscular en una zona concreta?
+    contexto: general
+    tipo: bateria-inicial
+    tipos: [estancamiento]
+    respuestas:
+      - id: A
+        texto: Sí, una zona puntual me molesta o se sobrecarga
+        metadatos: [dolor-localizado, tecnica]
+        puntos: {}
+      - id: B
+        texto: No, es más una sensación general de no avanzar
+        metadatos: [intensidad, recuperacion]
+        puntos: {}
+
+  - codigo: Q079
+    texto: ¿Hace cuánto entrenas de forma constante?
+    contexto: general
+    tipo: bateria-inicial
+    tipos: [estancamiento]
+    respuestas:
+      - id: A
+        texto: Menos de 6 meses
+        metadatos: []
+        puntos: {}
+      - id: B
+        texto: Entre 6 meses y 2 años
+        metadatos: []
+        puntos: {}
+      - id: C
+        texto: Varios años y siento que me estanqué
+        metadatos: [intensidad]
+        puntos: {}
+
+  # --- Afinación de estancamiento (D21) ---
+  - codigo: Q081
+    texto: ¿Tu nivel de estrés (trabajo, vida personal) es alto y sostenido últimamente?
+    contexto: general
+    tipo: afinacion
+    condiciones_aparicion:
+      metadatos_requeridos: [recuperacion]
+    respuestas:
+      - id: A
+        texto: Sí, bastante alto y mantenido
+        metadatos: []
+        puntos: {F003: 3}
+      - id: B
+        texto: Normal
+        metadatos: []
+        puntos: {}
+      - id: C
+        texto: Bajo, estoy tranquilo
+        metadatos: []
+        puntos: {F003: -1}
+
+  - codigo: Q082
+    texto: Llevas varios años entrenando; ¿has cambiado el estímulo (más intensidad, fuerza, volumen) o entrenas parecido a siempre?
+    contexto: general
+    tipo: afinacion
+    condiciones_aparicion:
+      metadatos_requeridos: [intensidad]
+    respuestas:
+      - id: A
+        texto: Entreno prácticamente igual desde hace tiempo
+        metadatos: []
+        puntos: {F005: 3}
+      - id: B
+        texto: Voy variando y progresando el estímulo
+        metadatos: []
+        puntos: {F005: -3}
+
+  - codigo: Q083
+    texto: Esa molestia localizada, ¿aparece con el gesto de pedaleo o tu posición en la bici?
+    contexto: general
+    tipo: afinacion
+    condiciones_aparicion:
+      metadatos_requeridos: [dolor-localizado]
+    respuestas:
+      - id: A
+        texto: Sí, la noto pedaleando o por la postura
+        metadatos: []
+        puntos: {F007: 5}
+      - id: B
+        texto: No, es más fatiga general
+        metadatos: []
+        puntos: {F007: -1}
 
   # ============ Batería LP008 - Respuesta cardíaca (tipo: respuesta-cardiaca) ============
   # La limitación implica uso de pulsómetro: la batería siembra 'pulso'.
