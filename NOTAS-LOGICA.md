@@ -18,3 +18,10 @@ Los 8 puntos detectados al estructurar la spec v1.0 fueron **resueltos** en `doc
 - Calibrar rangos de confianza y el umbral 50% del ranking con los 30 casos de validación (Fase 2).
 - Crear `objetivos.yaml` (v1.2).
 - Definir el algoritmo de selección de la *siguiente* pregunta cuando hay varias activadas (orden por impacto potencial vs. orden fijo por batería).
+
+## Pendiente: agrupar/paginar limitaciones y objetivos
+
+Cuando la lista de limitaciones crezca (dolor muscular, incomodidad, "me cuesta pulsar alto", pulso muy bajo, etc.), las pantallas "¿Cuál te describe mejor?" y "Me gustaría mejorar en:" necesitarán:
+- Un botón "Ver más / Ninguna de las anteriores" que muestre el siguiente grupo de teorías iniciales.
+- Un campo `grupo` en `limitaciones.yaml` para ordenarlas por tema.
+Con 7 limitaciones aún no hace falta; activar al superar ~8-10 opciones.

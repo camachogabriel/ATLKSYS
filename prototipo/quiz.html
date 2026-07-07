@@ -207,7 +207,7 @@ function bienvenida() {
     <p class="sub">Está en saber exactamente qué te frena. En 3 minutos, un motor que razona
     como un entrenador analiza tus respuestas y te dice dónde está tu mayor margen de mejora
     — y por dónde empezar.</p>
-    <button class="btn" onclick="pasoModo()">Descubrir qué me frena</button>
+    <button class="btn" onclick="pasoContexto(0)">Descubrir qué me frena</button>
     <p class="disclaimer">3 minutos · Gratis · Sin registro para empezar</p>
     <button class="link" onclick="pasoCodigoRevision()">¿Tienes un código de evaluación?</button>
   </div>`);
@@ -275,11 +275,11 @@ function pasoModo() {
   $(`<div class="fase">Para empezar</div>
     <h2>¿Qué te trae por aquí?</h2>
     <div class="opts">
-      <button class="opt" onclick='modo="limitacion";nRespuestas++;prog();pasoContexto(0)'>
+      <button class="opt" onclick='modo="limitacion";nRespuestas++;prog();pasoLimitacion()'>
         <strong>Algo me está frenando</strong><br>
         <span style="color:var(--dim);font-size:13.5px">Molestias, fatiga, pulso muy alto, no rindo como espero…</span>
       </button>
-      <button class="opt" onclick='modo="objetivo";nRespuestas++;prog();pasoContexto(0)'>
+      <button class="opt" onclick='modo="objetivo";nRespuestas++;prog();pasoObjetivo()'>
         <strong>Quiero mejorar algo concreto</strong><br>
         <span style="color:var(--dim);font-size:13.5px">Subir más rápido, ser más explosivo, terminar los fondos más fuerte…</span>
       </button>
@@ -303,7 +303,7 @@ function calcularIMC() {
 }
 
 function pasoContexto(i) {
-  if (i >= CONTEXTO.length) return modo === "objetivo" ? pasoObjetivo() : pasoLimitacion();
+  if (i >= CONTEXTO.length) return pasoModo();
   permitirAtras = true; snap(() => pasoContexto(i));
   const c = CONTEXTO[i];
   if (c.kind === "sexo") {
