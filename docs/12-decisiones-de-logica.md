@@ -108,3 +108,25 @@ Orden: mayor **impacto potencial** primero (máximo valor absoluto de puntos ent
 ## D10. Batería por tipo de problema
 
 Las preguntas de batería inicial declaran `tipos: [...]` y se seleccionan por el `tipo` de la limitación elegida, no por código LP. Esto cumple la spec original ("la batería depende del tipo de problema") y permite que varias limitaciones compartan batería sin duplicar preguntas. Tipos v1: fondo-largo, distribucion-de-esfuerzo, subida, fatiga-muscular-metabolica, cambio-de-ritmo, recuperacion-intrasesion, ambiente.
+
+## D11. Capacidades (fisiológico) vs. dimensiones de rendimiento (objetivos/emergentes)
+
+Las dimensiones clásicas de fitness (fuerza, velocidad, potencia, resistencia aeróbica, resistencia anaeróbica, flexibilidad) describen el **rendimiento observable/medible** — lo que se ve en un test. Las **capacidades** de ATL (C001-C005) describen los **mecanismos fisiológicos** que producen ese rendimiento. Son dos capas distintas y ATL las mantiene separadas a propósito: mezclarlas rompería la distinción causa/síntoma que es el valor del sistema.
+
+Regla de asignación de capas:
+
+| Capa | Qué es | Dónde vive en ATL |
+|---|---|---|
+| Lenguaje del cliente | Cómo expresa su problema o meta | Limitaciones (LP###) y Objetivos (O###) |
+| Rendimiento observable | Velocidad, potencia, resistencia aeróbica/anaeróbica, durabilidad, economía | Objetivos y Capacidades emergentes (E###) |
+| Mecanismo fisiológico | La causa que el motor razona | Capacidades (C###) |
+| Contexto modificable | | Factores (F###) |
+
+Consecuencias:
+
+- **Velocidad y potencia NO son capacidades.** Son resultados: potencia = fuerza × velocidad de contracción, dependiente de C004 + C005 + sistema energético. Entran como objetivos/emergentes y el motor los traduce a sus determinantes fisiológicos vía `capacidades_determinantes`.
+- **Resistencia anaeróbica** ya está cubierta por C002 (glucolítica oxidativa / tolerancia al lactato); no se añade capacidad nueva.
+- **Flexibilidad**: en ciclismo rara vez es limitante; si se necesita, entra como factor (junto a técnica), no como capacidad.
+- El puente cliente→fisiología ya existe: `knowledge/objetivos.yaml` mapea cada objetivo a la limitación cuya batería lo investiga y declara sus `capacidades_determinantes`. En modo objetivo, el informe habla en lenguaje de rendimiento ("tu palanca para X es Y") mientras el motor razona en la capa fisiológica.
+
+Decisión: **capacidades y factores permanecen fisiológicos/contextuales; el lenguaje de rendimiento se modela en objetivos y emergentes.** Enriquecer el sistema con nuevas dimensiones de rendimiento se hace agregando objetivos, no capacidades.

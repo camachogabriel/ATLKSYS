@@ -1,31 +1,46 @@
-# AthleteTrainLab - Objetivos v1.1
-# Fuente: docs/12-decisiones-de-logica.md (D7)
-# Segunda puerta de entrada al motor: "quiero mejorar X".
+# AthleteTrainLab - Objetivos v1.2
+# Fuente: docs/12-decisiones-de-logica.md (D7 y D11)
+# Segunda puerta de entrada: "quiero mejorar X".
 # Cada objetivo se traduce a la limitación cuya batería investiga lo mismo.
 # El motor no cambia; solo cambia la puerta de entrada y el copy del resultado.
+#
+# dimension_fitness: la dimensión de rendimiento observable que el objetivo
+# representa (D11). No es una capacidad; es lenguaje del cliente que el motor
+# traduce a capacidades_determinantes (mecanismo fisiológico).
 
 objetivos:
   - codigo: O001
     texto: Terminar los fondos más fuerte
+    dimension_fitness: resistencia aeróbica / durabilidad
     limitacion_asociada: LP001
     capacidades_determinantes: [C001, E001, D001, F006]
 
   - codigo: O002
     texto: Subir más rápido
+    dimension_fitness: potencia aeróbica (relación potencia-peso)
     limitacion_asociada: LP002
     capacidades_determinantes: [C001, C002, F004, F006]
 
   - codigo: O003
     texto: Ser más explosivo, responder ataques
+    dimension_fitness: velocidad / potencia anaeróbica
     limitacion_asociada: LP004
     capacidades_determinantes: [C003, C005, C004]
 
   - codigo: O004
     texto: Sostener ritmos fuertes más tiempo
+    dimension_fitness: resistencia anaeróbica (umbral)
     limitacion_asociada: LP003
     capacidades_determinantes: [C002, C001, F006]
 
+  - codigo: O006
+    texto: Recuperarme mejor entre esfuerzos
+    dimension_fitness: recuperación / resistencia aeróbica
+    limitacion_asociada: LP005
+    capacidades_determinantes: [C001, E006, F003]
+
   - codigo: O005
     texto: Rendir mejor en calor
+    dimension_fitness: tolerancia ambiental
     limitacion_asociada: LP007
     capacidades_determinantes: [F002, D003, F009]
