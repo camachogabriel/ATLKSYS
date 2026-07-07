@@ -54,6 +54,9 @@
   .evid li { margin: 6px 0 6px 18px; }
   .disclaimer { font-size: 12px; color: #6e7681; margin-top: 22px; line-height: 1.5; }
   .link { background: none; border: none; color: var(--acc); cursor: pointer; font-size: 14px; margin-top: 14px; text-decoration: underline; }
+  .grupo-tit { color: var(--acc); font-size: 12px; font-weight: 700; letter-spacing: 1px;
+    text-transform: uppercase; margin: 18px 0 8px; }
+  .grupo-tit:first-of-type { margin-top: 4px; }
   .logo { text-align: center; margin-bottom: 20px; }
   .logo-atl { font-weight: 800; font-style: italic; font-size: 44px; letter-spacing: 2px; line-height: 1; }
   .logo-atl .a { color: #c33a5b; } .logo-atl .t { color: #4fa96e; } .logo-atl .l { color: #6a67d6; }
@@ -399,24 +402,78 @@ function guardarAntropometria(i) {
   nRespuestas++; prog(); pasoContexto(i + 1);
 }
 
+// Agrupa items por su campo `grupo` conservando el orden de aparición
+function porGrupos(items) {
+  const orden = [], mapa = {};
+  for (const it of items) {
+    const g = it.grupo || "Otras";
+    if (!mapa[g]) { mapa[g] = []; orden.push(g); }
+    mapa[g].push(it);
+  }
+  return orden.map(g => ({ grupo: g, items: mapa[g] }));
+}
+
 function pasoLimitacion() {
   permitirAtras = true; snap(pasoLimitacion);
+  const bloques = porGrupos(KB.limitaciones).map(({ grupo, items }) =>
+    `<div class="grupo-tit">${grupo}</div><div class="opts">${items.map(l =>
+      `<button class="opt" onclick='elegirLimitacion("${l.codigo}")'>${l.texto}</button>`).join("")}</div>`).join("");
   $(`<div class="fase">Tu limitación</div>
     <h2>¿Cuál de estas frases te describe mejor?</h2>
-    <div class="opts">${KB.limitaciones.map(l =>
-      `<button class="opt" onclick='elegirLimitacion("${l.codigo}")'>${l.texto}</button>`).join("")}
-    </div>`);
+    ${bloques}
+    <button class="link" onclick="pasoSugerencia('limitacion')">Ninguna me describe — quiero contarte la mía</button>`);
 }
 
 function pasoObjetivo() {
   permitirAtras = true; snap(pasoObjetivo);
+  const bloques = porGrupos(KB.objetivos).map(({ grupo, items }) =>
+    `<div class="grupo-tit">${grupo}</div><div class="opts">${items.map(o =>
+      `<button class="opt" onclick='elegirObjetivo("${o.codigo}")'>${o.texto}</button>`).join("")}</div>`).join("");
   $(`<div class="fase">Tu objetivo</div>
     <h2>Me gustaría poder mejorar en:</h2>
-    <div class="opts">${KB.objetivos.map(o =>
-      `<button class="opt" onclick='elegirObjetivo("${o.codigo}")'>${o.texto}</button>`).join("")}
-    </div>
-    <p class="disclaimer" style="text-align:center;margin-top:20px">Este sistema ayuda a deportistas
+    ${bloques}
+    <button class="link" onclick="pasoSugerencia('objetivo')">Mi objetivo no está — quiero contártelo</button>
+    <p class="disclaimer" style="text-align:center;margin-top:16px">Este sistema ayuda a deportistas
     que buscan mejorar, de la mano de la ciencia y de más de 10 años de experiencia de AthleteTrainLab.</p>`);
+}
+
+// ---------- limitación/objetivo propio del usuario (no inventamos: lo captamos) ----------
+function pasoSugerencia(tipo) {
+  permitirAtras = true; snap(() => pasoSugerencia(tipo));
+  const q = tipo === "objetivo" ? "¿Qué te gustaría mejorar?" : "¿Qué sientes que te limita?";
+  $(`<div class="fase">Cuéntanos tu caso</div>
+    <h2>${q}</h2>
+    <p class="sub">Descríbelo con tus palabras. Si aún no lo cubrimos, lo revisamos y te
+    escribimos apenas lo integremos — así no inventamos nada, lo construimos con casos reales.</p>
+    <textarea id="sug" rows="4" placeholder="Ej: en descensos técnicos me tenso y pierdo tiempo…"
+      style="width:100%;background:#1c2129;border:1px solid var(--border);color:var(--txt);padding:14px 16px;border-radius:10px;font-size:15px;margin-bottom:12px;resize:vertical"></textarea>
+    <input type="email" id="sugmail" placeholder="tu@correo.com (para avisarte cuando lo integremos)">
+    <p id="sug-err" style="color:#f87171;font-size:13px;min-height:16px;margin:4px 0"></p>
+    <div class="center"><button class="btn" onclick="enviarSugerencia('${tipo}')">Enviar mi caso</button></div>`);
+}
+
+function enviarSugerencia(tipo) {
+  const texto = (document.getElementById("sug").value || "").trim();
+  const mail = (document.getElementById("sugmail").value || "").trim();
+  const err = document.getElementById("sug-err");
+  if (texto.length < 8) { err.textContent = "Cuéntanos un poco más, por favor."; return; }
+  if (!/.+@.+\..+/.test(mail)) { err.textContent = "Necesitamos un correo válido para avisarte."; return; }
+  try {
+    fetch(SB_URL + "/rest/v1/sugerencias", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", apikey: SB_KEY, Authorization: "Bearer " + SB_KEY, Prefer: "return=minimal" },
+      body: JSON.stringify({ tipo, texto, email: mail, contexto: ctx, user_agent: navigator.userAgent })
+    }).catch(() => {});
+  } catch (e) { /* no romper el flujo */ }
+  permitirAtras = false;
+  $(`<div class="center">
+    ${LOGO}
+    <h2>¡Gracias! Recibimos tu caso</h2>
+    <p class="sub">Lo revisaremos y te escribiremos a <strong>${mail}</strong> apenas lo integremos
+    al sistema. Mientras tanto, si quieres, escríbenos directo.</p>
+    <div>${waLink("Hola, acabo de dejar mi caso en AthleteTrainLab y me gustaría conversarlo.")}</div>
+    <button class="link" onclick="location.reload()">Volver al inicio</button>
+  </div>`);
 }
 
 function elegirObjetivo(cod) {

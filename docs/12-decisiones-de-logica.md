@@ -245,3 +245,9 @@ El quiz solo capta (escribe en `evaluaciones`). Un proceso aparte lee Supabase y
 - `engine/reporte.py`: empareja hipótesis → servicios (testeable en local).
 - Edge Function `enviar-reporte` (desplegada en ATL Analytics): disparada por webhook INSERT, cruza la hipótesis con los servicios y envía por Resend. Lleva un espejo del mapeo (sync con el YAML). Sin `RESEND_API_KEY` hace no-op.
 - Pasos manuales pendientes (cuenta Resend, secrets, webhook) en `supabase/README.md`.
+
+## D24. Agrupación de limitaciones/objetivos + captura de casos propios
+
+- **Agrupación:** cada limitación/objetivo lleva `grupo` (encabezado temático). El quiz los muestra agrupados en la pantalla de selección (5 grupos: Fondos y resistencia, Subidas/piernas/potencia, Explosividad, Pulso/calor/ambiente, Progreso). Escala al crecer el catálogo sin listas planas largas.
+- **"Ninguna me describe — cuéntame la tuya":** en vez de inventar limitaciones sin evidencia, el usuario escribe su caso con sus palabras + correo. Se guarda en la tabla `sugerencias` (RLS insert-only), NO corre el motor. Sirve de: lead, señal de roadmap con demanda real, y promesa de contacto ("te escribimos cuando lo integremos"). Las nuevas limitaciones nacen de estos casos, no de suposiciones.
+- Tabla `sugerencias`: tipo (limitacion|objetivo), texto, email, contexto, revisada, integrada. Se revisa en el panel de Supabase.

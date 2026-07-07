@@ -6,56 +6,67 @@
 # areas_iniciales usa vocabulario unificado (docs/12, D5):
 # solo metadatos oficiales o códigos C/F/D/E.
 
+# grupo: encabezado temático para agrupar en la pantalla de selección (D24).
 limitaciones:
   - codigo: LP001
     texto: Al final de los fondos se me apaga el motor
     tipo: fondo-largo
+    grupo: Fondos y resistencia
     areas_iniciales: [nutricion, hidratacion, E001, pacing, recuperacion, calor]
+
+  - codigo: LP006
+    texto: Me siento fuerte al inicio y exploto al final
+    tipo: distribucion-de-esfuerzo
+    grupo: Fondos y resistencia
+    areas_iniciales: [pacing, nutricion, hidratacion, E001, F005]
+
+  - codigo: LP005
+    texto: Me recupero lento entre esfuerzos
+    tipo: recuperacion-intrasesion
+    grupo: Fondos y resistencia
+    areas_iniciales: [C001, recuperacion, pacing, nutricion]
 
   - codigo: LP002
     texto: Me falta el aire en las cuestas
     tipo: subida
+    grupo: Subidas, piernas y potencia
     areas_iniciales: [C001, pacing, composicion-corporal, C004, intensidad]
 
   - codigo: LP003
     texto: Se me queman las piernas
     tipo: fatiga-muscular-metabolica
+    grupo: Subidas, piernas y potencia
     areas_iniciales: [C002, C004, pacing, nutricion, tecnica]
-
-  - codigo: LP004
-    texto: No puedo responder ataques
-    tipo: cambio-de-ritmo
-    areas_iniciales: [C003, C005, C004, tecnica, recuperacion]
-
-  - codigo: LP005
-    texto: Me recupero lento entre esfuerzos
-    tipo: recuperacion-intrasesion
-    areas_iniciales: [C001, recuperacion, pacing, nutricion]
-
-  - codigo: LP006
-    texto: Me siento fuerte al inicio y exploto al final
-    tipo: distribucion-de-esfuerzo
-    areas_iniciales: [pacing, nutricion, hidratacion, E001, F005]
-
-  - codigo: LP007
-    texto: Rindo mucho peor en calor
-    tipo: ambiente
-    areas_iniciales: [hidratacion, calor, D003, sodio, pacing]
-
-  - codigo: LP008
-    texto: Se me sube mucho el pulso (más que a mis compañeros)
-    tipo: respuesta-cardiaca
-    areas_iniciales: [C001, pulso, calor, recuperacion, respiracion]
-
-  - codigo: LP009
-    texto: Entreno pero siento que no mejoro
-    tipo: estancamiento
-    areas_iniciales: [F005, F003, intensidad, recuperacion, dolor-localizado]
 
   - codigo: LP010
     texto: Se me cargan mucho ciertos músculos (p. ej. el cuádriceps)
     tipo: sobrecarga-muscular
+    grupo: Subidas, piernas y potencia
     areas_iniciales: [tecnica, dolor-localizado, F007, fuerza]
+
+  - codigo: LP004
+    texto: No puedo responder ataques
+    tipo: cambio-de-ritmo
+    grupo: Explosividad y cambios de ritmo
+    areas_iniciales: [C003, C005, C004, tecnica, recuperacion]
+
+  - codigo: LP008
+    texto: Se me sube mucho el pulso (más que a mis compañeros)
+    tipo: respuesta-cardiaca
+    grupo: Pulso, calor y ambiente
+    areas_iniciales: [C001, pulso, calor, recuperacion, respiracion]
+
+  - codigo: LP007
+    texto: Rindo mucho peor en calor
+    tipo: ambiente
+    grupo: Pulso, calor y ambiente
+    areas_iniciales: [hidratacion, calor, D003, sodio, pacing]
+
+  - codigo: LP009
+    texto: Entreno pero siento que no mejoro
+    tipo: estancamiento
+    grupo: Progreso y entrenamiento
+    areas_iniciales: [F005, F003, intensidad, recuperacion, dolor-localizado]
 
 # Clasificación mínima requerida por limitación (esquema completo, a llenar):
 #   codigo, texto_usuario, tipo_esfuerzo, duracion, momento_aparicion,

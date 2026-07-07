@@ -10,54 +10,63 @@
 
 objetivos:
   - codigo: O001
+    grupo: Rendimiento y resistencia
     texto: Terminar los fondos más fuerte
     dimension_fitness: resistencia aeróbica / durabilidad
     limitacion_asociada: LP001
     capacidades_determinantes: [C001, E001, D001, F006]
 
   - codigo: O002
+    grupo: Subir y potencia
     texto: Subir más rápido
     dimension_fitness: potencia aeróbica (relación potencia-peso)
     limitacion_asociada: LP002
     capacidades_determinantes: [C001, C002, F004, F006]
 
   - codigo: O003
+    grupo: Explosividad
     texto: Ser más explosivo, responder ataques
     dimension_fitness: velocidad / potencia anaeróbica
     limitacion_asociada: LP004
     capacidades_determinantes: [C003, C005, C004]
 
   - codigo: O004
+    grupo: Rendimiento y resistencia
     texto: Sostener ritmos fuertes más tiempo
     dimension_fitness: resistencia anaeróbica (umbral)
     limitacion_asociada: LP003
     capacidades_determinantes: [C002, C001, F006]
 
   - codigo: O006
+    grupo: Rendimiento y resistencia
     texto: Recuperarme mejor entre esfuerzos
     dimension_fitness: recuperación / resistencia aeróbica
     limitacion_asociada: LP005
     capacidades_determinantes: [C001, E006, F003]
 
   - codigo: O005
+    grupo: Pulso y eficiencia
     texto: Rendir mejor en calor
     dimension_fitness: tolerancia ambiental
     limitacion_asociada: LP007
     capacidades_determinantes: [F002, D003, F009]
 
   - codigo: O007
+    grupo: Pulso y eficiencia
     texto: Pulsar menos en esfuerzos intensos
     dimension_fitness: eficiencia cardiovascular
     limitacion_asociada: LP008
     capacidades_determinantes: [C001, E002, F003]
 
   - codigo: O008
+    grupo: Progreso
     texto: Volver a progresar / romper el estancamiento
     dimension_fitness: progresión del rendimiento
     limitacion_asociada: LP009
     capacidades_determinantes: [F005, F003, C001]
 
   - codigo: O009
+    grupo: Subir y potencia
     texto: Pedalear más eficiente / dejar de sobrecargar músculos
     dimension_fitness: economía / técnica
     limitacion_asociada: LP010
