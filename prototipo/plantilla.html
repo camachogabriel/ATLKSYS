@@ -247,6 +247,7 @@ function revisarCodigo() {
     calcularIMC();
     metadatos = new Set(); estado = {}; respondidas = new Set(); evidencia = [];
     if (ctx.imc >= 27) metadatos.add("composicion-corporal");
+    else if (ctx.imc && ctx.imc < 20) ["disponibilidad-energetica", "nutricion", "carbohidratos"].forEach(m => metadatos.add(m));
     revision = { ver: p[5] || "?", traza: [] };
     for (const tok of p[4].split(".").filter(Boolean)) {
       const q = KB.preguntas.find(x => x.codigo === "Q" + tok.slice(0, 3));
@@ -362,8 +363,9 @@ function elegirObjetivo(cod) {
 
 function elegirLimitacion(lp) {
   limitacion = lp; nRespuestas++; prog();
-  // D12: IMC alto abre la ruta de composición corporal (señal, no conclusión)
+  // D12/D14: el IMC abre rutas de investigación (señal, no conclusión)
   if (ctx.imc >= 27) metadatos.add("composicion-corporal");
+  else if (ctx.imc && ctx.imc < 20) ["disponibilidad-energetica", "nutricion", "carbohidratos"].forEach(m => metadatos.add(m));
   const tipoLim = KB.limitaciones.find(l => l.codigo === lp).tipo;
   colaBateria = KB.preguntas.filter(q => q.tipo === "bateria-inicial" &&
     (q.tipos || []).includes(tipoLim)).sort((a, b) => a.codigo.localeCompare(b.codigo));

@@ -155,3 +155,17 @@ Salvaguardas:
 - Q057-A también suma F001 +1 (nutrición) y abre el metadato `intensidad` para investigar el contraste suave/intenso.
 
 Principio: usar la pista para orientar la solución, sin afirmar la causa fisiopatológica.
+
+## D14. Discriminar nutricional vs. aeróbico en fondos (perfil delgado dependiente de carbos)
+
+Un ciclista delgado que "se le cae la máquina" en fondos parece tener limitación aeróbica, pero suele ser **disponibilidad energética**: reservas de glucógeno pequeñas + alta dependencia del carbohidrato + baja oxidación de grasa → agota el combustible antes de tiempo. Es el espejo de D13 (IMC alto → C002).
+
+Discriminador clave (Q060): **¿comer revive el rendimiento?**
+- Sí, como y revivo → D001 +5 (nutricional/energético; NO aeróbico).
+- No, sigo fundido aunque coma → C001 +3, E001 +1 (ahí sí mirar aeróbico/durabilidad).
+
+Refuerzo (Q061): dependencia declarada de comer para rendir → D001.
+
+IMC bajo (< 20) como señal orientadora: abre las rutas `disponibilidad-energetica`, `nutricion` y `carbohidratos` al iniciar (dirección, no puntos), para que el discriminador aparezca. Umbral calibrable.
+
+H001 se amplió para cubrir ambos casos (no alimentarse / alta dependencia) y su recomendación incluye construir base aeróbica para mejorar la oxidación de grasa. Como H004 (aeróbica) exige C001 alta y el discriminador manda los puntos a D001, el motor separa correctamente "es nutricional" de "es aeróbico".

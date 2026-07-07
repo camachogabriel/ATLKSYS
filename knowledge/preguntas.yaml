@@ -177,6 +177,47 @@ preguntas:
         metadatos: []
         puntos: {D001: -1}
 
+  # Discriminador nutricional vs aeróbico (D14): ¿comer revive?
+  - codigo: Q060
+    texto: Cuando "se te cae la máquina" en un fondo, ¿comer carbohidratos te reactiva de forma clara?
+    contexto: fondos-largos
+    tipo: afinacion
+    condiciones_aparicion:
+      metadatos_requeridos: [disponibilidad-energetica]
+    respuestas:
+      - id: A
+        texto: Sí, como y revivo en pocos minutos
+        metadatos: [carbohidratos]
+        puntos: {D001: 5}
+      - id: B
+        texto: No mucho, sigo igual de fundido aunque coma
+        metadatos: [respiracion]
+        puntos: {C001: 3, E001: 1}
+      - id: C
+        texto: No lo he probado, casi no como en ruta
+        metadatos: [nutricion, carbohidratos]
+        puntos: {D001: 1}
+
+  - codigo: Q061
+    texto: ¿Sientes que dependes mucho de comer para rendir — que si no comes seguido te apagas rápido?
+    contexto: fondos-largos
+    tipo: afinacion
+    condiciones_aparicion:
+      metadatos_requeridos: [carbohidratos]
+    respuestas:
+      - id: A
+        texto: Sí, necesito comer casi constantemente
+        metadatos: []
+        puntos: {D001: 3, E001: 1}
+      - id: B
+        texto: Algo, pero lo llevo
+        metadatos: []
+        puntos: {D001: 1}
+      - id: C
+        texto: No, aguanto bastante sin comer
+        metadatos: []
+        puntos: {D001: -1}
+
   - codigo: Q004
     texto: ¿Cuánto líquido tomas por hora durante un fondo largo?
     contexto: fondos-largos

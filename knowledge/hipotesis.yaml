@@ -5,20 +5,26 @@
 
 hipotesis:
   - codigo: H001
-    nombre: Estrategia nutricional insuficiente para fondos largos
+    nombre: Disponibilidad energética / estrategia nutricional insuficiente
     texto: >
-      La limitación parece estar relacionada principalmente con una estrategia
-      nutricional insuficiente para fondos largos.
+      La limitación parece nutricional/energética más que aeróbica: la energía
+      disponible durante el esfuerzo no alcanza. Puede ser por no alimentarte lo
+      suficiente, o por depender mucho de los carbohidratos y agotar reservas
+      antes de tiempo (típico en perfiles delgados que "se apagan" y reviven al
+      comer). En ambos casos el motor aeróbico no es el techo.
     elementos: [D001, D002, F001, F002]
     condiciones:
       - {elemento: D001, confianza_minima: media}
     contraindicadores:
       - {elemento: D001, puntos_maximos: -3}
     recomendacion: >
-      Diseñar estrategia de carbohidratos (60-90 g/h según duración) e
-      hidratación antes de atribuir la limitación a capacidad aeróbica.
+      Ajustar la estrategia de carbohidratos a tu demanda real (a menudo 60-90 g/h,
+      más si dependes mucho de ellos) e hidratación; y a medio plazo, construir
+      base aeróbica para oxidar mejor la grasa y depender menos del azúcar —
+      antes de asumir que te falta fondo aeróbico.
     informacion_faltante:
       - Carbohidratos exactos por hora en el último fondo
+      - Si comer revive el rendimiento en ruta
       - Síntomas finales (hambre, sueño, dolor de cabeza)
 
   - codigo: H002
