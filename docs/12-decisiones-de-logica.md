@@ -236,3 +236,12 @@ Estos puntos no disparan hipótesis por sí solos (H001 exige D001 media; H012 e
 - **LP009 "Entreno pero siento que no mejoro"** (tipo `estancamiento`) + O008 "Volver a progresar". Su batería (Q076-Q079) separa las causas típicas de una meseta: entrenamiento monótono/sin progresión → F005; muy intenso sin días suaves + mal descanso → F003 (sobrecarga); molestia localizada → técnica; y cuánto tiempo lleva constante.
 - **Afinación nueva:** Q081 estrés → F003; Q082 mismo estímulo por años → F005; Q083 molestia con el gesto → F007.
 - **Hipótesis:** H008 ampliada a "recuperación insuficiente / sobrecarga" (incluye exceso de intensidad sin recuperar); H015 "molestia/sobrecarga localizada" → revisar posición/bike fit y valorar fisioterapia (derivación, no diagnóstico). El estancamiento por falta de estructura ya lo cubren H009/H012.
+
+## D23. Reporte y servicios: separación captura / entrega
+
+El quiz solo capta (escribe en `evaluaciones`). Un proceso aparte lee Supabase y genera el reporte + correo, con lógica comercial. Ventaja: cambiar ofertas o textos no toca el quiz.
+
+- `knowledge/servicios.yaml`: catálogo de servicios y sus disparadores (hipótesis → servicio). Es conocimiento comercial versionable, igual que las hipótesis. Servicios v1: bike fit (H015), coaching (H009/H012/H002/H008), nutrición (H001/H007), valoración fisiológica (H004/H005/H013/H010/H006), y contacto (siempre, cierre).
+- `engine/reporte.py`: empareja hipótesis → servicios (testeable en local).
+- Edge Function `enviar-reporte` (desplegada en ATL Analytics): disparada por webhook INSERT, cruza la hipótesis con los servicios y envía por Resend. Lleva un espejo del mapeo (sync con el YAML). Sin `RESEND_API_KEY` hace no-op.
+- Pasos manuales pendientes (cuenta Resend, secrets, webhook) en `supabase/README.md`.

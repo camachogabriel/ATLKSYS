@@ -1,0 +1,62 @@
+# AthleteTrainLab - Catálogo de servicios v1.0
+# Fuente: docs/12-decisiones-de-logica.md (D23)
+# Mapea el resultado de una evaluación (hipótesis activadas) a ofertas de
+# servicio para el reporte/correo. Es conocimiento comercial versionable:
+# cambiar ofertas o disparadores no toca el quiz ni el motor.
+#
+# activar_si.hipotesis: si alguna de estas hipótesis está entre las activadas
+#   (principal o secundarias), el servicio se ofrece.
+# siempre: true -> se ofrece siempre (fallback de cierre).
+# prioridad: menor = aparece antes en el reporte.
+
+servicios:
+  - codigo: SV_BIKEFIT
+    nombre: Estudio de posición (Bike Fit)
+    prioridad: 1
+    gancho: >
+      Tu evaluación apunta a que la posición o la técnica te están
+      sobrecargando. Un bike fit corrige eso y suele desbloquear rendimiento
+      y comodidad de inmediato.
+    activar_si:
+      hipotesis: [H015]
+
+  - codigo: SV_COACHING
+    nombre: Planes de entrenamiento / coaching
+    prioridad: 1
+    gancho: >
+      Tu mayor margen está en cómo entrenas. Un plan estructurado con
+      progresión (y acompañamiento) convierte el esfuerzo que ya haces en
+      mejora real.
+    activar_si:
+      hipotesis: [H009, H012, H002, H008]
+
+  - codigo: SV_NUTRICION
+    nombre: Asesoría nutricional
+    prioridad: 1
+    gancho: >
+      La energía disponible parece tu limitante. Una estrategia de
+      alimentación e hidratación bien diseñada cambia por completo cómo
+      terminas los fondos.
+    activar_si:
+      hipotesis: [H001, H007]
+
+  - codigo: SV_FISIOLOGIA
+    nombre: Valoración fisiológica y tests
+    prioridad: 2
+    gancho: >
+      Para afinar de verdad conviene medir: umbrales, metabolismo y respuesta
+      cardíaca. Una valoración fisiológica te da los números para entrenar
+      con precisión.
+    activar_si:
+      hipotesis: [H004, H005, H013, H010, H006]
+
+  - codigo: SV_CONTACTO
+    nombre: Habla con nosotros (análisis personalizado)
+    prioridad: 9
+    gancho: >
+      ¿Quieres que revisemos tu caso a fondo? Escríbenos y te damos una
+      orientación personalizada según tu evaluación.
+    siempre: true
+
+# Nota: el reporte muestra los servicios activados ordenados por prioridad.
+# El de contacto (SV_CONTACTO) cierra siempre.
