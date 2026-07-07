@@ -507,11 +507,20 @@ function pasoResultado() {
   if (ctx.imc) {
     const cat = ctx.imc < 18.5 ? "bajo" : ctx.imc < 25 ? "normal" : ctx.imc < 27 ? "ligeramente elevado" : ctx.imc < 30 ? "elevado" : "alto";
     const alerta = ctx.imc >= 27;
-    imcNota = `<div class="evid"><strong>Composición corporal</strong>
-      <p style="margin-top:6px">IMC estimado: <strong>${ctx.imc}</strong> (${cat}).
-      ${alerta ? "Es un valor que conviene tener en cuenta, sobre todo si tu limitación aparece subiendo: la relación peso-potencia influye. " : ""}
-      El IMC es solo una referencia inicial — la masa muscular puede elevarlo sin que haya exceso de grasa, así que no sustituye una valoración real.
-      ${alerta ? "Cualquier ajuste de composición debe ser gradual y con apoyo profesional, sin comprometer el entrenamiento ni la salud." : ""}</p></div>`;
+    const tipoLim = limitacion ? (KB.limitaciones.find(l => l.codigo === limitacion) || {}).tipo : null;
+    const esSubida = tipoLim === "subida" || (objetivo && objetivo.codigo === "O002");
+    let cuerpo = `IMC estimado: <strong>${ctx.imc}</strong> (${cat}).`;
+    if (alerta) {
+      cuerpo += esSubida
+        ? " Subiendo, lo que manda es la relación <strong>vatios por kilo</strong>: la gravedad tira de todo tu peso, venga de grasa o de músculo. "
+          + "Si vienes de mucho gimnasio, parte de esa masa (sobre todo del tren superior) suma kilos que subes pero no aportan potencia al pedaleo — por eso puedes ser fuerte y aun así subir con dificultad."
+        : " El peso corporal influye en cuánto esfuerzo cuesta cada watt, sobre todo en subida. Cuenta el peso total, venga de grasa o de músculo.";
+      cuerpo += " La palanca es mejorar los vatios/kg: subir potencia con entrenamiento específico y, si procede, ajustar peso de forma gradual y con apoyo profesional. No se trata de perder músculo por perderlo, ni de comprometer tu salud.";
+    } else {
+      cuerpo += " El IMC es solo una referencia inicial; en deportistas la masa muscular puede elevarlo sin que haya exceso de grasa.";
+    }
+    imcNota = `<div class="evid"><strong>Composición corporal y peso-potencia</strong>
+      <p style="margin-top:6px">${cuerpo}</p></div>`;
   }
 
   let extra = "";

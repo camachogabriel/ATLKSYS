@@ -136,18 +136,22 @@ hipotesis:
     nombre: Relación peso-potencia limitante en subida
     texto: >
       La evidencia sugiere que la relación entre potencia y peso corporal es
-      lo que más penaliza al subir: el motor rinde, pero mueve más carga de
-      la óptima.
+      lo que más penaliza al subir. Subiendo cuenta el peso total, venga de
+      grasa o de músculo: la gravedad tira de todos los kilos por igual. Quien
+      viene de mucho gimnasio suele cargar masa (sobre todo del tren superior)
+      que no aporta potencia al pedaleo, y por eso puede ser fuerte y aun así
+      subir con dificultad.
     elementos: [F004, C001]
     condiciones:
       - {elemento: F004, confianza_minima: media}
     contraindicadores:
       - {elemento: F004, puntos_maximos: -3}
     recomendacion: >
-      Mejorar vatios/kg por las dos vías a la vez: consolidar potencia
-      (fuerza + trabajo de umbral) y ajustar composición corporal de forma
-      gradual con apoyo nutricional — nunca con déficits agresivos que
-      comprometan el entrenamiento o la salud.
+      Mejorar los vatios/kg por las dos vías: subir potencia con entrenamiento
+      específico de ciclismo y, si procede, ajustar el peso de forma gradual y
+      con apoyo profesional. No se trata de perder músculo por perderlo ni de
+      comprometer la salud, sino de que la masa que cargas trabaje a tu favor
+      en la subida.
     informacion_faltante:
       - Peso y estatura actuales, y su evolución reciente
       - Potencia sostenida en subida (si la mide)
