@@ -216,7 +216,8 @@ function bienvenida() {
 // ---------- código de evaluación (autocontenido, sin servidor) ----------
 function generarCodigo() {
   const payload = [modo[0], objetivo ? objetivo.codigo : "", limitacion,
-    [ctx.edad, ctx.experiencia_anios, ctx.frecuencia_sem, ctx.duracion_fondo_h].join(","),
+    [ctx.edad, ctx.experiencia_anios, ctx.frecuencia_sem, ctx.duracion_fondo_h,
+     ctx.peso_kg || "", ctx.estatura_cm || ""].join(","),
     recorrido.join("."), KBVER].join("|");
   return "ATL1-" + btoa(payload).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 }
@@ -239,9 +240,13 @@ function revisarCodigo() {
     modo = p[0] === "o" ? "objetivo" : "limitacion";
     objetivo = p[1] ? KB.objetivos.find(o => o.codigo === p[1]) : null;
     limitacion = p[2];
-    const cv = p[3].split(",").map(Number);
-    ctx = { edad: cv[0], experiencia_anios: cv[1], frecuencia_sem: cv[2], duracion_fondo_h: cv[3] };
+    const cv = p[3].split(",");
+    ctx = { edad: +cv[0], experiencia_anios: +cv[1], frecuencia_sem: +cv[2], duracion_fondo_h: +cv[3] };
+    if (cv[4]) ctx.peso_kg = +cv[4];
+    if (cv[5]) ctx.estatura_cm = +cv[5];
+    calcularIMC();
     metadatos = new Set(); estado = {}; respondidas = new Set(); evidencia = [];
+    if (ctx.imc >= 27) metadatos.add("composicion-corporal");
     revision = { ver: p[5] || "?", traza: [] };
     for (const tok of p[4].split(".").filter(Boolean)) {
       const q = KB.preguntas.find(x => x.codigo === "Q" + tok.slice(0, 3));
@@ -281,20 +286,53 @@ function pasoModo() {
 
 const CONTEXTO = [
   { campo: "edad", texto: "¿Cuál es tu edad?", opts: [["Menos de 30", 25], ["30-39", 35], ["40-49", 45], ["50 o más", 55]] },
+  { kind: "antropometria", texto: "¿Cuánto pesas y mides?" },
   { campo: "experiencia_anios", texto: "¿Cuánto llevas entrenando con regularidad?", opts: [["Menos de 1 año", 0.5], ["1-2 años", 1.5], ["2-5 años", 3], ["Más de 5 años", 6]] },
   { campo: "frecuencia_sem", texto: "¿Cuántas veces entrenas por semana?", opts: [["1-2", 1.5], ["2-3", 2.5], ["4-5", 4.5], ["6 o más", 6]] },
   { campo: "duracion_fondo_h", texto: "¿Cuánto suele durar tu salida larga?", opts: [["2-3 horas", 3], ["3-4 horas", 4], ["4-5 horas", 5], ["Más de 5 horas", 6]] },
 ];
 
+function calcularIMC() {
+  if (ctx.peso_kg > 0 && ctx.estatura_cm > 0) {
+    const m = ctx.estatura_cm / 100;
+    ctx.imc = Math.round((ctx.peso_kg / (m * m)) * 10) / 10;
+  }
+}
+
 function pasoContexto(i) {
   if (i >= CONTEXTO.length) return modo === "objetivo" ? pasoObjetivo() : pasoLimitacion();
   permitirAtras = true; snap(() => pasoContexto(i));
   const c = CONTEXTO[i];
+  if (c.kind === "antropometria") {
+    $(`<div class="fase">Sobre ti · ${i + 1}/${CONTEXTO.length}</div>
+      <h2>${c.texto}</h2>
+      <p class="sub">Nos sirve para valorar la relación peso-potencia y ajustar las
+      recomendaciones a tu tamaño. Puedes omitirlo si prefieres.</p>
+      <div style="display:flex;gap:12px;margin-bottom:8px">
+        <input type="number" id="peso" inputmode="numeric" placeholder="Peso (kg)"
+          value="${ctx.peso_kg || ""}" style="flex:1;background:#1c2129;border:1px solid var(--border);color:var(--txt);padding:14px 16px;border-radius:10px;font-size:16px">
+        <input type="number" id="estatura" inputmode="numeric" placeholder="Estatura (cm)"
+          value="${ctx.estatura_cm || ""}" style="flex:1;background:#1c2129;border:1px solid var(--border);color:var(--txt);padding:14px 16px;border-radius:10px;font-size:16px">
+      </div>
+      <div class="center" style="margin-top:16px">
+        <button class="btn" onclick="guardarAntropometria(${i})">Continuar</button></div>
+      <button class="link" onclick="nRespuestas++;prog();pasoContexto(${i + 1})">Prefiero no decirlo</button>`);
+    return;
+  }
   $(`<div class="fase">Sobre ti · ${i + 1}/${CONTEXTO.length}</div>
     <h2>${c.texto}</h2>
     <div class="opts">${c.opts.map(([t, v]) =>
       `<button class="opt" onclick='ctx["${c.campo}"]=${v};nRespuestas++;prog();pasoContexto(${i + 1})'>${t}</button>`).join("")}
     </div>`);
+}
+
+function guardarAntropometria(i) {
+  const p = parseFloat(document.getElementById("peso").value);
+  const e = parseFloat(document.getElementById("estatura").value);
+  if (p > 0) ctx.peso_kg = p;
+  if (e > 0) ctx.estatura_cm = e;
+  calcularIMC();
+  nRespuestas++; prog(); pasoContexto(i + 1);
 }
 
 function pasoLimitacion() {
@@ -324,6 +362,8 @@ function elegirObjetivo(cod) {
 
 function elegirLimitacion(lp) {
   limitacion = lp; nRespuestas++; prog();
+  // D12: IMC alto abre la ruta de composición corporal (señal, no conclusión)
+  if (ctx.imc >= 27) metadatos.add("composicion-corporal");
   const tipoLim = KB.limitaciones.find(l => l.codigo === lp).tipo;
   colaBateria = KB.preguntas.filter(q => q.tipo === "bateria-inicial" &&
     (q.tipos || []).includes(tipoLim)).sort((a, b) => a.codigo.localeCompare(b.codigo));
@@ -462,6 +502,18 @@ function pasoResultado() {
   const evid = evidencia.map(e =>
     `<li>"${e.r}" — ${Object.entries(e.ef).map(([k, v]) => `${KB.nombres[k] || k} ${v > 0 ? "+" : ""}${v}`).join(", ")}</li>`).join("");
 
+  // Nota de IMC (señal, no diagnóstico) — D12
+  let imcNota = "";
+  if (ctx.imc) {
+    const cat = ctx.imc < 18.5 ? "bajo" : ctx.imc < 25 ? "normal" : ctx.imc < 27 ? "ligeramente elevado" : ctx.imc < 30 ? "elevado" : "alto";
+    const alerta = ctx.imc >= 27;
+    imcNota = `<div class="evid"><strong>Composición corporal</strong>
+      <p style="margin-top:6px">IMC estimado: <strong>${ctx.imc}</strong> (${cat}).
+      ${alerta ? "Es un valor que conviene tener en cuenta, sobre todo si tu limitación aparece subiendo: la relación peso-potencia influye. " : ""}
+      El IMC es solo una referencia inicial — la masa muscular puede elevarlo sin que haya exceso de grasa, así que no sustituye una valoración real.
+      ${alerta ? "Cualquier ajuste de composición debe ser gradual y con apoyo profesional, sin comprometer el entrenamiento ni la salud." : ""}</p></div>`;
+  }
+
   let extra = "";
   if (revision) {
     const trz = revision.traza.map(t =>
@@ -484,6 +536,7 @@ function pasoResultado() {
     <h3 style="font-size:15px;margin:24px 0 12px">Estado de conocimiento</h3>
     ${barras || '<p class="sub">Sin evidencia puntuada aún.</p>'}
     <div class="evid"><strong>Evidencia utilizada:</strong><ul>${evid || "<li>Solo caracterización inicial.</li>"}</ul></div>
+    ${imcNota}
     ${extra}
     ${!revision && candidatas().length ? `<button class="link" onclick="modoAfinar=true;pasoAfinacion()">Afinar mi resultado (más preguntas)</button>` : ""}
     ${revision ? `<button class="link" onclick="location.reload()">Salir de la revisión</button>` : ""}

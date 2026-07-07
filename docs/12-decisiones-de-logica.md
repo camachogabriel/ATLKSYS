@@ -130,3 +130,15 @@ Consecuencias:
 - El puente cliente→fisiología ya existe: `knowledge/objetivos.yaml` mapea cada objetivo a la limitación cuya batería lo investiga y declara sus `capacidades_determinantes`. En modo objetivo, el informe habla en lenguaje de rendimiento ("tu palanca para X es Y") mientras el motor razona en la capa fisiológica.
 
 Decisión: **capacidades y factores permanecen fisiológicos/contextuales; el lenguaje de rendimiento se modela en objetivos y emergentes.** Enriquecer el sistema con nuevas dimensiones de rendimiento se hace agregando objetivos, no capacidades.
+
+## D12. Peso, estatura e IMC como señal de composición corporal
+
+El contexto inicial captura `peso_kg` y `estatura_cm` (opcionales). Con ellos se calcula el IMC = peso / (estatura_m)². Usos:
+
+1. **Señal de investigación (no conclusión).** Si IMC ≥ 27, se activa el metadato `composicion-corporal` al iniciar la evaluación, abriendo su ruta de afinación (Q027/Q028) aunque la batería no lo hubiera abierto. El IMC no suma puntos ni concluye por sí solo — solo dirige (coherente con el principio metadatos = dirección, y con "el contexto modifica la interpretación, no concluye").
+2. **Relación peso-potencia.** Alimenta H010 y el objetivo O002 (subir más rápido).
+3. **Informe.** Se muestra el IMC con su categoría y una nota honesta: es una referencia inicial, la masa muscular puede elevarlo sin exceso de grasa, y cualquier ajuste debe ser gradual y con apoyo profesional (salvaguarda de bienestar; nunca recomendar déficits agresivos).
+
+Otros usos previstos de peso/estatura (futuro): escalar recomendaciones de carbohidratos (g/h) e hidratación al tamaño corporal, y estimar vatios/kg cuando el usuario aporte potencia. El código de evaluación incluye peso y estatura (campos 5 y 6 del contexto); códigos antiguos sin ellos siguen siendo válidos.
+
+Umbral IMC ≥ 27 (no 25) para reducir falsos positivos en deportistas musculados. Calibrable.

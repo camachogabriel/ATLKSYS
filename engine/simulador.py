@@ -113,6 +113,13 @@ def evaluacion_completa(limitacion, responder, contexto=None, verbose=True):
     preguntas = cargar("preguntas")["preguntas"]
     metadatos, estado, respondidas, traza = set(), {}, set(), []
 
+    # D12: IMC alto abre la ruta de composición corporal (señal, no conclusión)
+    if contexto and contexto.get("peso_kg") and contexto.get("estatura_cm"):
+        m = contexto["estatura_cm"] / 100
+        contexto["imc"] = round(contexto["peso_kg"] / (m * m), 1)
+        if contexto["imc"] >= 27:
+            metadatos.add("composicion-corporal")
+
     # Fase batería inicial: seleccionada por el tipo de la limitación (D10)
     lim = next(x for x in cargar("limitaciones")["limitaciones"]
                if x["codigo"] == limitacion)
