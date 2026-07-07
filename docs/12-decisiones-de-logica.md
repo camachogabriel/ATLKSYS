@@ -203,3 +203,9 @@ La FC y el desacople cardíaco son **indicadores** (spec cap. 2 y 8), no capacid
   - Q066 [pulso, recuperacion]: pulso en reposo elevado → F003 recuperación/fatiga.
 
 El código de evaluación incluye `usa_hr` (campo 8); códigos previos siguen válidos. Ampliable: HRV, zonas, umbral por FC, etc.
+
+## D18. Limitación de respuesta cardíaca + doble texto por modo
+
+**LP008 "Se me sube mucho el pulso" / O007 "Pulsar menos en esfuerzos intensos".** Nuevo tipo `respuesta-cardiaca`. La limitación implica uso de pulsómetro, así que su batería (Q067-Q069) siembra el metadato `pulso` y abre rutas según la respuesta: pulso alto en todo→aeróbica (C001→H004), en calor→D003 (H007), con fatiga→F003 (H008). Matiz de honestidad: la FC es individual; si el usuario responde "solo al compararme, me siento bien", no se fuerza hipótesis (resultado preliminar tranquilizador). No se crea capacidad nueva: la FC es indicador.
+
+**Doble texto por modo (generalización de D16).** Toda pregunta puede declarar `texto_objetivo`; el quiz lo usa en modo objetivo (fallback a `texto`). Principio: las preguntas neutras ("¿tienes plan de hidratación?") no lo necesitan; solo las que suenan a problema ("¿cuándo aparece el problema?" → "¿en qué momento se te complica subir?"). Se rellena `texto_objetivo` de forma incremental donde el enfoque cambie.

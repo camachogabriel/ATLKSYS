@@ -42,6 +42,11 @@ limitaciones:
     tipo: ambiente
     areas_iniciales: [hidratacion, calor, D003, sodio, pacing]
 
+  - codigo: LP008
+    texto: Se me sube mucho el pulso (más que a mis compañeros)
+    tipo: respuesta-cardiaca
+    areas_iniciales: [C001, pulso, calor, recuperacion, respiracion]
+
 # Clasificación mínima requerida por limitación (esquema completo, a llenar):
 #   codigo, texto_usuario, tipo_esfuerzo, duracion, momento_aparicion,
 #   sensacion_principal, metadatos_iniciales, bateria_inicial

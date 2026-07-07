@@ -52,6 +52,7 @@ preguntas:
 
   - codigo: Q006
     texto: ¿El problema aparece más en días calurosos?
+    texto_objetivo: ¿Rindes peor en días calurosos?
     contexto: fondos-largos
     tipo: bateria-inicial
     tipos: [fondo-largo, distribucion-de-esfuerzo]
@@ -867,6 +868,64 @@ preguntas:
         metadatos: []
         puntos: {}
 
+  # ============ Batería LP008 - Respuesta cardíaca (tipo: respuesta-cardiaca) ============
+  # La limitación implica uso de pulsómetro: la batería siembra 'pulso'.
+  - codigo: Q067
+    texto: ¿En qué situaciones notas el pulso más alto de lo normal?
+    texto_objetivo: Para pulsar menos, primero ubiquemos cuándo se te sube más el pulso. ¿En qué situaciones lo notas?
+    contexto: general
+    tipo: bateria-inicial
+    tipos: [respuesta-cardiaca]
+    respuestas:
+      - id: A
+        texto: En casi cualquier esfuerzo, incluso suaves
+        metadatos: [pulso, respiracion, intensidad]
+        puntos: {}
+      - id: B
+        texto: Sobre todo en días de calor
+        metadatos: [pulso, calor, hidratacion]
+        puntos: {}
+      - id: C
+        texto: Cuando llevo días cargado o duermo mal
+        metadatos: [pulso, recuperacion, sueno]
+        puntos: {}
+      - id: D
+        texto: Solo al compararme con otros, pero me siento bien
+        metadatos: [pulso]
+        puntos: {}
+
+  - codigo: Q068
+    texto: A un ritmo suave donde deberías ir cómodo, ¿el pulso ya está alto?
+    texto_objetivo: A un ritmo suave donde vas cómodo, ¿el pulso ya te sube bastante?
+    contexto: general
+    tipo: bateria-inicial
+    tipos: [respuesta-cardiaca]
+    respuestas:
+      - id: A
+        texto: Sí, se me sube incluso yendo suave
+        metadatos: [pulso, respiracion, intensidad]
+        puntos: {}
+      - id: B
+        texto: No, yendo suave el pulso se mantiene bajo
+        metadatos: [pulso]
+        puntos: {}
+
+  - codigo: Q069
+    texto: Tras un esfuerzo fuerte, ¿el pulso tarda mucho en bajar?
+    texto_objetivo: Tras un esfuerzo fuerte, ¿cuánto tarda tu pulso en volver a la normalidad?
+    contexto: general
+    tipo: bateria-inicial
+    tipos: [respuesta-cardiaca]
+    respuestas:
+      - id: A
+        texto: Sí, tarda bastante en recuperarse
+        metadatos: [pulso, recuperacion, intensidad]
+        puntos: {}
+      - id: B
+        texto: Baja rápido, me recupero bien
+        metadatos: [pulso]
+        puntos: {}
+
   # ============ Batería LP002 - Subida (tipo: subida) ============
   - codigo: Q032
     texto: ¿En qué tipo de subida te falta el aire?
@@ -889,6 +948,7 @@ preguntas:
 
   - codigo: Q033
     texto: ¿Cuándo aparece el problema?
+    texto_objetivo: ¿En qué momento notas que subir se te complica más?
     contexto: subida
     tipo: bateria-inicial
     tipos: [subida]
