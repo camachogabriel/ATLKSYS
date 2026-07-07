@@ -565,9 +565,9 @@ function pasoResultado() {
         <h3>No hay un freno claro — buena señal</h3>
         <p>Tu base parece equilibrada para «${objetivo.texto.toLowerCase()}».
         Las áreas con más margen de mejora según tus respuestas: ${senal}.</p>
-        <p style="margin-top:10px">Unas preguntas más pueden precisar tu mayor palanca.</p>
+        <p style="margin-top:10px">Unas preguntas más pueden precisar dónde tienes más margen de mejora.</p>
         ${candidatas().length ? `<div class="center" style="margin-top:16px">
-          <button class="btn" onclick="modoAfinar=true;pasoAfinacion()">Precisar mi palanca</button></div>` : ""}
+          <button class="btn" onclick="modoAfinar=true;pasoAfinacion()">Precisar mi resultado</button></div>` : ""}
       </div>`
       : `<div class="hyp"><div class="fase">Resultado preliminar</div>
         <h3>Todavía no hay una causa dominante — y eso también es información</h3>
@@ -581,7 +581,7 @@ function pasoResultado() {
     act.forEach(([score, h], i) => {
       const sec = i > 0;
       if (sec && score < act[0][0] * 0.5) return;
-      const etiqueta = esObj ? (sec ? "Palanca secundaria" : "Tu mayor palanca de mejora")
+      const etiqueta = esObj ? (sec ? "Otra oportunidad de mejora" : "Tu mayor oportunidad de mejora")
                              : (sec ? "Hipótesis secundaria" : "Hipótesis principal");
       const cuerpo = esObj
         ? `Para «${objetivo.texto.toLowerCase()}», tu mayor margen está aquí según tus respuestas.`
@@ -612,7 +612,7 @@ function pasoResultado() {
         ? " Subiendo, lo que manda es la relación <strong>vatios por kilo</strong>: la gravedad tira de todo tu peso, venga de grasa o de músculo. "
           + "Si vienes de mucho gimnasio, parte de esa masa (sobre todo del tren superior) suma kilos que subes pero no aportan potencia al pedaleo — por eso puedes ser fuerte y aun así subir con dificultad."
         : " El peso corporal influye en cuánto esfuerzo cuesta cada watt, sobre todo en subida. Cuenta el peso total, venga de grasa o de músculo.";
-      cuerpo += " La palanca es mejorar los vatios/kg: subir potencia con entrenamiento específico y, si procede, ajustar peso de forma gradual y con apoyo profesional. No se trata de perder músculo por perderlo, ni de comprometer tu salud.";
+      cuerpo += " Lo que más ayuda es mejorar los vatios/kg: subir potencia con entrenamiento específico y, si procede, ajustar peso de forma gradual y con apoyo profesional. No se trata de perder músculo por perderlo, ni de comprometer tu salud.";
       if (esMujer) cuerpo += " Ten en cuenta que las mujeres necesitáis de forma natural más grasa esencial; el objetivo no es una grasa corporal muy baja, sino más potencia.";
     } else if (bajo) {
       cuerpo += " Con un IMC en el rango bajo, lo prioritario es asegurar suficiente energía disponible: comer acorde a tu carga de entrenamiento sostiene el rendimiento y la salud."
