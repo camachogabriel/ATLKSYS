@@ -868,6 +868,59 @@ preguntas:
         metadatos: []
         puntos: {}
 
+  # --- Afinación de respuesta cardíaca (D19): normal individual vs sobreesfuerzo ---
+  - codigo: Q071
+    texto: Comparado con compañeros de tu nivel, a la misma potencia o ritmo, ¿tus sensaciones son parecidas?
+    contexto: general
+    tipo: afinacion
+    condiciones_aparicion:
+      metadatos_requeridos: [pulso]
+    respuestas:
+      - id: A
+        texto: Sí, mismo esfuerzo y potencia; solo el número del pulso es más alto
+        metadatos: []
+        puntos: {D005: 5}
+      - id: B
+        texto: No, yo voy más ahogado y sufro más que ellos
+        metadatos: [respiracion, intensidad]
+        puntos: {C001: 3}
+      - id: C
+        texto: No lo sé, no me comparo
+        metadatos: []
+        puntos: {}
+
+  - codigo: Q072
+    texto: Cuando el pulso se te sube, ¿la respiración también se dispara y lo pasas mal, o respiras bien pese al número alto?
+    contexto: general
+    tipo: afinacion
+    condiciones_aparicion:
+      metadatos_requeridos: [pulso]
+    respuestas:
+      - id: A
+        texto: Respiro bien y me siento bien, aunque el pulso marque alto
+        metadatos: []
+        puntos: {D005: 3}
+      - id: B
+        texto: La respiración también se dispara y sufro
+        metadatos: [respiracion, intensidad]
+        puntos: {C001: 3}
+
+  - codigo: Q070
+    texto: Al final de un fondo, a igual ritmo, ¿tu pulso queda más alto que al inicio?
+    contexto: fondos-largos
+    tipo: afinacion
+    condiciones_aparicion:
+      metadatos_requeridos: [pulso, intensidad]
+    respuestas:
+      - id: A
+        texto: Sí, bastante más alto para el mismo ritmo
+        metadatos: []
+        puntos: {F006: 3}   # el fondo fue más fuerte de lo sostenible: dosificación
+      - id: B
+        texto: Se mantiene parecido de inicio a fin
+        metadatos: []
+        puntos: {F006: -1}
+
   # ============ Batería LP008 - Respuesta cardíaca (tipo: respuesta-cardiaca) ============
   # La limitación implica uso de pulsómetro: la batería siembra 'pulso'.
   - codigo: Q067

@@ -198,6 +198,27 @@ hipotesis:
       - Distribución actual de intensidades en una semana típica
       - Si haces fuerza y con qué frecuencia
 
+  - codigo: H013
+    nombre: Respuesta cardíaca individual (probablemente normal)
+    texto: >
+      Tu pulso alto parece variación individual: a la misma potencia y con
+      sensaciones normales, un número de pulsaciones más alto no es de por sí
+      un problema. La frecuencia cardíaca es muy personal y no se compara bien
+      entre personas.
+    elementos: [D005]
+    condiciones:
+      - {elemento: D005, confianza_minima: media}
+    contraindicadores:
+      - {elemento: C001, puntos_maximos: -1}   # si hay señales de sobreesfuerzo real, no aplica
+    recomendacion: >
+      No hace falta obsesionarse con el número. El trabajo aeróbico suave
+      (zona 2, conversando) puede bajarlo algo con el tiempo. Como el pulso
+      depende de tu fisiología, recomendamos una valoración fisiológica para
+      entender tu metabolismo y una revisión cardíaca para confirmar que todo
+      está bien — orientación, no diagnóstico.
+    informacion_faltante:
+      - Valoración fisiológica y cardíaca con un profesional
+
 # Ranking (D6): principal = mayor score; secundarias = score >= 50% del
 # principal o confianza media en su elemento núcleo (primera condición).
 # H009 es la primera hipótesis combinada (dos condiciones en media, ninguna

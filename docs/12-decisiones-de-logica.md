@@ -209,3 +209,14 @@ El código de evaluación incluye `usa_hr` (campo 8); códigos previos siguen v�
 **LP008 "Se me sube mucho el pulso" / O007 "Pulsar menos en esfuerzos intensos".** Nuevo tipo `respuesta-cardiaca`. La limitación implica uso de pulsómetro, así que su batería (Q067-Q069) siembra el metadato `pulso` y abre rutas según la respuesta: pulso alto en todo→aeróbica (C001→H004), en calor→D003 (H007), con fatiga→F003 (H008). Matiz de honestidad: la FC es individual; si el usuario responde "solo al compararme, me siento bien", no se fuerza hipótesis (resultado preliminar tranquilizador). No se crea capacidad nueva: la FC es indicador.
 
 **Doble texto por modo (generalización de D16).** Toda pregunta puede declarar `texto_objetivo`; el quiz lo usa en modo objetivo (fallback a `texto`). Principio: las preguntas neutras ("¿tienes plan de hidratación?") no lo necesitan; solo las que suenan a problema ("¿cuándo aparece el problema?" → "¿en qué momento se te complica subir?"). Se rellena `texto_objetivo` de forma incremental donde el enfoque cambie.
+
+## D19. FC para entender el esfuerzo: normal individual vs. sobreesfuerzo
+
+El pulso alto tiene dos lecturas opuestas y ATL las separa con Q071/Q072:
+
+- **Individual normal (H013):** misma potencia y sensaciones que otros, respira bien pese al número alto → suma a D005 (respuesta cardíaca individual). H013 no es una limitación: dice que el pulso alto probablemente es fisiología personal, sugiere trabajo aeróbico suave y recomienda valoración fisiológica y cardíaca profesional (orientación, no diagnóstico). Se descarta si hay señales de sobreesfuerzo real (contraindicador C001).
+- **Sobreesfuerzo (H004):** pulso alto + respiración agitada + sufre más que sus pares → C001 (base aeróbica / trabaja por encima de su nivel).
+
+Además Q070 usa la FC como lente del esfuerzo: si al final del fondo el pulso queda más alto que al inicio a igual ritmo, el fondo fue más fuerte de lo sostenible → dosificación (F006). Se distingue de Q065 (desacople que sube al aflojar → hidratación/combustible).
+
+Principio: la FC no se compara entre personas; se usa para entender el esfuerzo propio, no como número absoluto.

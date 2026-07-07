@@ -48,3 +48,7 @@ estados_derivados:
   - codigo: D004
     nombre: Base aeróbica
     relacionado_con: [C001]
+  - codigo: D005
+    nombre: Respuesta cardíaca individual
+    relacionado_con: [C001]
+    # Marca "el pulso alto parece variación individual normal", no una limitación.
