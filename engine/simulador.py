@@ -124,6 +124,18 @@ def evaluacion_completa(limitacion, responder, contexto=None, verbose=True):
     if contexto and contexto.get("usa_hr"):
         metadatos.add("pulso")   # D17: habilita la capa de pulso
 
+    # Fase perfil general (D20): puntos + metadatos, para todos
+    for q in sorted([x for x in preguntas if x["tipo"] == "perfil"],
+                    key=lambda x: x["codigo"]):
+        rid = responder(q)
+        r = next(x for x in q["respuestas"] if x["id"] == rid)
+        ef = _efectos(r, contexto)
+        for k, v in ef.items():
+            estado[k] = estado.get(k, 0) + v
+        metadatos.update(r.get("metadatos", []))
+        respondidas.add(q["codigo"])
+        traza.append(("perfil", q, r, ef))
+
     # Fase batería inicial: seleccionada por el tipo de la limitación (D10)
     lim = next(x for x in cargar("limitaciones")["limitaciones"]
                if x["codigo"] == limitacion)

@@ -96,7 +96,8 @@ function snap(driver) {
     respondidas: [...respondidas], evidencia: evidencia.map(e => ({ ...e })),
     recorrido: [...recorrido], nRespuestas, limitacion, modo,
     objetivo: objetivo ? objetivo.codigo : null,
-    colaBateria: colaBateria.map(q => q.codigo), modoAfinar, debugLog: [...debugLog]
+    colaBateria: colaBateria.map(q => q.codigo), colaPerfil: colaPerfil.map(q => q.codigo),
+    modoAfinar, debugLog: [...debugLog]
   }});
 }
 
@@ -110,6 +111,7 @@ function atras() {
   recorrido = [...s.recorrido]; nRespuestas = s.nRespuestas; limitacion = s.limitacion;
   modo = s.modo; objetivo = s.objetivo ? KB.objetivos.find(o => o.codigo === s.objetivo) : null;
   colaBateria = s.colaBateria.map(c => KB.preguntas.find(q => q.codigo === c));
+  colaPerfil = (s.colaPerfil || []).map(c => KB.preguntas.find(q => q.codigo === c));
   modoAfinar = s.modoAfinar; debugLog = [...s.debugLog];
   prog();
   h.driver();
@@ -256,7 +258,7 @@ function revisarCodigo() {
       const q = KB.preguntas.find(x => x.codigo === "Q" + tok.slice(0, 3));
       const r = q.respuestas.find(x => x.id === tok.slice(3));
       let ef = {};
-      if (q.tipo === "afinacion") {
+      if (q.tipo === "afinacion" || q.tipo === "perfil") {
         ef = efectos(r);
         for (const [k, v] of Object.entries(ef)) estado[k] = (estado[k] || 0) + v;
         if (Object.keys(ef).length) evidencia.push({ q: q.texto, r: r.texto, ef });
@@ -396,7 +398,24 @@ function elegirLimitacion(lp) {
   const tipoLim = KB.limitaciones.find(l => l.codigo === lp).tipo;
   colaBateria = KB.preguntas.filter(q => q.tipo === "bateria-inicial" &&
     (q.tipos || []).includes(tipoLim)).sort((a, b) => a.codigo.localeCompare(b.codigo));
-  pasoBateria();
+  colaPerfil = KB.preguntas.filter(q => q.tipo === "perfil").sort((a, b) => a.codigo.localeCompare(b.codigo));
+  pasoPerfil();
+}
+
+let colaPerfil = [];
+function pasoPerfil() {
+  if (!colaPerfil.length) return pasoBateria();
+  permitirAtras = true; snap(pasoPerfil);
+  const q = colaPerfil.shift();
+  pantallaPregunta(q, "Tu perfil", r => {
+    const ef = efectos(r);
+    for (const [k, v] of Object.entries(ef)) estado[k] = (estado[k] || 0) + v;
+    (r.metadatos || []).forEach(m => metadatos.add(m));
+    if (Object.keys(ef).length) evidencia.push({ q: q.texto, r: r.texto, ef });
+    if (DEBUG) debugLog.push(`${q.codigo}${r.id} → ${Object.entries(ef).map(([k, v]) => k + (v > 0 ? "+" : "") + v).join(" ") || "perfil"}`);
+    respondidas.add(q.codigo); recorrido.push(q.codigo.substring(1) + r.id); nRespuestas++; prog();
+    pasoPerfil();
+  });
 }
 
 let colaBateria = [];

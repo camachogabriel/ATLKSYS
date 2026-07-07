@@ -12,6 +12,49 @@
 # - No deben existir dos respuestas con exactamente el mismo efecto.
 
 preguntas:
+  # ============ Perfil general (D20) ============
+  # Se preguntan una vez al inicio, a todos. Pre-cargan puntos en los factores
+  # más comunes para acortar la afinación posterior.
+  - codigo: Q073
+    texto: ¿Sabes cómo comer e hidratarte durante la práctica del ciclismo?
+    contexto: general
+    tipo: perfil
+    respuestas:
+      - id: A
+        texto: Sí, muy bien
+        metadatos: []
+        puntos: {D002: -3}
+      - id: B
+        texto: Creo saber; no he tenido problemas
+        metadatos: []
+        puntos: {}
+      - id: C
+        texto: No, pero no siento que lo necesite
+        metadatos: [nutricion, carbohidratos]
+        puntos: {D002: 3, D001: 1}
+      - id: D
+        texto: No, no le presto atención
+        metadatos: [nutricion, carbohidratos, hidratacion]
+        puntos: {D002: 5, D001: 1}
+
+  - codigo: Q074
+    texto: ¿Sigues un plan de entrenamiento?
+    contexto: general
+    tipo: perfil
+    respuestas:
+      - id: A
+        texto: Sí, con entrenador
+        metadatos: []
+        puntos: {F005: -3}
+      - id: B
+        texto: Sí, me autoentreno
+        metadatos: []
+        puntos: {F005: -1}
+      - id: C
+        texto: No, solo trato de hacer lo mejor que puedo
+        metadatos: [intensidad]
+        puntos: {F005: 3}
+
   - codigo: Q001
     texto: ¿Tienes una estrategia de alimentación para fondos largos?
     contexto: fondos-largos

@@ -220,3 +220,12 @@ El pulso alto tiene dos lecturas opuestas y ATL las separa con Q071/Q072:
 Además Q070 usa la FC como lente del esfuerzo: si al final del fondo el pulso queda más alto que al inicio a igual ritmo, el fondo fue más fuerte de lo sostenible → dosificación (F006). Se distingue de Q065 (desacople que sube al aflojar → hidratación/combustible).
 
 Principio: la FC no se compara entre personas; se usa para entender el esfuerzo propio, no como número absoluto.
+
+## D20. Fase de perfil general (pre-carga de puntos)
+
+Antes de la batería, un bloque corto de preguntas `tipo: perfil` se hace a todos (independiente de la limitación) y **sí genera puntos** (a diferencia de la batería). Pre-carga los factores más comunes para acortar la afinación:
+
+- Q073 "¿Sabes comer e hidratarte en ciclismo?" → estrategia nutricional (D002) y, si no le presta atención, abre rutas nutrición/carbohidratos.
+- Q074 "¿Sigues un plan de entrenamiento?" → estructura (F005); "no, hago lo que puedo" abre `intensidad`.
+
+Estos puntos no disparan hipótesis por sí solos (H001 exige D001 media; H012 exige F005 alta), pero suman al score y a la confianza, de modo que la evaluación converge con menos preguntas de afinación. Se registran en el código de evaluación y el replay los reproduce. Flujo: contexto → modo → limitación/objetivo → **perfil** → batería → afinación → informe.
