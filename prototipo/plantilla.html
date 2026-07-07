@@ -217,7 +217,7 @@ function bienvenida() {
 function generarCodigo() {
   const payload = [modo[0], objetivo ? objetivo.codigo : "", limitacion,
     [ctx.edad, ctx.experiencia_anios, ctx.frecuencia_sem, ctx.duracion_fondo_h,
-     ctx.peso_kg || "", ctx.estatura_cm || ""].join(","),
+     ctx.peso_kg || "", ctx.estatura_cm || "", ctx.sexo || ""].join(","),
     recorrido.join("."), KBVER].join("|");
   return "ATL1-" + btoa(payload).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 }
@@ -244,6 +244,7 @@ function revisarCodigo() {
     ctx = { edad: +cv[0], experiencia_anios: +cv[1], frecuencia_sem: +cv[2], duracion_fondo_h: +cv[3] };
     if (cv[4]) ctx.peso_kg = +cv[4];
     if (cv[5]) ctx.estatura_cm = +cv[5];
+    if (cv[6]) ctx.sexo = cv[6];
     calcularIMC();
     metadatos = new Set(); estado = {}; respondidas = new Set(); evidencia = [];
     if (ctx.imc >= 27) metadatos.add("composicion-corporal");
@@ -287,6 +288,7 @@ function pasoModo() {
 
 const CONTEXTO = [
   { campo: "edad", texto: "¿Cuál es tu edad?", opts: [["Menos de 30", 25], ["30-39", 35], ["40-49", 45], ["50 o más", 55]] },
+  { kind: "sexo", texto: "¿Con qué sexo biológico te identificas?" },
   { kind: "antropometria", texto: "¿Cuánto pesas y mides?" },
   { campo: "experiencia_anios", texto: "¿Cuánto llevas entrenando con regularidad?", opts: [["Menos de 1 año", 0.5], ["1-2 años", 1.5], ["2-5 años", 3], ["Más de 5 años", 6]] },
   { campo: "frecuencia_sem", texto: "¿Cuántas veces entrenas por semana?", opts: [["1-2", 1.5], ["2-3", 2.5], ["4-5", 4.5], ["6 o más", 6]] },
@@ -304,6 +306,17 @@ function pasoContexto(i) {
   if (i >= CONTEXTO.length) return modo === "objetivo" ? pasoObjetivo() : pasoLimitacion();
   permitirAtras = true; snap(() => pasoContexto(i));
   const c = CONTEXTO[i];
+  if (c.kind === "sexo") {
+    $(`<div class="fase">Sobre ti · ${i + 1}/${CONTEXTO.length}</div>
+      <h2>${c.texto}</h2>
+      <p class="sub">Nos ayuda a interpretar mejor tu peso y composición corporal.</p>
+      <div class="opts">
+        <button class="opt" onclick='ctx.sexo="m";nRespuestas++;prog();pasoContexto(${i + 1})'>Hombre</button>
+        <button class="opt" onclick='ctx.sexo="f";nRespuestas++;prog();pasoContexto(${i + 1})'>Mujer</button>
+        <button class="opt" onclick='ctx.sexo="";nRespuestas++;prog();pasoContexto(${i + 1})'>Prefiero no decirlo</button>
+      </div>`);
+    return;
+  }
   if (c.kind === "antropometria") {
     $(`<div class="fase">Sobre ti · ${i + 1}/${CONTEXTO.length}</div>
       <h2>${c.texto}</h2>
@@ -504,11 +517,13 @@ function pasoResultado() {
   const evid = evidencia.map(e =>
     `<li>"${e.r}" — ${Object.entries(e.ef).map(([k, v]) => `${KB.nombres[k] || k} ${v > 0 ? "+" : ""}${v}`).join(", ")}</li>`).join("");
 
-  // Nota de IMC (señal, no diagnóstico) — D12
+  // Nota de IMC (señal, no diagnóstico) — D12/D15
   let imcNota = "";
   if (ctx.imc) {
     const cat = ctx.imc < 18.5 ? "bajo" : ctx.imc < 25 ? "normal" : ctx.imc < 27 ? "ligeramente elevado" : ctx.imc < 30 ? "elevado" : "alto";
     const alerta = ctx.imc >= 27;
+    const bajo = ctx.imc < 18.5;
+    const esMujer = ctx.sexo === "f";
     const tipoLim = limitacion ? (KB.limitaciones.find(l => l.codigo === limitacion) || {}).tipo : null;
     const esSubida = tipoLim === "subida" || (objetivo && objetivo.codigo === "O002");
     let cuerpo = `IMC estimado: <strong>${ctx.imc}</strong> (${cat}).`;
@@ -518,6 +533,10 @@ function pasoResultado() {
           + "Si vienes de mucho gimnasio, parte de esa masa (sobre todo del tren superior) suma kilos que subes pero no aportan potencia al pedaleo — por eso puedes ser fuerte y aun así subir con dificultad."
         : " El peso corporal influye en cuánto esfuerzo cuesta cada watt, sobre todo en subida. Cuenta el peso total, venga de grasa o de músculo.";
       cuerpo += " La palanca es mejorar los vatios/kg: subir potencia con entrenamiento específico y, si procede, ajustar peso de forma gradual y con apoyo profesional. No se trata de perder músculo por perderlo, ni de comprometer tu salud.";
+      if (esMujer) cuerpo += " Ten en cuenta que las mujeres necesitáis de forma natural más grasa esencial; el objetivo no es una grasa corporal muy baja, sino más potencia.";
+    } else if (bajo) {
+      cuerpo += " Con un IMC en el rango bajo, lo prioritario es asegurar suficiente energía disponible: comer acorde a tu carga de entrenamiento sostiene el rendimiento y la salud."
+        + (esMujer ? " En mujeres, una energía crónicamente baja puede afectar el ciclo, los huesos y el rendimiento; si notas señales así, vale la pena valorarlo con un profesional." : " Si notas fatiga persistente o estancamiento, vale la pena valorar tu disponibilidad energética con un profesional.");
     } else {
       cuerpo += " El IMC es solo una referencia inicial; en deportistas la masa muscular puede elevarlo sin que haya exceso de grasa.";
     }

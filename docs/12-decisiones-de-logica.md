@@ -169,3 +169,14 @@ Refuerzo (Q061): dependencia declarada de comer para rendir → D001.
 IMC bajo (< 20) como señal orientadora: abre las rutas `disponibilidad-energetica`, `nutricion` y `carbohidratos` al iniciar (dirección, no puntos), para que el discriminador aparezca. Umbral calibrable.
 
 H001 se amplió para cubrir ambos casos (no alimentarse / alta dependencia) y su recomendación incluye construir base aeróbica para mejorar la oxidación de grasa. Como H004 (aeróbica) exige C001 alta y el discriminador manda los puntos a D001, el motor separa correctamente "es nutricional" de "es aeróbico".
+
+## D15. Género/sexo como contexto de interpretación (no de puntaje)
+
+El sexo biológico se captura en el contexto (hombre / mujer / prefiero no decirlo). Los umbrales numéricos de IMC son iguales por sexo (OMS); lo que cambia es la composición e interpretación:
+
+- **NO modifica el puntaje** de capacidades ni factores (evitar estereotipos y ciencia frágil; la lógica peso-potencia y "comer revive" es sexo-neutra). Igual que la edad, el sexo modula la interpretación, no concluye.
+- **Sí ajusta el mensaje** del informe:
+  - IMC alto en mujer: recordatorio de que la grasa esencial es mayor y necesaria; el objetivo es más potencia, no grasa corporal muy baja.
+  - IMC bajo: refuerzo de disponibilidad energética; en mujeres, mención de que la energía crónicamente baja puede afectar ciclo/huesos/rendimiento (conciencia de RED-S), con sugerencia de valoración profesional — sin diagnosticar.
+
+El código de evaluación incluye el sexo (campo 7 del contexto); códigos previos sin él siguen siendo válidos.
