@@ -328,6 +328,46 @@ preguntas:
         metadatos: []
         puntos: {C002: -1}
 
+  - codigo: Q058
+    texto: ¿Cómo se compara tu rendimiento a ritmo suave-moderado con cuando aprietas a intensidad alta?
+    contexto: general
+    tipo: afinacion
+    condiciones_aparicion:
+      metadatos_requeridos: [intensidad]
+    respuestas:
+      - id: A
+        texto: Aguanto bien horas a ritmo suave, pero en intensidad me hundo
+        metadatos: [fatiga-muscular]
+        puntos: {C002: 5}
+      - id: B
+        texto: Parecido en ambos
+        metadatos: []
+        puntos: {}
+      - id: C
+        texto: Mejor en esfuerzos cortos e intensos que en lo largo y suave
+        metadatos: [respiracion]
+        puntos: {C001: 3}
+
+  - codigo: Q059
+    texto: En esfuerzos duros de 2 a 5 minutos (una cuesta a ritmo medio-alto), ¿qué te pasa?
+    contexto: general
+    tipo: afinacion
+    condiciones_aparicion:
+      metadatos_requeridos: [intensidad]
+    respuestas:
+      - id: A
+        texto: Me cuesta muchísimo sostenerlos, me apago
+        metadatos: [fatiga-muscular]
+        puntos: {C002: 3}
+      - id: B
+        texto: Los llevo razonablemente
+        metadatos: []
+        puntos: {}
+      - id: C
+        texto: Son mi punto fuerte
+        metadatos: []
+        puntos: {C002: -3}
+
   # --- Ruta fuerza (alimenta H005/H006 vía C004) ---
   - codigo: Q016
     texto: ¿Cómo llevas pedalear con baja cadencia o subidas empinadas sentado?
@@ -584,6 +624,26 @@ preguntas:
         texto: Subo razonablemente para mi nivel
         metadatos: []
         puntos: {F004: -3}
+
+  - codigo: Q057
+    texto: Ese peso de más, ¿dónde lo notas sobre todo?
+    contexto: general
+    tipo: afinacion
+    condiciones_aparicion:
+      metadatos_requeridos: [composicion-corporal]
+    respuestas:
+      - id: A
+        texto: En la zona abdominal o media
+        metadatos: [nutricion, intensidad]     # abre contraste de intensidad; orienta a C002
+        puntos: {C002: 1, F001: 1}
+      - id: B
+        texto: Es sobre todo músculo (piernas, tren superior)
+        metadatos: []
+        puntos: {F004: 1}
+      - id: C
+        texto: Repartido / no sabría decir
+        metadatos: []
+        puntos: {}
 
   # --- Ruta técnica / posicionamiento ---
   - codigo: Q029

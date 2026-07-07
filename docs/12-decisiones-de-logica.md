@@ -142,3 +142,16 @@ El contexto inicial captura `peso_kg` y `estatura_cm` (opcionales). Con ellos se
 Otros usos previstos de peso/estatura (futuro): escalar recomendaciones de carbohidratos (g/h) e hidratación al tamaño corporal, y estimar vatios/kg cuando el usuario aporte potencia. El código de evaluación incluye peso y estatura (campos 5 y 6 del contexto); códigos antiguos sin ellos siguen siendo válidos.
 
 Umbral IMC ≥ 27 (no 25) para reducir falsos positivos en deportistas musculados. Calibrable.
+
+## D13. Adiposidad central como señal orientadora hacia C002 (no diagnóstico)
+
+Cuando el IMC es alto y hay indicios de peso en la zona central (Q057-A), ATL **no** infiere ni menciona causas metabólicas/hormonales (resistencia a la insulina, etc.): eso es terreno médico fuera de alcance. Lo que hace es tratarlo como **una señal débil más** que orienta hacia una limitación que el sistema ya modela — la capacidad glucolítica oxidativa (C002).
+
+Salvaguardas:
+
+- El peso central suma solo **+1 a C002** (orientador, leve). Nunca concluye por sí solo: H005 (limitación glucolítica) exige C002 en confianza alta (≥8), que solo se alcanza con evidencia de rendimiento que lo respalde.
+- La evidencia que sí pesa viene del patrón de rendimiento: Q058 (bien en suave / mal en intensidad, +5), Q059 (mala tolerancia a 2-5 min duros, +3), Q014/Q015 (piernas se queman en sostenido, +3/+5). Es el patrón acumulado —adiposidad + intolerancia a la intensidad + piernas que arden + buen fondo suave— el que converge en C002.
+- La salida es siempre "limitación glucolítica" con recomendación de entrenamiento y nutrición (H005). En ningún punto se nombra insulina, hormonas ni diagnóstico.
+- Q057-A también suma F001 +1 (nutrición) y abre el metadato `intensidad` para investigar el contraste suave/intenso.
+
+Principio: usar la pista para orientar la solución, sin afirmar la causa fisiopatológica.
