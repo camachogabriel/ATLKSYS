@@ -127,20 +127,24 @@ hipotesis:
       - Distribución de intensidad y días de descanso reales
 
   - codigo: H015
-    nombre: Molestia o sobrecarga localizada
+    nombre: Sobrecarga localizada por técnica o posición
     texto: >
-      Hay una molestia en una zona concreta que aparece con el gesto de
-      pedaleo o la posición. Más que un límite fisiológico, apunta a técnica,
-      posición en la bici o una sobrecarga puntual que conviene atender.
+      Una zona concreta se te carga o molesta (típico: el cuádriceps hace
+      casi todo el trabajo y el glúteo no participa). Más que un límite
+      fisiológico, apunta a la posición en la bici, la técnica de pedaleo o la
+      movilidad — y esa sobrecarga acaba limitándote. Pasar muchas horas
+      sentado o entrenar casi siempre en rodillo suele agravarlo.
     elementos: [F007]
     condiciones:
       - {elemento: F007, confianza_minima: alta}
     recomendacion: >
-      Revisar posición y ajuste de la bici (bike fit) y la técnica de pedaleo;
-      si la molestia persiste o duele, valorar con un fisioterapeuta antes de
-      seguir cargando. Es orientación, no un diagnóstico.
+      Si no te has hecho un bike fit, hazlo: una posición mal ajustada
+      sobrecarga músculos y apaga el glúteo. Trabaja movilidad (cadera,
+      isquios) y activación glútea, y revisa la técnica de pedaleo para
+      repartir mejor el esfuerzo. Si la molestia duele o persiste, valóralo
+      con un fisioterapeuta. Es orientación, no un diagnóstico.
     informacion_faltante:
-      - Zona exacta, cuándo aparece y si duele en reposo
+      - Zona exacta, si te has hecho bike fit y si duele en reposo
 
   - codigo: H009
     nombre: Entrenamiento sin estructura, siempre en zona media

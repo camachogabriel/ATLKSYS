@@ -343,9 +343,10 @@ function pasoContexto(i) {
         <input type="number" id="estatura" inputmode="numeric" placeholder="Estatura (cm)"
           value="${ctx.estatura_cm || ""}" style="flex:1;background:#1c2129;border:1px solid var(--border);color:var(--txt);padding:14px 16px;border-radius:10px;font-size:16px">
       </div>
-      <div class="center" style="margin-top:16px">
+      <p id="antro-err" style="color:#f87171;font-size:13px;min-height:16px;margin-bottom:4px"></p>
+      <div class="center">
         <button class="btn" onclick="guardarAntropometria(${i})">Continuar</button></div>
-      <button class="link" onclick="nRespuestas++;prog();pasoContexto(${i + 1})">Prefiero no decirlo</button>`);
+      <button class="link" onclick="ctx.peso_kg=null;ctx.estatura_cm=null;ctx.imc=null;nRespuestas++;prog();pasoContexto(${i + 1})">Prefiero no decirlo</button>`);
     return;
   }
   $(`<div class="fase">Sobre ti · ${i + 1}/${CONTEXTO.length}</div>
@@ -358,9 +359,20 @@ function pasoContexto(i) {
 function guardarAntropometria(i) {
   const p = parseFloat(document.getElementById("peso").value);
   const e = parseFloat(document.getElementById("estatura").value);
-  if (p > 0) ctx.peso_kg = p;
-  if (e > 0) ctx.estatura_cm = e;
+  const err = document.getElementById("antro-err");
+  // Rangos plausibles para adultos; deben darse ambos o ninguno
+  if ((p > 0) !== (e > 0)) { err.textContent = "Pon peso y estatura, o usa \"prefiero no decirlo\"."; return; }
+  if (p > 0 && (p < 30 || p > 250)) { err.textContent = "El peso no parece válido (30-250 kg)."; return; }
+  if (e > 0 && (e < 120 || e > 230)) { err.textContent = "La estatura no parece válida (120-230 cm)."; return; }
+  ctx.peso_kg = p > 0 ? p : null;
+  ctx.estatura_cm = e > 0 ? e : null;
   calcularIMC();
+  // Chequeo de coherencia del IMC (p. ej. 160 kg / 60 cm daría un valor absurdo)
+  if (ctx.imc && (ctx.imc < 10 || ctx.imc > 60)) {
+    err.textContent = "El peso y la estatura juntos no parecen coherentes. Revísalos.";
+    ctx.imc = null; ctx.peso_kg = null; ctx.estatura_cm = null;
+    return;
+  }
   nRespuestas++; prog(); pasoContexto(i + 1);
 }
 

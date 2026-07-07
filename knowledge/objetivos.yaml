@@ -56,3 +56,9 @@ objetivos:
     dimension_fitness: progresión del rendimiento
     limitacion_asociada: LP009
     capacidades_determinantes: [F005, F003, C001]
+
+  - codigo: O009
+    texto: Pedalear más eficiente / dejar de sobrecargar músculos
+    dimension_fitness: economía / técnica
+    limitacion_asociada: LP010
+    capacidades_determinantes: [F007, E002, C005]

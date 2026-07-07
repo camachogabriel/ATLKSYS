@@ -52,6 +52,11 @@ limitaciones:
     tipo: estancamiento
     areas_iniciales: [F005, F003, intensidad, recuperacion, dolor-localizado]
 
+  - codigo: LP010
+    texto: Se me cargan mucho ciertos músculos (p. ej. el cuádriceps)
+    tipo: sobrecarga-muscular
+    areas_iniciales: [tecnica, dolor-localizado, F007, fuerza]
+
 # Clasificación mínima requerida por limitación (esquema completo, a llenar):
 #   codigo, texto_usuario, tipo_esfuerzo, duracion, momento_aparicion,
 #   sensacion_principal, metadatos_iniciales, bateria_inicial

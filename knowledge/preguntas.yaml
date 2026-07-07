@@ -982,6 +982,127 @@ preguntas:
         metadatos: []
         puntos: {F006: -1}
 
+  # ============ Batería LP010 - Sobrecarga muscular (tipo: sobrecarga-muscular) ============
+  - codigo: Q084
+    texto: ¿Qué zona se te carga sobre todo?
+    contexto: general
+    tipo: bateria-inicial
+    tipos: [sobrecarga-muscular]
+    respuestas:
+      - id: A
+        texto: Cuádriceps (parte delantera del muslo)
+        metadatos: [tecnica, dolor-localizado, fuerza]
+        puntos: {}
+      - id: B
+        texto: Zona lumbar o cuello
+        metadatos: [tecnica, dolor-localizado]
+        puntos: {}
+      - id: C
+        texto: Gemelos o pies
+        metadatos: [tecnica, dolor-localizado]
+        puntos: {}
+      - id: D
+        texto: Varias zonas
+        metadatos: [tecnica, dolor-localizado]
+        puntos: {}
+
+  - codigo: Q085
+    texto: ¿Te has hecho un bike fit (estudio de posición en la bici)?
+    contexto: general
+    tipo: bateria-inicial
+    tipos: [sobrecarga-muscular]
+    respuestas:
+      - id: A
+        texto: Nunca
+        metadatos: [tecnica]
+        puntos: {}
+      - id: B
+        texto: Hace mucho tiempo
+        metadatos: [tecnica]
+        puntos: {}
+      - id: C
+        texto: Sí, reciente
+        metadatos: []
+        puntos: {}
+
+  - codigo: Q086
+    texto: ¿Te sientes cómodo en tu posición sobre la bici?
+    contexto: general
+    tipo: bateria-inicial
+    tipos: [sobrecarga-muscular]
+    respuestas:
+      - id: A
+        texto: No, hay algo que no me termina de cuadrar
+        metadatos: [tecnica]
+        puntos: {}
+      - id: B
+        texto: Sí, cómodo
+        metadatos: []
+        puntos: {}
+
+  - codigo: Q087
+    texto: ¿Pasas muchas horas sentado en el día (trabajo de oficina)?
+    contexto: general
+    tipo: bateria-inicial
+    tipos: [sobrecarga-muscular]
+    respuestas:
+      - id: A
+        texto: Sí, muchas horas sentado
+        metadatos: [tecnica]
+        puntos: {}
+      - id: B
+        texto: No, me muevo bastante
+        metadatos: []
+        puntos: {}
+
+  - codigo: Q088
+    texto: ¿Entrenas mucho en rodillo (bici estática/indoor)?
+    contexto: general
+    tipo: bateria-inicial
+    tipos: [sobrecarga-muscular]
+    respuestas:
+      - id: A
+        texto: Sí, casi siempre en rodillo
+        metadatos: [tecnica]
+        puntos: {}
+      - id: B
+        texto: Mayormente al aire libre
+        metadatos: []
+        puntos: {}
+
+  # --- Afinación de sobrecarga muscular / técnica (D22) ---
+  - codigo: Q089
+    texto: ¿Tienes poca flexibilidad o movilidad (isquios, cadera, tobillo)?
+    contexto: general
+    tipo: afinacion
+    condiciones_aparicion:
+      metadatos_requeridos: [tecnica]
+    respuestas:
+      - id: A
+        texto: Sí, soy bastante rígido
+        metadatos: []
+        puntos: {F007: 3}
+      - id: B
+        texto: Normal / trabajo la movilidad
+        metadatos: []
+        puntos: {F007: -1}
+
+  - codigo: Q090
+    texto: ¿Sientes que empujas casi todo con el cuádriceps y poco con el glúteo?
+    contexto: general
+    tipo: afinacion
+    condiciones_aparicion:
+      metadatos_requeridos: [tecnica]
+    respuestas:
+      - id: A
+        texto: Sí, el cuádriceps hace casi todo
+        metadatos: []
+        puntos: {F007: 5}
+      - id: B
+        texto: Siento que reparto bien el pedaleo
+        metadatos: []
+        puntos: {F007: -3}
+
   # ============ Batería LP009 - Estancamiento (tipo: estancamiento) ============
   - codigo: Q076
     texto: ¿Cómo ha sido tu entrenamiento en los últimos meses?
