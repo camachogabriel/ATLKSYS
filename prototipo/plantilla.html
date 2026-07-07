@@ -54,6 +54,14 @@
   .evid li { margin: 6px 0 6px 18px; }
   .disclaimer { font-size: 12px; color: #6e7681; margin-top: 22px; line-height: 1.5; }
   .link { background: none; border: none; color: var(--acc); cursor: pointer; font-size: 14px; margin-top: 14px; text-decoration: underline; }
+  .logo { text-align: center; margin-bottom: 20px; }
+  .logo-atl { font-weight: 800; font-style: italic; font-size: 44px; letter-spacing: 2px; line-height: 1; }
+  .logo-atl .a { color: #c33a5b; } .logo-atl .t { color: #4fa96e; } .logo-atl .l { color: #6a67d6; }
+  .logo-name { color: var(--txt); font-weight: 700; letter-spacing: 5px; font-size: 15px; margin-top: 6px; }
+  .logo-sub { color: var(--dim); letter-spacing: 4px; font-size: 10px; margin-top: 3px; }
+  .wa { display: inline-flex; align-items: center; gap: 7px; color: #25d366; text-decoration: none;
+    font-size: 14px; margin-top: 16px; border: 1px solid #25d36655; border-radius: 8px; padding: 9px 16px; }
+  .wa:hover { background: #25d3661a; }
   .backbtn { background: #1c2129; border: 1px solid var(--border); border-radius: 10px;
     color: var(--txt); cursor: pointer; font-size: 15px; padding: 12px 22px;
     margin-bottom: 18px; display: inline-block; }
@@ -200,11 +208,25 @@ function evaluarHipotesis() {
   return act;
 }
 
+// ---------- marca y contacto ----------
+const LOGO = `<div class="logo">
+  <div class="logo-atl"><span class="a">A</span><span class="t">T</span><span class="l">L</span></div>
+  <div class="logo-name">ATHLETETRAINLAB</div>
+  <div class="logo-sub">PERFORMANCE TRAINING</div>
+</div>`;
+const WA_NUM = "50688445505";
+function waLink(motivo) {
+  const txt = encodeURIComponent(motivo || "Hola, tengo una consulta sobre mi evaluación de AthleteTrainLab.");
+  return `<a class="wa" href="https://wa.me/${WA_NUM}?text=${txt}" target="_blank" rel="noopener">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="#25d366"><path d="M12 2a10 10 0 0 0-8.5 15.2L2 22l4.9-1.5A10 10 0 1 0 12 2zm5.8 14.1c-.2.7-1.4 1.3-2 1.4-.5.1-1.2.1-1.9-.1-.4-.1-1-.3-1.7-.6-3-1.3-4.9-4.3-5.1-4.5-.1-.2-1.2-1.6-1.2-3 0-1.4.7-2.1 1-2.4.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 1.9c.1.2.1.3 0 .5l-.4.6-.3.3c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.2.1.4.1.6-.1l.8-1c.2-.2.4-.2.6-.1l1.8.9c.3.1.5.2.5.3.1.2.1.7-.1 1.3z"/></svg>
+    Dudas o consultas por WhatsApp</a>`;
+}
+
 // ---------- pantallas ----------
 function bienvenida() {
   permitirAtras = false; snap(bienvenida);
   $(`<div class="center">
-    <div class="fase">AthleteTrainLab</div>
+    ${LOGO}
     <h1>Tu mayor ganancia no está<br>en entrenar más.</h1>
     <p class="sub">Está en saber exactamente qué te frena. En 3 minutos, un motor que razona
     como un entrenador analiza tus respuestas y te dice dónde está tu mayor margen de mejora
@@ -212,6 +234,7 @@ function bienvenida() {
     <button class="btn" onclick="pasoContexto(0)">Descubrir qué me frena</button>
     <p class="disclaimer">3 minutos · Gratis · Sin registro para empezar</p>
     <button class="link" onclick="pasoCodigoRevision()">¿Tienes un código de evaluación?</button>
+    <div>${waLink()}</div>
   </div>`);
 }
 
@@ -650,6 +673,7 @@ function pasoResultado() {
     ${extra}
     ${!revision && candidatas().length ? `<button class="link" onclick="modoAfinar=true;pasoAfinacion()">Afinar mi resultado (más preguntas)</button>` : ""}
     ${revision ? `<button class="link" onclick="location.reload()">Salir de la revisión</button>` : ""}
+    <div class="center">${waLink("Hola, acabo de hacer mi evaluación en AthleteTrainLab y quiero consultar sobre mi resultado.")}</div>
     <p class="disclaimer">AthleteTrainLab genera hipótesis orientativas basadas en tus respuestas.
     No es un diagnóstico médico ni fisiológico.</p>`);
 }
