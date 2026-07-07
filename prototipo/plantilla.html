@@ -416,8 +416,9 @@ function pasoAfinacion() {
 }
 
 function pantallaPregunta(q, fase, alResponder) {
+  const texto = (modo === "objetivo" && q.texto_objetivo) ? q.texto_objetivo : q.texto;
   $(`<div class="fase">${fase}</div>
-    <h2>${q.texto}</h2>
+    <h2>${texto}</h2>
     <div class="opts">${q.respuestas.map((r, i) =>
       `<button class="opt" data-i="${i}">${r.texto}</button>`).join("")}
     </div>`);

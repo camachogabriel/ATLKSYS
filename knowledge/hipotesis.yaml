@@ -37,7 +37,10 @@ hipotesis:
       - {elemento: E001, confianza_minima: media}
       - {elemento: D001, confianza_maxima: baja}   # si nutrición explica, gana H001
     recomendacion: >
-      Aumentar volumen aeróbico progresivo y trabajo específico en fatiga.
+      Construir durabilidad sobre base aeróbica: volumen progresivo y, sobre
+      todo, meter trabajo de fuerza y de calidad al final de las sesiones
+      largas (con fatiga previa), para que el rendimiento no se caiga en las
+      últimas horas. La fuerza y lo aeróbico van de la mano, no por separado.
     informacion_faltante:
       - Volumen semanal actual y progresión reciente
 
@@ -176,6 +179,24 @@ hipotesis:
     informacion_faltante:
       - Historial de trabajo de fuerza
       - Tolerancia a baja cadencia medida
+
+  - codigo: H012
+    nombre: Entrenamiento poco estructurado, faltan estímulos específicos
+    texto: >
+      No aparece una limitación fisiológica dominante; tu mayor margen está en
+      cómo entrenas. Salir a rodar sin trabajos específicos de intensidad y
+      fuerza deja rendimiento sobre la mesa: el cuerpo se adapta a lo que le
+      pides, y si siempre es lo mismo, deja de mejorar.
+    elementos: [F005, C004, C001]
+    condiciones:
+      - {elemento: F005, confianza_minima: alta}
+    recomendacion: >
+      Estructurar la semana con intención: base aeróbica suave de verdad, uno
+      o dos trabajos de intensidad según tu objetivo y fuerza 1-2 veces por
+      semana. Progresión y variedad, no repetir siempre la misma salida.
+    informacion_faltante:
+      - Distribución actual de intensidades en una semana típica
+      - Si haces fuerza y con qué frecuencia
 
 # Ranking (D6): principal = mayor score; secundarias = score >= 50% del
 # principal o confianza media en su elemento núcleo (primera condición).

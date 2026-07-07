@@ -101,6 +101,7 @@ preguntas:
 
   - codigo: Q009
     texto: En el momento en que "se apaga el motor", ¿qué sientes principalmente?
+    texto_objetivo: Al final de los fondos, si el ritmo se te cae, ¿qué notas sobre todo?
     contexto: fondos-largos
     tipo: bateria-inicial
     tipos: [fondo-largo, distribucion-de-esfuerzo]
@@ -120,6 +121,10 @@ preguntas:
       - id: D
         texto: Mareo, dolor de cabeza o sed extrema
         metadatos: [hidratacion, sodio, calor]
+        puntos: {}
+      - id: E
+        texto: Ninguna; aguanto bien, solo quiero rendir más
+        metadatos: [intensidad, respiracion, fuerza]   # escape: abre rutas para seguir investigando (D16)
         puntos: {}
 
   - codigo: Q002
@@ -601,6 +606,26 @@ preguntas:
         texto: No, varío duración e intensidad
         metadatos: []
         puntos: {F005: -1}
+
+  - codigo: Q062
+    texto: ¿Tu entrenamiento incluye trabajos específicos de intensidad y de fuerza, o sales más bien a rodar?
+    contexto: general
+    tipo: afinacion
+    condiciones_aparicion:
+      metadatos_requeridos: [intensidad]
+    respuestas:
+      - id: A
+        texto: Salgo a rodar, sin trabajos específicos
+        metadatos: [fuerza]
+        puntos: {F005: 3}
+      - id: B
+        texto: Hago algo de intensidad, pero no fuerza
+        metadatos: [fuerza]
+        puntos: {F005: 1, C004: 1}
+      - id: C
+        texto: Tengo un plan con intensidad y fuerza
+        metadatos: []
+        puntos: {F005: -3}
 
   # --- Ruta explosiva (H006 requiere C003 media: Q015B+Q024A = 6) ---
   - codigo: Q024

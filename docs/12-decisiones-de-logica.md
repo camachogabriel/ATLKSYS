@@ -180,3 +180,13 @@ El sexo biológico se captura en el contexto (hombre / mujer / prefiero no decir
   - IMC bajo: refuerzo de disponibilidad energética; en mujeres, mención de que la energía crónicamente baja puede afectar ciclo/huesos/rendimiento (conciencia de RED-S), con sugerencia de valoración profesional — sin diagnosticar.
 
 El código de evaluación incluye el sexo (campo 7 del contexto); códigos previos sin él siguen siendo válidos.
+
+## D16. Reformulación por modo, opción de escape y entrenamiento estructurado
+
+Tres ajustes nacidos de pruebas reales (objetivo O001, código del 2026-07-06):
+
+1. **Texto por modo.** Las preguntas de batería pueden declarar `texto_objetivo`, que el quiz usa en modo objetivo. Evita que preguntas escritas para "algo me falla" suenen presuntuosas cuando el usuario solo quiere rendir más (ej. Q009 pasa de «cuando se apaga el motor…» a «si el ritmo se te cae al final…»).
+2. **Opción de escape.** Q009 gana la opción E ("ninguna; aguanto bien, solo quiero rendir más"), que no concluye nada: activa metadatos amplios (intensidad, respiración, fuerza) para que el motor siga investigando por las rutas de mayor impacto (D9). Toda pregunta de caracterización con opciones cerradas debería ofrecer una salida así, para no forzar respuestas que no aplican.
+3. **Entrenamiento estructurado (Q062).** Detecta si el usuario solo "sale a rodar" sin trabajos de intensidad/fuerza → alimenta F005 (estructura) y abre la ruta de fuerza. Cubre el caso "quiere ir más rápido y su entrenamiento no está estructurado".
+
+Además, H002 (durabilidad) refuerza su recomendación: se construye sobre base aeróbica con fuerza y calidad al final de sesiones largas; fuerza y aeróbico van de la mano.
