@@ -443,7 +443,8 @@ function pasoEmail() {
     la evidencia que la sostiene y una recomendación inicial.</p>
     <input type="email" id="email" placeholder="tu@correo.com">
     <button class="btn" onclick="verResultado()">Ver mis resultados</button>
-    <p class="disclaimer">Demo: el correo no se envía a ningún servidor.</p>
+    <p class="disclaimer">Guardamos tu correo y tu evaluación para enviarte el resultado
+    y mejorar el sistema. No los compartimos con terceros.</p>
   </div>`);
 }
 
@@ -451,7 +452,40 @@ function verResultado() {
   const e = document.getElementById("email").value;
   if (!/.+@.+\..+/.test(e)) { document.getElementById("email").style.borderColor = "#f87171"; return; }
   ctx.email = e;
+  guardarEvaluacion();
   interludio("Generando tu informe…", pasoResultado);
+}
+
+// ---------- persistencia en Supabase (insert-only, no bloquea el flujo) ----------
+const SB_URL = "https://wmmfsblgrusvbaugcihp.supabase.co";
+const SB_KEY = "sb_publishable_iC4xe9jDAnxnn5Dwj-XARw_3nvPFhGf";
+
+function guardarEvaluacion() {
+  if (revision) return;            // en modo revisión no se guarda
+  try {
+    const act = evaluarHipotesis();
+    const fila = {
+      codigo: generarCodigo(),
+      email: ctx.email || null,
+      modo,
+      objetivo: objetivo ? objetivo.codigo : null,
+      limitacion,
+      hipotesis_principal: act.length ? act[0][1].codigo : null,
+      preliminar: !hayAlta(),
+      imc: ctx.imc || null,
+      sexo: ctx.sexo || null,
+      n_preguntas: respondidas.size,
+      kb_version: KBVER,
+      estado,
+      user_agent: navigator.userAgent
+    };
+    fetch(SB_URL + "/rest/v1/evaluaciones", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", apikey: SB_KEY,
+        Authorization: "Bearer " + SB_KEY, Prefer: "return=minimal" },
+      body: JSON.stringify(fila)
+    }).catch(() => {});           // si falla, el usuario igual ve su resultado
+  } catch (e) { /* nunca romper el flujo por el guardado */ }
 }
 
 function pasoResultado() {
