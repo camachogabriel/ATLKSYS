@@ -190,3 +190,16 @@ Tres ajustes nacidos de pruebas reales (objetivo O001, código del 2026-07-06):
 3. **Entrenamiento estructurado (Q062).** Detecta si el usuario solo "sale a rodar" sin trabajos de intensidad/fuerza → alimenta F005 (estructura) y abre la ruta de fuerza. Cubre el caso "quiere ir más rápido y su entrenamiento no está estructurado".
 
 Además, H002 (durabilidad) refuerza su recomendación: se construye sobre base aeróbica con fuerza y calidad al final de sesiones largas; fuerza y aeróbico van de la mano.
+
+## D17. Capa de pulso (indicador de frecuencia cardíaca)
+
+La FC y el desacople cardíaco son **indicadores** (spec cap. 2 y 8), no capacidades: formas de observar capacidades/factores. Solo aplican a quien usa pulsómetro.
+
+- Contexto: pregunta "¿Entrenas con monitor de ritmo cardíaco?" → `ctx.usa_hr`. Si es sí, se siembra el metadato `pulso` al iniciar.
+- Las preguntas de pulso se activan con `[pulso, <ruta>]`: aparecen solo si el usuario usa pulsómetro Y la ruta correspondiente está abierta. No suman por sí solas evidencia de una capacidad nueva; refuerzan factores/capacidades ya existentes:
+  - Q063 [pulso, intensidad]: pulso disparado en cuestas → C001 (nivel aeróbico); pulso plano/no sube → F003 (fatiga).
+  - Q064 [pulso, calor]: pulso alto a igual intensidad en calor → D003 estrés térmico + F002 hidratación.
+  - Q065 [pulso, disponibilidad-energetica]: desacople al final de fondos (sube aunque baje el ritmo) → F002 hidratación + D001 + E001 (indicador clásico de deriva cardíaca por deshidratación/combustible).
+  - Q066 [pulso, recuperacion]: pulso en reposo elevado → F003 recuperación/fatiga.
+
+El código de evaluación incluye `usa_hr` (campo 8); códigos previos siguen válidos. Ampliable: HRV, zonas, umbral por FC, etc.

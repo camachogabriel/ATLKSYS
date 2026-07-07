@@ -217,7 +217,7 @@ function bienvenida() {
 function generarCodigo() {
   const payload = [modo[0], objetivo ? objetivo.codigo : "", limitacion,
     [ctx.edad, ctx.experiencia_anios, ctx.frecuencia_sem, ctx.duracion_fondo_h,
-     ctx.peso_kg || "", ctx.estatura_cm || "", ctx.sexo || ""].join(","),
+     ctx.peso_kg || "", ctx.estatura_cm || "", ctx.sexo || "", ctx.usa_hr ? "1" : ""].join(","),
     recorrido.join("."), KBVER].join("|");
   return "ATL1-" + btoa(payload).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 }
@@ -245,10 +245,12 @@ function revisarCodigo() {
     if (cv[4]) ctx.peso_kg = +cv[4];
     if (cv[5]) ctx.estatura_cm = +cv[5];
     if (cv[6]) ctx.sexo = cv[6];
+    if (cv[7]) ctx.usa_hr = true;
     calcularIMC();
     metadatos = new Set(); estado = {}; respondidas = new Set(); evidencia = [];
     if (ctx.imc >= 27) metadatos.add("composicion-corporal");
     else if (ctx.imc && ctx.imc < 20) ["disponibilidad-energetica", "nutricion", "carbohidratos"].forEach(m => metadatos.add(m));
+    if (ctx.usa_hr) metadatos.add("pulso");
     revision = { ver: p[5] || "?", traza: [] };
     for (const tok of p[4].split(".").filter(Boolean)) {
       const q = KB.preguntas.find(x => x.codigo === "Q" + tok.slice(0, 3));
@@ -293,6 +295,7 @@ const CONTEXTO = [
   { campo: "experiencia_anios", texto: "¿Cuánto llevas entrenando con regularidad?", opts: [["Menos de 1 año", 0.5], ["1-2 años", 1.5], ["2-5 años", 3], ["Más de 5 años", 6]] },
   { campo: "frecuencia_sem", texto: "¿Cuántas veces entrenas por semana?", opts: [["1-2", 1.5], ["2-3", 2.5], ["4-5", 4.5], ["6 o más", 6]] },
   { campo: "duracion_fondo_h", texto: "¿Cuánto suele durar tu salida larga?", opts: [["2-3 horas", 3], ["3-4 horas", 4], ["4-5 horas", 5], ["Más de 5 horas", 6]] },
+  { kind: "hr", texto: "¿Entrenas con monitor de ritmo cardíaco (pulsómetro)?" },
 ];
 
 function calcularIMC() {
@@ -306,6 +309,16 @@ function pasoContexto(i) {
   if (i >= CONTEXTO.length) return pasoModo();
   permitirAtras = true; snap(() => pasoContexto(i));
   const c = CONTEXTO[i];
+  if (c.kind === "hr") {
+    $(`<div class="fase">Sobre ti · ${i + 1}/${CONTEXTO.length}</div>
+      <h2>${c.texto}</h2>
+      <p class="sub">Si lo usas, podemos leer pistas del pulso (esfuerzo, calor, deshidratación).</p>
+      <div class="opts">
+        <button class="opt" onclick='ctx.usa_hr=true;nRespuestas++;prog();pasoContexto(${i + 1})'>Sí, lo uso</button>
+        <button class="opt" onclick='ctx.usa_hr=false;nRespuestas++;prog();pasoContexto(${i + 1})'>No</button>
+      </div>`);
+    return;
+  }
   if (c.kind === "sexo") {
     $(`<div class="fase">Sobre ti · ${i + 1}/${CONTEXTO.length}</div>
       <h2>${c.texto}</h2>
@@ -379,6 +392,7 @@ function elegirLimitacion(lp) {
   // D12/D14: el IMC abre rutas de investigación (señal, no conclusión)
   if (ctx.imc >= 27) metadatos.add("composicion-corporal");
   else if (ctx.imc && ctx.imc < 20) ["disponibilidad-energetica", "nutricion", "carbohidratos"].forEach(m => metadatos.add(m));
+  if (ctx.usa_hr) metadatos.add("pulso");   // D17: habilita la capa de pulso
   const tipoLim = KB.limitaciones.find(l => l.codigo === lp).tipo;
   colaBateria = KB.preguntas.filter(q => q.tipo === "bateria-inicial" &&
     (q.tipos || []).includes(tipoLim)).sort((a, b) => a.codigo.localeCompare(b.codigo));

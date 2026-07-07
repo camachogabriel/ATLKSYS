@@ -791,6 +791,82 @@ preguntas:
         metadatos: []
         puntos: {C003: -3}
 
+  # ============ Capa de pulso / indicador HR (D17) ============
+  # Todas requieren [pulso, <ruta>]: solo aparecen si el usuario usa
+  # pulsómetro (metadato pulso sembrado) Y la ruta correspondiente está abierta.
+
+  - codigo: Q063
+    texto: En cuestas o esfuerzos fuertes, ¿el pulso se te dispara enseguida, más de lo que esperarías para ese esfuerzo?
+    contexto: general
+    tipo: afinacion
+    condiciones_aparicion:
+      metadatos_requeridos: [pulso, intensidad]
+    respuestas:
+      - id: A
+        texto: Sí, se me va altísimo muy rápido
+        metadatos: []
+        puntos: {C001: 3}
+      - id: B
+        texto: Sube, pero de forma controlada
+        metadatos: []
+        puntos: {}
+      - id: C
+        texto: Al contrario, me cuesta subir el pulso y me siento plano
+        metadatos: [recuperacion]
+        puntos: {F003: 3}
+
+  - codigo: Q064
+    texto: En días de calor, ¿tu pulso está más alto de lo normal para la misma intensidad?
+    contexto: ambiente
+    tipo: afinacion
+    condiciones_aparicion:
+      metadatos_requeridos: [pulso, calor]
+    respuestas:
+      - id: A
+        texto: Sí, bastante más alto
+        metadatos: [hidratacion, sodio]
+        puntos: {D003: 3, F002: 1}
+      - id: B
+        texto: No noto diferencia
+        metadatos: []
+        puntos: {D003: -1}
+
+  - codigo: Q065
+    texto: Al final de los fondos largos, ¿el pulso se te sube aunque bajes el ritmo (se te "desacopla")?
+    contexto: fondos-largos
+    tipo: afinacion
+    condiciones_aparicion:
+      metadatos_requeridos: [pulso, disponibilidad-energetica]
+    respuestas:
+      - id: A
+        texto: Sí, sube aunque afloje
+        metadatos: [hidratacion, durabilidad]
+        puntos: {F002: 3, D001: 1, E001: 1}
+      - id: B
+        texto: Se mantiene acorde al ritmo
+        metadatos: []
+        puntos: {}
+
+  - codigo: Q066
+    texto: ¿Tu pulso en reposo (al despertar) ha estado más alto de lo normal últimamente?
+    contexto: general
+    tipo: afinacion
+    condiciones_aparicion:
+      metadatos_requeridos: [pulso, recuperacion]
+    respuestas:
+      - id: A
+        texto: Sí, más alto de lo habitual
+        metadatos: []
+        puntos: {F003: 3}
+      - id: B
+        texto: Normal
+        metadatos: []
+        puntos: {F003: -1}
+      - id: C
+        texto: No lo controlo
+        metadatos: []
+        puntos: {}
+
   # ============ Batería LP002 - Subida (tipo: subida) ============
   - codigo: Q032
     texto: ¿En qué tipo de subida te falta el aire?

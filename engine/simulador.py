@@ -121,6 +121,8 @@ def evaluacion_completa(limitacion, responder, contexto=None, verbose=True):
             metadatos.add("composicion-corporal")
         elif contexto["imc"] < 20:
             metadatos.update(["disponibilidad-energetica", "nutricion", "carbohidratos"])
+    if contexto and contexto.get("usa_hr"):
+        metadatos.add("pulso")   # D17: habilita la capa de pulso
 
     # Fase batería inicial: seleccionada por el tipo de la limitación (D10)
     lim = next(x for x in cargar("limitaciones")["limitaciones"]
