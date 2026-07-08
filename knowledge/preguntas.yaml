@@ -1176,16 +1176,26 @@ preguntas:
     tipo: bateria-inicial
     tipos: [estancamiento]
     respuestas:
+      # Orden de aparición ascendente (A,B,D,E,C). Se conservan los ids para no
+      # romper el replay de códigos viejos: C sigue siendo el rango más largo.
       - id: A
         texto: Menos de 6 meses
         metadatos: []
         puntos: {}
       - id: B
-        texto: Entre 6 meses y 2 años
+        texto: De 6 meses a 1 año
         metadatos: []
         puntos: {}
+      - id: D
+        texto: De 1 a 2 años
+        metadatos: []
+        puntos: {}
+      - id: E
+        texto: De 2 a 4 años
+        metadatos: [intensidad]
+        puntos: {}
       - id: C
-        texto: Varios años y siento que me estanqué
+        texto: Más de 4 años
         metadatos: [intensidad]
         puntos: {}
 
