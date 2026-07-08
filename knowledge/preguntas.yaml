@@ -565,7 +565,7 @@ preguntas:
       - id: A
         texto: Menos de 6
         metadatos: [recuperacion]
-        puntos: {F003: 3}
+        puntos: {F003: 5}
       - id: B
         texto: 6-7
         metadatos: []
@@ -652,6 +652,10 @@ preguntas:
         texto: Sí, sigo un plan con progresión
         metadatos: []
         puntos: {F005: -3}
+      - id: D
+        texto: No lo sé, mi entrenador lo maneja
+        metadatos: []
+        puntos: {F005: -3}   # tiene coach: estructura cubierta
 
   - codigo: Q026
     texto: ¿Tus salidas se parecen mucho entre sí (misma ruta, mismo ritmo, misma duración)?
@@ -688,6 +692,10 @@ preguntas:
         texto: Tengo un plan con intensidad y fuerza
         metadatos: []
         puntos: {F005: -3}
+      - id: D
+        texto: No lo sé, mi entrenador lo maneja
+        metadatos: []
+        puntos: {F005: -3}   # tiene coach: estructura cubierta
 
   # --- Ruta explosiva (H006 requiere C003 media: Q015B+Q024A = 6) ---
   - codigo: Q024
@@ -935,7 +943,7 @@ preguntas:
     contexto: general
     tipo: afinacion
     condiciones_aparicion:
-      metadatos_requeridos: [pulso]
+      metadatos_requeridos: [pulso-alto]
     respuestas:
       - id: A
         texto: Sí, mismo esfuerzo y potencia; solo el número del pulso es más alto
@@ -955,7 +963,7 @@ preguntas:
     contexto: general
     tipo: afinacion
     condiciones_aparicion:
-      metadatos_requeridos: [pulso]
+      metadatos_requeridos: [pulso-alto]
     respuestas:
       - id: A
         texto: Respiro bien y me siento bien, aunque el pulso marque alto
@@ -1184,7 +1192,7 @@ preguntas:
       - id: A
         texto: Sí, bastante alto y mantenido
         metadatos: []
-        puntos: {F003: 3}
+        puntos: {F003: 5}
       - id: B
         texto: Normal
         metadatos: []
@@ -1237,19 +1245,19 @@ preguntas:
     respuestas:
       - id: A
         texto: En casi cualquier esfuerzo, incluso suaves
-        metadatos: [pulso, respiracion, intensidad]
+        metadatos: [pulso, pulso-alto, respiracion, intensidad]
         puntos: {}
       - id: B
         texto: Sobre todo en días de calor
-        metadatos: [pulso, calor, hidratacion]
+        metadatos: [pulso, pulso-alto, calor, hidratacion]
         puntos: {}
       - id: C
         texto: Cuando llevo días cargado o duermo mal
-        metadatos: [pulso, recuperacion, sueno]
+        metadatos: [pulso, pulso-alto, recuperacion, sueno]
         puntos: {}
       - id: D
         texto: Solo al compararme con otros, pero me siento bien
-        metadatos: [pulso]
+        metadatos: [pulso, pulso-alto]
         puntos: {}
 
   - codigo: Q068
@@ -1261,11 +1269,11 @@ preguntas:
     respuestas:
       - id: A
         texto: Sí, se me sube incluso yendo suave
-        metadatos: [pulso, respiracion, intensidad]
+        metadatos: [pulso, pulso-alto, respiracion, intensidad]
         puntos: {}
       - id: B
         texto: No, yendo suave el pulso se mantiene bajo
-        metadatos: [pulso]
+        metadatos: [pulso, pulso-alto]
         puntos: {}
 
   - codigo: Q069

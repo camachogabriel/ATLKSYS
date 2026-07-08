@@ -34,6 +34,9 @@ metadatos:
   - estrategia-nutricional
   # Indicador HR (D17): se activa solo si el usuario usa pulsómetro
   - pulso
+  # Solo la batería de la limitación de pulso (LP008) lo activa; encierra las
+  # preguntas de "pulso como queja" (Q070-072) a ese contexto.
+  - pulso-alto
 
 # Regla de crecimiento (D3): un metadato nuevo requiere al menos una pregunta
 # que lo genere y al menos una pregunta que se active con él.

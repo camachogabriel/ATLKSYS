@@ -112,16 +112,21 @@ hipotesis:
   - codigo: H008
     nombre: Recuperación insuficiente / sobrecarga
     texto: >
-      Fatiga acumulada, falta de sueño, estrés o demasiada intensidad sin
-      días suaves impiden expresar las capacidades existentes. Entrenas, pero
-      no asimilas: sin recuperación no hay adaptación, y por eso no mejoras.
+      Cuando sientes que no mejoras, muchas veces el cuerpo se adaptó y entró
+      en "modo protección": deja de progresar. Para salir hay que variar el
+      estímulo — más intensidad si no tienes más tiempo, o más volumen si sí
+      lo tienes. Pero en tu caso la recuperación es el punto débil (poco sueño
+      y/o estrés alto), y sin recuperación esos cambios no cuajan: entrenas
+      pero no asimilas.
     elementos: [F003, F005]
     condiciones:
       - {elemento: F003, confianza_minima: alta}
     recomendacion: >
-      Priorizar sueño y bajar la carga/intensidad 1-2 semanas (descarga);
-      reducir estrés donde se pueda y asegurar días realmente suaves entre
-      los duros. Reevaluar tras ese periodo.
+      Primero endereza la recuperación: prioriza el sueño y baja el estrés
+      donde puedas; mete una semana más suave (descarga). Sobre esa base,
+      varía el estímulo (más intensidad o más volumen según tu tiempo).
+      Recuerda que mejorar es un trípode: nutrición, descanso y entrenamiento
+      trabajan juntos; ninguno solo alcanza.
     informacion_faltante:
       - Horas de sueño, HRV o sensación al despertar
       - Distribución de intensidad y días de descanso reales
