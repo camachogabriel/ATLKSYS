@@ -251,3 +251,40 @@ El quiz solo capta (escribe en `evaluaciones`). Un proceso aparte lee Supabase y
 - **Agrupación:** cada limitación/objetivo lleva `grupo` (encabezado temático). El quiz los muestra agrupados en la pantalla de selección (5 grupos: Fondos y resistencia, Subidas/piernas/potencia, Explosividad, Pulso/calor/ambiente, Progreso). Escala al crecer el catálogo sin listas planas largas.
 - **"Ninguna me describe — cuéntame la tuya":** en vez de inventar limitaciones sin evidencia, el usuario escribe su caso con sus palabras + correo. Se guarda en la tabla `sugerencias` (RLS insert-only), NO corre el motor. Sirve de: lead, señal de roadmap con demanda real, y promesa de contacto ("te escribimos cuando lo integremos"). Las nuevas limitaciones nacen de estos casos, no de suposiciones.
 - Tabla `sugerencias`: tipo (limitacion|objetivo), texto, email, contexto, revisada, integrada. Se revisa en el panel de Supabase.
+
+## D25. Razonamiento por naturaleza de la limitación: rendimiento vs. energía, y detección de carga
+
+Nace de la calibración de casos reales (2026-07-08). Un mismo síntoma puede tener varias raíces, y hoy el motor no las desenreda ni pondera según de qué *tipo* de limitación se trata. Este es el marco; se implementa por fases (D25.1 → D25.4).
+
+**Principio rector — el eje rendimiento ↔ energía.** Toda limitación cae en algún punto entre dos naturalezas, y eso decide qué evidencia pesa más:
+
+- **Rendimiento** ("no mejoro", "me falta aire en las cuestas", "no aguanto la intensidad"): lo que más informa es *cuándo y cómo entreno* — carga (volumen, frecuencia), estructura, distribución de intensidad, progresión y recuperación. Las preguntas de entrenamiento pesan más aquí.
+- **Energía** ("se me apaga el motor al final del fondo", "me quedo sin fuerzas"): lo que más informa es *cómo me alimento e hidrato* durante y alrededor del esfuerzo. Las preguntas de nutrición/hidratación pesan más aquí.
+
+Cada limitación (`limitaciones.yaml`) llevará un campo `naturaleza: rendimiento | energia | mixta`. La `naturaleza` no puntúa por sí sola: modula (a) qué preguntas de afinación se priorizan y (b) el desempate entre hipótesis con score parecido, de modo que en una limitación de rendimiento no gane una hipótesis nutricional por un punto, y viceversa.
+
+**Regla de las raíces múltiples.** Para los síntomas ambiguos, el motor debe recorrer explícitamente las raíces posibles antes de concluir, en orden de "lo más corregible / más frecuente" primero:
+
+- *"No mejoro" (LP009)* → dos ramas opuestas: **estancamiento** (falta estímulo → hay que subir volumen o intensidad) vs. **sobreentrenamiento/mala recuperación** (sobra carga o falta descanso → hay que bajar y recuperar). Hoy solo cubrimos bien la segunda (H008). Falta detectar la carga para decidir la rama — ver D25.1.
+- *"Se apaga el motor en fondos"* → nutrición/hidratación insuficiente (H001/H007) · llega fatigado / mal descanso (H008) · se sobreexige por nivel aeróbico bajo (H004) · pacing (H003). Orden de descarte en D25.2.
+- *"Falta aire en cuestas"* → falta de trabajo de intensidad (H005) **si** aparece solo en esfuerzos fuertes; pero **si es desde el inicio y vive agitado** → nivel aeróbico bajo (H004), agravado por peso alto + poco entrenamiento + sobreexigencia (H010). Discriminador en D25.3.
+
+### D25.1 — Detección de carga de entrenamiento (falta hoy)
+
+No hay preguntas que digan si la carga es **alta** o **baja**; sin eso no se puede separar estancamiento de sobreentrenamiento. Se añade:
+
+- **Señal de contexto (ya la tenemos, no puntúa, orienta):** `frecuencia_sem` y `duracion_fondo`. Poca frecuencia (≤3 días) o fondos cortos (≤4 h) → hay *margen para subir volumen* (lado sub-entrenamiento). Frecuencia alta + fondos largos + mala recuperación → lado sobrecarga.
+- **Preguntas nuevas de carga** (afinación, ruta estancamiento): volumen semanal percibido y su tendencia; cuántos días duros por semana; si mete semanas de descarga. Nuevos destinos de puntos: un factor de **carga** (p. ej. `F010 carga de entrenamiento`, + = mucha, − = poca) que alimente el desempate estancamiento vs. sobrecarga.
+- **Hipótesis nueva `H014` sub-entrenamiento / falta de volumen:** entrena poco y de forma monótona, con recuperación sana → el margen está en *entrenar más y mejor* (subir volumen primero, luego intensidad). Contraindicada si F003 (recuperación) es alta-negativa o la carga ya es alta.
+- **Orden de recomendación cuando coexisten mala recuperación + carga baja** (el caso de Gabriel): primero recuperación, y *sobre esa base* subir volumen y después intensidad. Ya está en el texto de H008; se generaliza.
+
+### D25.2 y D25.3 — Discriminadores por síntoma
+
+- **Fondos ("se apaga el motor"):** cadena de preguntas que pregunte primero si *comer/beber revive* (→ energía, H001/H007), si *llega cansado* (→ H008), si *va más duro de lo que debería / sube el pulso pronto* (→ pacing H003 / aeróbico H004). La `naturaleza: energia` de esta limitación hace que, en empate, gane la rama nutricional.
+- **Cuestas ("falta aire"):** discriminador de **inicio vs. solo en fuerte** y **agitación sostenida**. Solo en esfuerzos fuertes → intensidad (H005). Desde el inicio + agitado siempre → aeróbico bajo (H004); si además IMC alto y poca frecuencia → peso-potencia (H010). `naturaleza: rendimiento`.
+
+### D25.4 — Textos de recomendación por perfil
+
+Las recomendaciones dejan de ser un único texto por hipótesis y pasan a componerse según el perfil detectado (combinación de factores + contexto). Ejemplo objetivo del caso LP009 con estrés alto + poco sueño + 2-3 días + fondos ≤4 h: *"primero mejora el descanso; sobre esa base sube el volumen y luego la intensidad"*. Se implementa como variantes de recomendación dentro de la hipótesis, seleccionadas por condiciones (igual mecanismo que las hipótesis).
+
+**Estado:** marco aprobado 2026-07-08. Pendiente de implementar por fases; empezar por D25.1 (carga) porque desbloquea el caso más frecuente ("no mejoro").
