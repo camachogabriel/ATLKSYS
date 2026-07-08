@@ -1,62 +1,50 @@
-# AthleteTrainLab - Catálogo de servicios v1.0
-# Fuente: docs/12-decisiones-de-logica.md (D23)
-# Mapea el resultado de una evaluación (hipótesis activadas) a ofertas de
-# servicio para el reporte/correo. Es conocimiento comercial versionable:
-# cambiar ofertas o disparadores no toca el quiz ni el motor.
+# AthleteTrainLab - Catálogo de servicios v2.0
+# Fuente: docs/12-decisiones-de-logica.md (D23) + servicios reales de
+# athletetrainlab.com. Mapea el resultado (hipótesis) a ofertas para el correo.
+# Conocimiento comercial versionable: cambiar esto no toca el quiz ni el motor.
 #
-# activar_si.hipotesis: si alguna de estas hipótesis está entre las activadas
-#   (principal o secundarias), el servicio se ofrece.
-# siempre: true -> se ofrece siempre (fallback de cierre).
-# prioridad: menor = aparece antes en el reporte.
+# activar_si.hipotesis: si alguna está entre las activadas, se ofrece.
+# siempre: true -> se ofrece siempre (cierre). prioridad: menor aparece antes.
 
 servicios:
   - codigo: SV_BIKEFIT
-    nombre: Estudio de posición (Bike Fit)
+    nombre: Sistema de Bike Fit 3D
+    url: https://www.athletetrainlab.com/sistemadebikefit3d
     prioridad: 1
     gancho: >
       Tu evaluación apunta a que la posición o la técnica te están
-      sobrecargando. Un bike fit corrige eso y suele desbloquear rendimiento
-      y comodidad de inmediato.
+      sobrecargando. Un Bike Fit 3D ajusta tu posición para que el músculo
+      correcto trabaje, y suele desbloquear rendimiento y comodidad enseguida.
     activar_si:
       hipotesis: [H015]
 
-  - codigo: SV_COACHING
-    nombre: Planes de entrenamiento / coaching
+  - codigo: SV_ENTRENO
+    nombre: Plan de Entrenamientos
+    url: https://www.athletetrainlab.com/plandeentrenamientos
     prioridad: 1
     gancho: >
-      Tu mayor margen está en cómo entrenas. Un plan estructurado con
-      progresión (y acompañamiento) convierte el esfuerzo que ya haces en
-      mejora real.
+      Tu mayor margen está en cómo entrenas y te alimentas en la bici. Un plan
+      personalizado con progresión, intensidad y estrategia de nutrición
+      convierte el esfuerzo que ya haces en mejora real.
     activar_si:
-      hipotesis: [H009, H012, H002, H008]
+      hipotesis: [H009, H012, H002, H008, H001, H007]
 
-  - codigo: SV_NUTRICION
-    nombre: Asesoría nutricional
-    prioridad: 1
-    gancho: >
-      La energía disponible parece tu limitante. Una estrategia de
-      alimentación e hidratación bien diseñada cambia por completo cómo
-      terminas los fondos.
-    activar_si:
-      hipotesis: [H001, H007]
-
-  - codigo: SV_FISIOLOGIA
-    nombre: Valoración fisiológica y tests
+  - codigo: SV_PRUEBAS
+    nombre: Pruebas de Rendimiento (VO2máx y Lactato)
+    url: https://www.athletetrainlab.com/pruebasderendimiento
     prioridad: 2
     gancho: >
-      Para afinar de verdad conviene medir: umbrales, metabolismo y respuesta
-      cardíaca. Una valoración fisiológica te da los números para entrenar
-      con precisión.
+      Para afinar de verdad conviene medir: VO2máx, umbrales de lactato y
+      respuesta cardíaca. Una evaluación fisiológica te da los números para
+      entrenar con precisión y saber exactamente en qué mejorar.
     activar_si:
       hipotesis: [H004, H005, H013, H010, H006]
 
   - codigo: SV_CONTACTO
-    nombre: Habla con nosotros (análisis personalizado)
+    nombre: Agenda una cita con nosotros
+    url: https://www.athletetrainlab.com/contactoatl
     prioridad: 9
     gancho: >
-      ¿Quieres que revisemos tu caso a fondo? Escríbenos y te damos una
+      ¿Quieres que revisemos tu caso a fondo? Agenda una cita y te damos una
       orientación personalizada según tu evaluación.
     siempre: true
-
-# Nota: el reporte muestra los servicios activados ordenados por prioridad.
-# El de contacto (SV_CONTACTO) cierra siempre.
