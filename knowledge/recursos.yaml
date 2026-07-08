@@ -1,0 +1,31 @@
+# AthleteTrainLab - Recursos (videos) v1.0
+# Se muestran en el correo según la hipótesis principal. Si ninguno coincide,
+# se muestran los generales (zonas y fatiga). Conocimiento versionable.
+
+recursos:
+  - codigo: R_DESCANSO
+    titulo: Cómo mejorar tu descanso y recuperación
+    url: https://youtu.be/YvkaXwLeE_c
+    hipotesis: [H008]
+
+  - codigo: R_NUTRICION
+    titulo: Alimentación en fondos y carreras
+    url: https://youtu.be/vLLAqg9L1I4
+    hipotesis: [H001, H007]
+
+  - codigo: R_FATIGA
+    titulo: Charla sobre la fatiga
+    url: https://youtu.be/ixbQAGieIRk
+    hipotesis: [H008, H002, H013]
+    general: true
+
+  - codigo: R_PRINCIPIANTES
+    titulo: Guía de entrenamiento para principiantes
+    url: https://youtu.be/qo50IgQs2kY
+    hipotesis: [H009, H012]
+
+  - codigo: R_ZONAS
+    titulo: Zonas de entrenamiento explicadas
+    url: https://youtu.be/h-ajG_gd91o
+    hipotesis: [H009, H012, H004, H005]
+    general: true
