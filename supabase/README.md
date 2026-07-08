@@ -1,37 +1,28 @@
-# Supabase — captura y reporte por correo
+# Supabase — captura y correo (en producción)
 
-## Arquitectura (separación captura / entrega)
-
+## Flujo
 ```
-Quiz (GitHub Pages)  --insert-->  tabla evaluaciones  --webhook INSERT-->  Edge Function enviar-reporte  --Brevo-->  correo al usuario
+Quiz (GitHub Pages) --insert--> tabla evaluaciones --trigger pg_net--> Edge Function enviar-reporte --Brevo--> correo
 ```
+- Quiz capta y escribe en `evaluaciones` (RLS insert-only). No envía correo.
+- Trigger `on_evaluacion_insert` (pg_net) llama a la función al insertarse una fila.
+- Edge Function `enviar-reporte` cruza la hipótesis con `servicios.yaml` y envía por Brevo.
+- Sugerencias de casos propios del usuario -> tabla `sugerencias` (RLS insert-only).
 
-- **Quiz**: solo capta y escribe en `evaluaciones` (RLS insert-only). No envía correo.
-- **Edge Function `enviar-reporte`**: al insertarse una fila, cruza la hipótesis con el catálogo de servicios y envía el correo. La lógica comercial (qué servicio ofrecer) es conocimiento versionable en `knowledge/servicios.yaml`.
+## Correo (Brevo)
+- Proveedor: Brevo (api.brevo.com/v3/smtp/email). Free 300/día.
+- Dominio `athletetrainlab.com` autenticado (DKIM brevo1/brevo2 + SPF + brevo-code) vía integración Brevo-Wix.
+- Secrets en Supabase (Edge Functions): `BREVO_API_KEY`, `FROM_EMAIL` (= "AthleteTrainLab <hola@athletetrainlab.com>"), opcional `REPLY_TO` (default athletetrainlab@gmail.com).
+- Remitente desde el dominio autenticado (cumple requisitos Google/Yahoo/MS). Respuestas via reply-to al gmail.
 
-## Catálogo de servicios
+## Cambiar servicios / correo
+Editar `knowledge/servicios.yaml` (fuente única) -> `python3 supabase/build_function.py` -> redeploy de la función.
 
-`knowledge/servicios.yaml` es la **única fuente de verdad** del mapeo hipótesis → servicio (bike fit, coaching, nutrición, valoración fisiológica, contacto). `engine/reporte.py` prueba el emparejamiento en local. El `index.ts` de la función **se genera** desde el YAML:
+## Diagnóstico
+La respuesta de Brevo queda en `net._http_response` (Postgres):
+`select status_code, content from net._http_response order by created desc limit 5;`
+- content con `messageId` = enviado. `no-op` = falta BREVO_API_KEY. Error de Brevo = aparece su mensaje.
 
-```
-python3 supabase/build_function.py     # regenera functions/enviar-reporte/index.ts
-# luego redeplegar la función (MCP o `supabase functions deploy enviar-reporte`)
-```
-
-No editar el bloque de datos del `index.ts` a mano: editar el YAML y regenerar.
-
-## Pasos manuales pendientes (los hace Gabriel)
-
-1. **Cuenta en Brevo** (resend.com, plan gratis). Verificar un dominio remitente (o usar `onboarding@resend.dev` para pruebas).
-2. **Secrets** en Supabase → Project Settings → Edge Functions → Secrets:
-   - `BREVO_API_KEY` = la API key de Brevo.
-   - `FROM_EMAIL` = remitente verificado, ej. `AthleteTrainLab <hola@tudominio.com>`.
-   Sin `BREVO_API_KEY` la función no falla: registra y no envía (no-op).
-3. **Database Webhook**: Supabase → Database → Webhooks → crear:
-   - Tabla `public.evaluaciones`, evento `INSERT`.
-   - Tipo: Supabase Edge Function → `enviar-reporte`.
-   - Incluye la service role key en el header (opción del asistente de webhooks).
-
-## Probar
-
-Tras configurar los secrets, completar una evaluación en el quiz debería llegar un correo. Los logs de la función están en Supabase → Edge Functions → enviar-reporte → Logs.
+## Pendiente / mejoras
+- Panel para leer evaluaciones + sugerencias.
+- Verificar entregabilidad real (bandeja vs spam) con envíos a varios proveedores.
