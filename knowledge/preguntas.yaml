@@ -56,7 +56,7 @@ preguntas:
         puntos: {F005: 3}
 
   - codigo: Q075
-    texto: ¿Sueles llegar descansado y con buen sueño a tus entrenamientos?
+    texto: ¿Sueles llegar descansado y bien dormido a tus entrenamientos?
     contexto: general
     tipo: perfil
     respuestas:
