@@ -288,3 +288,21 @@ No hay preguntas que digan si la carga es **alta** o **baja**; sin eso no se pue
 Las recomendaciones dejan de ser un único texto por hipótesis y pasan a componerse según el perfil detectado (combinación de factores + contexto). Ejemplo objetivo del caso LP009 con estrés alto + poco sueño + 2-3 días + fondos ≤4 h: *"primero mejora el descanso; sobre esa base sube el volumen y luego la intensidad"*. Se implementa como variantes de recomendación dentro de la hipótesis, seleccionadas por condiciones (igual mecanismo que las hipótesis).
 
 **Estado:** marco aprobado 2026-07-08. Pendiente de implementar por fases; empezar por D25.1 (carga) porque desbloquea el caso más frecuente ("no mejoro").
+
+## D26. La limitación declarada manda; lo demás son "otros hallazgos" + pasada extendida opcional
+
+Refina D25 con una observación del 2026-07-08: que el motor detecte una segunda limitación (p. ej. nutrición en una consulta por dolor) NO es un error — es información valiosa. El error sería dejar que esa segunda cosa le robe el titular a lo que la persona vino a preguntar. La limitación declarada define la **consulta**, y su elemento núcleo debe pesar más que el resto.
+
+**Prioridad de la limitación declarada.** Cada limitación tiene un elemento/hipótesis núcleo (LP003 → F007/H015; LP001 → D001/H001; LP009 → F003/H008; etc.). En el ranking, la hipótesis núcleo de la limitación declarada:
+
+- Se reporta SIEMPRE como respuesta a la consulta, aunque otra hipótesis puntúe algo más alto, siempre que su elemento alcance al menos confianza media.
+- Recibe un pequeño bono de desempate (coherente con la `naturaleza` de D25), para que no la desplace otra hipótesis por 1-2 puntos.
+
+**Resultado en dos secciones.** El informe (pantalla y correo) se separa en:
+
+1. *"Sobre lo que preguntaste"* — la hipótesis núcleo de la limitación declarada, con su recomendación.
+2. *"Además notamos que podría estar afectándote"* — hipótesis secundarias que superaron su umbral (nutrición, base aeróbica, recuperación…), en tono de hallazgo, no de diagnóstico. Es exactamente el caso del dolor + mala nutrición: titular = dolor/técnica; nota secundaria = nutrición.
+
+**Pasada extendida opcional.** La evaluación base se mantiene **corta y enfocada** en la limitación declarada (D25: no perseguir rutas ajenas). Al final, un botón *"Ver qué más podría estar frenándome"* abre una tanda de **preguntas genéricas transversales** (base aeróbica, carga, nutrición, recuperación, fuerza) que buscan co-limitaciones fuera del foco inicial. Así, quien solo quiere respuesta a su queja la obtiene rápido; quien quiere el panorama completo, opta por profundizar. Los resultados de esta pasada alimentan la sección "además notamos".
+
+**Estado:** principio aprobado 2026-07-08; se implementa junto con D25 (la prioridad y las dos secciones son baratas; la pasada extendida es una fase aparte).
