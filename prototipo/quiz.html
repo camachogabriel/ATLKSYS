@@ -35,6 +35,9 @@
   .btn:disabled { opacity: .4; cursor: default; }
   input[type=email], input.txt { width: 100%; background: #1c2129; border: 1px solid var(--border); color: var(--txt);
     padding: 14px 16px; border-radius: 10px; font-size: 16px; margin-bottom: 16px; }
+  label.check { display: flex; gap: 10px; align-items: flex-start; text-align: left; cursor: pointer;
+    color: var(--txt); font-size: 14px; line-height: 1.4; margin: 4px 0 18px; }
+  label.check input { width: 18px; height: 18px; margin-top: 1px; flex: 0 0 auto; accent-color: var(--acc); }
   .spinner { width: 46px; height: 46px; border: 4px solid var(--border); border-top-color: var(--acc);
     border-radius: 50%; margin: 26px auto; animation: spin 0.9s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
@@ -567,11 +570,15 @@ function pasoEmail() {
     <h2>Tu resultado está listo</h2>
     <p class="sub">Déjanos tu nombre y tu correo, y te mostramos la hipótesis principal de tu
     limitación, la evidencia que la sostiene y una recomendación inicial.</p>
-    <input type="text" class="txt" id="nombre" placeholder="Tu nombre" autocomplete="given-name">
+    <input type="text" class="txt" id="nombre" placeholder="Tu nombre (opcional)" autocomplete="given-name">
     <input type="email" id="email" placeholder="tu@correo.com">
-    <button class="btn" onclick="verResultado()">Ver mis resultados</button>
-    <p class="disclaimer">Guardamos tu correo y tu evaluación para enviarte el resultado
-    y mejorar el sistema. No los compartimos con terceros.</p>
+    <input type="tel" class="txt" id="telefono" placeholder="Tu teléfono / WhatsApp (opcional)" autocomplete="tel">
+    <label class="check"><input type="checkbox" id="quiereInfo">
+      <span>Me gustaría recibir información de los servicios para mejorar mi rendimiento.</span></label>
+    <button class="btn" onclick="verResultado()">Enviar evaluación por correo</button>
+    <p class="disclaimer">Verás tu resultado en pantalla y también te lo enviamos por correo
+    (puede tardar un poco). Guardamos tus datos para enviarte el resultado y mejorar el
+    sistema; no los compartimos con terceros.</p>
   </div>`);
 }
 
@@ -580,6 +587,9 @@ function verResultado() {
   if (!/.+@.+\..+/.test(e)) { document.getElementById("email").style.borderColor = "#f87171"; return; }
   const nom = (document.getElementById("nombre").value || "").trim();
   ctx.nombre = nom.slice(0, 60) || null;
+  const tel = (document.getElementById("telefono").value || "").trim();
+  ctx.telefono = tel.slice(0, 30) || null;
+  ctx.quiere_info = document.getElementById("quiereInfo").checked;
   ctx.email = e;
   guardarEvaluacion();
   interludio("Generando tu informe…", pasoResultado);
@@ -597,6 +607,8 @@ function guardarEvaluacion() {
       codigo: generarCodigo(),
       email: ctx.email || null,
       nombre: ctx.nombre || null,
+      telefono: ctx.telefono || null,
+      quiere_info: !!ctx.quiere_info,
       modo,
       objetivo: objetivo ? objetivo.codigo : null,
       limitacion,

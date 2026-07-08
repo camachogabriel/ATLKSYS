@@ -8,6 +8,7 @@ const SB_URL = Deno.env.get("SUPABASE_URL");
 const SB_SVC = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 const LOGO = "https://static.wixstatic.com/media/9d1be0_e4ee180b08184d159adbfa2a55f4ace3~mv2.png/v1/fill/w_405,h_254/ATLLogoColores.png";
 const SITE = "https://www.athletetrainlab.com", IG = "https://www.instagram.com/athletetrainlab", WA = "https://wa.me/50688445505", AGENDA = "https://www.athletetrainlab.com/contactoatl";
+const LEAD = Deno.env.get("LEAD_EMAIL") ?? "athletetrainlab@gmail.com";
 
 async function cargarConfig() {
   const r = await fetch(SB_URL + "/rest/v1/config_correo?select=clave,valor", { headers: { apikey: SB_SVC, Authorization: "Bearer " + SB_SVC } });
@@ -65,6 +66,20 @@ function construirHTML(C: any, row: any): string {
   return `<div style='background:#f4f5f7;padding:24px 0;font-family:Arial,Helvetica,sans-serif'><div style='max-width:560px;margin:auto;background:#fff;border-radius:14px;overflow:hidden;border:1px solid #e6e8eb'><div style='background:#0d1117;padding:22px;text-align:center'><img src='${LOGO}' alt='AthleteTrainLab' width='170' style='display:inline-block;max-width:170px'></div><div style='padding:26px 28px'><h1 style='font-size:20px;margin:0 0 6px;color:#1a1a2e'>Tu evaluación está lista</h1><p style='color:#5a6472;font-size:14px;margin:0 0 14px'>${saludo}Gracias por completar tu análisis. AthleteTrainLab no es un diagnóstico: es un sistema que, a partir de tus respuestas, estima <strong>qué áreas conviene revisar</strong> para que rindas mejor. Reduce la incertidumbre y te orienta por dónde empezar; no reemplaza una valoración profesional.</p>${resultado}${pasosBlock}${radarBlock}<h2 style='font-size:15px;margin:22px 0 4px;color:#1a1a2e'>Cómo podemos ayudarte</h2>${cards}${recBlock}<div style='background:#f0f9f4;border:1px solid #d5ead9;border-radius:10px;padding:16px 18px;margin:22px 0 4px'><div style='color:#1a1a2e;font-weight:700;font-size:15px;margin-bottom:6px'>Los 3 pilares: entrenamiento, descanso y nutrición</div><div style='color:#5a6472;font-size:14px'>Mejorar nunca depende de una sola cosa. El entrenamiento, el descanso y la nutrición son un trípode que debe estar en equilibrio: no puedes entrenar más sin una buena recuperación y una buena alimentación que lo sostengan. Entrenar y progresar depende tanto de esos dos pilares como del entreno en sí. Es lo que la mayoría pasa por alto, y por eso es lo primero que conviene cuidar.</div></div><div style='text-align:center;margin-top:16px'><a href='${WA}' style='display:inline-block;background:#25d366;color:#fff;text-decoration:none;font-size:14px;font-weight:700;padding:12px 22px;border-radius:9px;margin:4px'>Escríbenos por WhatsApp</a><a href='${AGENDA}' style='display:inline-block;background:#4fa96e;color:#fff;text-decoration:none;font-size:14px;font-weight:700;padding:12px 22px;border-radius:9px;margin:4px'>Agenda una cita</a></div></div><div style='background:#f4f5f7;padding:16px 28px;text-align:center;color:#8b95a3;font-size:12px'><a href='${SITE}' style='color:#4fa96e;text-decoration:none'>athletetrainlab.com</a> · <a href='${IG}' style='color:#4fa96e;text-decoration:none'>Instagram</a><br>Orientación basada en tus respuestas, no un diagnóstico médico.</div></div></div>`;
 }
 
+async function avisoInterno(row: any, key: string, from: { name: string; email: string }) {
+  const nom = row.nombre || row.email;
+  const canal = row.telefono ? "WhatsApp / mensaje de texto" : "Correo";
+  const html = `<div style='font-family:Arial,sans-serif;font-size:14px;color:#1a1a2e'>` +
+    `<p>Nueva persona interesada en los servicios (marcó el checkbox en la evaluación).</p>` +
+    `<p><b>Nombre:</b> ${esc(row.nombre || "—")}<br>` +
+    `<b>Correo:</b> ${esc(row.email || "—")}<br>` +
+    `<b>Teléfono:</b> ${esc(row.telefono || "—")}<br>` +
+    `<b>Canal sugerido:</b> ${canal}</p>` +
+    `<p><b>Limitación:</b> ${esc(row.limitacion || "—")} · <b>Hipótesis:</b> ${esc(row.hipotesis_principal || "—")}${row.preliminar ? " (preliminar)" : ""}<br>` +
+    `<b>Código:</b> ${esc(row.codigo || "—")}</p>` +
+    `<p style='color:#5a6472'>Responde a este correo para escribirle directamente.</p></div>`;
+  await fetch("https://api.brevo.com/v3/smtp/email", { method: "POST", headers: { "Content-Type": "application/json", "accept": "application/json", "api-key": key }, body: JSON.stringify({ sender: from, replyTo: { email: row.email, name: row.nombre || "Contacto" }, to: [{ email: LEAD }], subject: "Contactar: " + nom, htmlContent: html }) });
+}
 serve(async (req) => {
   try {
     const payload = await req.json();
@@ -80,6 +95,7 @@ serve(async (req) => {
     if (!key) { console.log("no BREVO_API_KEY; no-op", row.id); return new Response("no-op", { status: 200 }); }
     const C = await cargarConfig();
     const r = await fetch("https://api.brevo.com/v3/smtp/email", { method: "POST", headers: { "Content-Type": "application/json", "accept": "application/json", "api-key": key }, body: JSON.stringify({ sender: { name: fromName, email: fromEmail }, replyTo: { email: replyRaw, name: "AthleteTrainLab" }, to: [{ email }], subject: "Tu evaluación AthleteTrainLab", htmlContent: construirHTML(C, row) }) });
+    if (row.quiere_info) { try { await avisoInterno(row, key, { name: fromName, email: fromEmail }); } catch (e) { console.error("aviso interno falló:", e); } }
     return new Response(await r.text(), { status: r.ok ? 200 : 502 });
   } catch (e) {
     console.error("error enviar-reporte:", e);
