@@ -38,6 +38,10 @@
   label.check { display: flex; gap: 10px; align-items: flex-start; text-align: left; cursor: pointer;
     color: var(--txt); font-size: 14px; line-height: 1.4; margin: 4px 0 18px; }
   label.check input { width: 18px; height: 18px; margin-top: 1px; flex: 0 0 auto; accent-color: var(--acc); }
+  .tema { display: inline-block; font-size: 11px; letter-spacing: .05em; text-transform: uppercase;
+    color: var(--acc); border: 1px solid var(--border); border-radius: 999px; padding: 3px 11px; margin-bottom: 12px; }
+  .ilus { margin: 2px 0 16px; text-align: center; }
+  .ilus svg { max-width: 240px; height: auto; }
   .spinner { width: 46px; height: 46px; border: 4px solid var(--border); border-top-color: var(--acc);
     border-radius: 50%; margin: 26px auto; animation: spin 0.9s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
@@ -546,8 +550,12 @@ function pasoAfinacion() {
 
 function pantallaPregunta(q, fase, alResponder) {
   const texto = (modo === "objetivo" && q.texto_objetivo) ? q.texto_objetivo : q.texto;
+  const tema = q.tema ? `<div class="tema">${q.tema}</div>` : "";
+  const ilus = q.imagen ? `<div class="ilus">${q.imagen}</div>` : "";
   $(`<div class="fase">${fase}</div>
+    ${tema}
     <h2>${texto}</h2>
+    ${ilus}
     <div class="opts">${q.respuestas.map((r, i) =>
       `<button class="opt" data-i="${i}">${r.texto}</button>`).join("")}
     </div>`);

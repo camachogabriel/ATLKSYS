@@ -191,6 +191,7 @@ preguntas:
 
   - codigo: Q002
     texto: ¿Cuántos gramos de carbohidratos consumes por hora durante un fondo largo?
+    tema: Nutrición
     contexto: fondos-largos
     tipo: afinacion
     condiciones_aparicion:
@@ -267,6 +268,7 @@ preguntas:
 
   - codigo: Q061
     texto: ¿Sientes que dependes mucho de comer para rendir — que si no comes seguido te apagas rápido?
+    tema: Nutrición
     contexto: fondos-largos
     tipo: afinacion
     condiciones_aparicion:
@@ -765,10 +767,12 @@ preguntas:
 
   - codigo: Q057
     texto: Ese peso de más, ¿dónde lo notas sobre todo?
+    tema: Composición corporal
     contexto: general
     tipo: afinacion
     condiciones_aparicion:
       metadatos_requeridos: [composicion-corporal]
+      metadatos_excluidos: [tecnica]  # no perseguir composición en una queja muscular/técnica (D25)
     respuestas:
       - id: A
         texto: En la zona abdominal o media
@@ -784,29 +788,34 @@ preguntas:
         puntos: {}
 
   # --- Ruta técnica / posicionamiento ---
+  # Reubicada fuera de la ruta de técnica (D25): era una pregunta de posición en
+  # grupo, no de pedaleo, y no aportaba a un diagnóstico de dolor muscular.
+  # Queda gateada en 'pacing' (ruta no activa hoy) y reformulada sin regionalismos.
   - codigo: Q029
-    texto: ¿Dónde estás colocado cuando el ritmo se rompe?
+    texto: En una salida en grupo, cuando el ritmo se pone duro, ¿dónde sueles quedar?
     contexto: general
     tipo: afinacion
     condiciones_aparicion:
-      metadatos_requeridos: [tecnica]
+      metadatos_requeridos: [pacing]
     respuestas:
       - id: A
-        texto: Atrás, donde me pilla
+        texto: Atrás, me cuesta sostener el ritmo del grupo
         metadatos: []
-        puntos: {F007: 3}
+        puntos: {F006: 3}
       - id: B
-        texto: Suelo pelear la posición adelante
+        texto: Adelante o en medio, aguanto bien la posición
         metadatos: []
-        puntos: {F007: -1}
+        puntos: {F006: -1}
 
   # --- Ruta recuperación entre esfuerzos ---
   - codigo: Q030
     texto: Tras un esfuerzo fuerte, ¿cuánto tardas en poder repetir otro parecido?
+    tema: Recuperación
     contexto: general
     tipo: afinacion
     condiciones_aparicion:
       metadatos_requeridos: [intensidad]
+      metadatos_excluidos: [tecnica]  # no aporta a una queja muscular/técnica (D25)
     respuestas:
       - id: A
         texto: Mucho más que otros de mi nivel
@@ -1082,34 +1091,41 @@ preguntas:
 
   # --- Afinación de sobrecarga muscular / técnica (D22) ---
   - codigo: Q089
-    texto: ¿Tienes poca flexibilidad o movilidad (isquios, cadera, tobillo)?
+    texto: "Prueba de flexibilidad: de pie y sin doblar las rodillas, ¿logras tocarte los pies con las manos?"
+    tema: Movilidad y flexibilidad
     contexto: general
     tipo: afinacion
     condiciones_aparicion:
       metadatos_requeridos: [tecnica]
     respuestas:
       - id: A
-        texto: Sí, soy bastante rígido
-        metadatos: []
-        puntos: {F007: 3}
-      - id: B
-        texto: Normal / trabajo la movilidad
+        texto: Sí, me toco los pies con facilidad
         metadatos: []
         puntos: {F007: -1}
+      - id: B
+        texto: Con algo de dificultad, casi llego
+        metadatos: []
+        puntos: {F007: 1}
+      - id: C
+        texto: No, me cuesta bastante, no llego a los pies
+        metadatos: []
+        puntos: {F007: 3}
 
   - codigo: Q090
-    texto: ¿Sientes que empujas casi todo con el cuádriceps y poco con el glúteo?
+    texto: Al pedalear fuerte, ¿sientes que trabajas casi todo con el muslo (la parte de adelante) y muy poco con el glúteo?
+    tema: Técnica de pedaleo
+    imagen: "<svg viewBox='0 0 240 190' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='Muslo (cuádriceps) y glúteo'><ellipse cx='74' cy='52' rx='36' ry='31' fill='#3a4657'/><path d='M74 68 Q126 78 150 152 Q153 172 137 178 Q116 150 98 122 Q74 100 62 84 Z' fill='#2a3140'/><path d='M96 96 Q132 112 146 152 Q120 142 100 120 Q90 106 96 96 Z' fill='#4fa96e'/><ellipse cx='70' cy='50' rx='23' ry='18' fill='#e7c13c'/><text x='4' y='24' fill='#e7c13c' font-size='13' font-family='Arial'>Glúteo (la nalga)</text><text x='150' y='116' fill='#4fa96e' font-size='13' font-family='Arial'>Cuádriceps</text><text x='150' y='132' fill='#8b95a3' font-size='11' font-family='Arial'>(muslo, al frente)</text></svg>"
     contexto: general
     tipo: afinacion
     condiciones_aparicion:
       metadatos_requeridos: [tecnica]
     respuestas:
       - id: A
-        texto: Sí, el cuádriceps hace casi todo
+        texto: Sí, el muslo (cuádriceps) hace casi todo
         metadatos: []
-        puntos: {F007: 5}
+        puntos: {F007: 6}
       - id: B
-        texto: Siento que reparto bien el pedaleo
+        texto: No, reparto bien entre muslo y glúteo
         metadatos: []
         puntos: {F007: -3}
 
@@ -1467,13 +1483,16 @@ preguntas:
 
   - codigo: Q040
     texto: ¿Consumes carbohidratos antes y durante los entrenamientos exigentes?
+    tema: Nutrición
     contexto: general
     tipo: bateria-inicial
     tipos: [fatiga-muscular-metabolica]
     respuestas:
+      # "No" ya no abre la ruta de carbohidratos (Q002/Q061): no usar carbos solo
+      # es señal si hay una queja de energía; aquí la queja es muscular (D25).
       - id: A
         texto: No, casi nunca
-        metadatos: [nutricion, carbohidratos]
+        metadatos: []
         puntos: {}
       - id: B
         texto: Sí, habitualmente
