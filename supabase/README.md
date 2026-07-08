@@ -3,7 +3,7 @@
 ## Arquitectura (separación captura / entrega)
 
 ```
-Quiz (GitHub Pages)  --insert-->  tabla evaluaciones  --webhook INSERT-->  Edge Function enviar-reporte  --Resend-->  correo al usuario
+Quiz (GitHub Pages)  --insert-->  tabla evaluaciones  --webhook INSERT-->  Edge Function enviar-reporte  --Brevo-->  correo al usuario
 ```
 
 - **Quiz**: solo capta y escribe en `evaluaciones` (RLS insert-only). No envía correo.
@@ -22,11 +22,11 @@ No editar el bloque de datos del `index.ts` a mano: editar el YAML y regenerar.
 
 ## Pasos manuales pendientes (los hace Gabriel)
 
-1. **Cuenta en Resend** (resend.com, plan gratis). Verificar un dominio remitente (o usar `onboarding@resend.dev` para pruebas).
+1. **Cuenta en Brevo** (resend.com, plan gratis). Verificar un dominio remitente (o usar `onboarding@resend.dev` para pruebas).
 2. **Secrets** en Supabase → Project Settings → Edge Functions → Secrets:
-   - `RESEND_API_KEY` = la API key de Resend.
+   - `BREVO_API_KEY` = la API key de Brevo.
    - `FROM_EMAIL` = remitente verificado, ej. `AthleteTrainLab <hola@tudominio.com>`.
-   Sin `RESEND_API_KEY` la función no falla: registra y no envía (no-op).
+   Sin `BREVO_API_KEY` la función no falla: registra y no envía (no-op).
 3. **Database Webhook**: Supabase → Database → Webhooks → crear:
    - Tabla `public.evaluaciones`, evento `INSERT`.
    - Tipo: Supabase Edge Function → `enviar-reporte`.
