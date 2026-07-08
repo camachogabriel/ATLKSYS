@@ -37,6 +37,9 @@ metadatos:
   # Solo la batería de la limitación de pulso (LP008) lo activa; encierra las
   # preguntas de "pulso como queja" (Q070-072) a ese contexto.
   - pulso-alto
+  # Lo generan Q074 A/B (sigue plan / entrenador). Sirve para EXCLUIR las
+  # preguntas de estructura (Q025, Q062): si ya dijo que tiene plan, no repetir.
+  - plan-estructurado
 
 # Regla de crecimiento (D3): un metadato nuevo requiere al menos una pregunta
 # que lo genere y al menos una pregunta que se active con él.

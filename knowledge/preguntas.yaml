@@ -44,11 +44,11 @@ preguntas:
     respuestas:
       - id: A
         texto: Sí, con entrenador
-        metadatos: []
+        metadatos: [plan-estructurado]
         puntos: {F005: -3}
       - id: B
         texto: Sí, me autoentreno
-        metadatos: []
+        metadatos: [plan-estructurado]
         puntos: {F005: -1}
       - id: C
         texto: No, solo trato de hacer lo mejor que puedo
@@ -639,6 +639,7 @@ preguntas:
     tipo: afinacion
     condiciones_aparicion:
       metadatos_requeridos: [intensidad]
+      metadatos_excluidos: [plan-estructurado]  # si Q074 ya dijo que sigue un plan, no repetir
     respuestas:
       - id: A
         texto: No, salgo a rodar según me sienta
@@ -679,6 +680,7 @@ preguntas:
     tipo: afinacion
     condiciones_aparicion:
       metadatos_requeridos: [intensidad]
+      metadatos_excluidos: [plan-estructurado]  # si ya sigue un plan, no reinterrogar sobre estructura
     respuestas:
       - id: A
         texto: Salgo a rodar, sin trabajos específicos
@@ -1142,8 +1144,14 @@ preguntas:
         texto: Duermo mal o estoy bastante estresado
         metadatos: [recuperacion, sueno]
         puntos: {}
+      # id: C es la respuesta intermedia; se lista aquí para que aparezca en
+      # medio, pero conserva su id para no romper el replay de códigos viejos.
+      - id: C
+        texto: Regular, hay semanas buenas y semanas malas
+        metadatos: [recuperacion]
+        puntos: {}
       - id: B
-        texto: Bien en general
+        texto: Bien en general, descanso y llego con energía
         metadatos: []
         puntos: {}
 

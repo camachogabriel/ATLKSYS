@@ -153,7 +153,9 @@ def evaluacion_completa(limitacion, responder, contexto=None, verbose=True):
         candidatas = [q for q in preguntas if q["tipo"] == "afinacion"
                       and q["codigo"] not in respondidas
                       and set(q["condiciones_aparicion"].get("metadatos_requeridos", []))
-                      <= metadatos]
+                      <= metadatos
+                      and not (set(q["condiciones_aparicion"].get("metadatos_excluidos", []))
+                               & metadatos)]
         if not candidatas:
             parada = "agotamiento"
             break

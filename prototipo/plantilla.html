@@ -188,7 +188,8 @@ function impacto(q) {
 
 function candidatas() {
   return KB.preguntas.filter(q => q.tipo === "afinacion" && !respondidas.has(q.codigo) &&
-    (q.condiciones_aparicion.metadatos_requeridos || []).every(m => metadatos.has(m)))
+    (q.condiciones_aparicion.metadatos_requeridos || []).every(m => metadatos.has(m)) &&
+    !(q.condiciones_aparicion.metadatos_excluidos || []).some(m => metadatos.has(m)))
     .sort((a, b) => impacto(b) - impacto(a) || a.codigo.localeCompare(b.codigo));
 }
 
