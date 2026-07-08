@@ -120,6 +120,7 @@ serve(async (req) => {
     const email = row.email;
     const key = Deno.env.get("BREVO_API_KEY");
     const fromRaw = Deno.env.get("FROM_EMAIL") ?? "AthleteTrainLab <athletetrainlab@gmail.com>";
+    const replyRaw = Deno.env.get("REPLY_TO") ?? "athletetrainlab@gmail.com";
     const m = fromRaw.match(/^(.*)<(.+)>$/);
     const fromName = m ? m[1].trim() : "AthleteTrainLab";
     const fromEmail = m ? m[2].trim() : fromRaw.trim();
@@ -135,6 +136,7 @@ serve(async (req) => {
       headers: { "Content-Type": "application/json", "accept": "application/json", "api-key": key },
       body: JSON.stringify({
         sender: { name: fromName, email: fromEmail },
+        replyTo: { email: replyRaw, name: "AthleteTrainLab" },
         to: [{ email }],
         subject: "Tu evaluación AthleteTrainLab",
         htmlContent: construirHTML(row),
