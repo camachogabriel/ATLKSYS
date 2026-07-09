@@ -219,6 +219,19 @@ function evaluarHipotesis() {
   return act;
 }
 
+// D26: la limitación declarada manda. Sube al frente la hipótesis núcleo de la
+// limitación (la de mayor score que haya disparado); el resto queda como
+// "además notamos". En modo objetivo no aplica.
+function rankearNucleo(act) {
+  if (modo === "objetivo" || !act.length || !limitacion) return act;
+  const lim = KB.limitaciones.find(l => l.codigo === limitacion);
+  const nucleo = (lim && lim.hipotesis_nucleo) || [];
+  if (!nucleo.length) return act;
+  const i = act.findIndex(([, h]) => nucleo.includes(h.codigo));
+  if (i > 0) act.unshift(act.splice(i, 1)[0]);
+  return act;
+}
+
 // ---------- marca y contacto ----------
 const LOGO = `<div class="logo">
   <div class="logo-atl"><span class="a">A</span><span class="t">T</span><span class="l">L</span></div>
@@ -610,7 +623,8 @@ const SB_KEY = "sb_publishable_iC4xe9jDAnxnn5Dwj-XARw_3nvPFhGf";
 function guardarEvaluacion() {
   if (revision) return;            // en modo revisión no se guarda
   try {
-    const act = evaluarHipotesis();
+    const act = rankearNucleo(evaluarHipotesis());
+    const otras = act.slice(1, 3).map(([, h]) => h.codigo);  // hallazgos secundarios (D26)
     const fila = {
       codigo: generarCodigo(),
       email: ctx.email || null,
@@ -621,6 +635,7 @@ function guardarEvaluacion() {
       objetivo: objetivo ? objetivo.codigo : null,
       limitacion,
       hipotesis_principal: act.length ? act[0][1].codigo : null,
+      hipotesis_otras: otras,
       preliminar: !hayAlta(),
       imc: ctx.imc || null,
       sexo: ctx.sexo || null,
@@ -640,7 +655,7 @@ function guardarEvaluacion() {
 
 function pasoResultado() {
   permitirAtras = false;
-  const act = evaluarHipotesis();
+  const act = rankearNucleo(evaluarHipotesis());
   const preliminar = !hayAlta();
   const orden = Object.entries(estado).sort((a, b) => b[1] - a[1]).filter(([, p]) => p > 0);
   const maxPts = 15;
@@ -685,9 +700,9 @@ function pasoResultado() {
   } else {
     act.forEach(([score, h], i) => {
       const sec = i > 0;
-      if (sec && score < act[0][0] * 0.5) return;
+      if (sec && i > 2) return;  // como mucho 2 hallazgos secundarios
       const etiqueta = esObj ? (sec ? "Otra oportunidad de mejora" : "Tu mayor oportunidad de mejora")
-                             : (sec ? "Hipótesis secundaria" : "Hipótesis principal");
+                             : (sec ? "Además notamos que podría afectarte" : "Sobre lo que preguntaste");
       const cuerpo = esObj
         ? `Para «${objetivo.texto.toLowerCase()}», tu mayor margen está aquí según tus respuestas.`
         : h.texto;

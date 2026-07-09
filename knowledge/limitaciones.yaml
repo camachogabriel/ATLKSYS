@@ -8,65 +8,78 @@
 
 # grupo: encabezado temático para agrupar en la pantalla de selección (D24).
 limitaciones:
+  # hipotesis_nucleo (D26): hipótesis que responden directamente a la consulta,
+  # en orden de prioridad. La de mayor score que haya disparado es el "titular";
+  # el resto de hipótesis disparadas van como "además notamos".
   - codigo: LP001
     texto: Al final de los fondos se me apaga el motor
     tipo: fondo-largo
     grupo: Fondos y resistencia
     areas_iniciales: [nutricion, hidratacion, E001, pacing, recuperacion, calor]
+    hipotesis_nucleo: [H001, H002, H007]
 
   - codigo: LP006
     texto: Me siento fuerte al inicio y exploto al final
     tipo: distribucion-de-esfuerzo
     grupo: Fondos y resistencia
     areas_iniciales: [pacing, nutricion, hidratacion, E001, F005]
+    hipotesis_nucleo: [H003, H001]
 
   - codigo: LP005
     texto: Me recupero lento entre esfuerzos
     tipo: recuperacion-intrasesion
     grupo: Fondos y resistencia
     areas_iniciales: [C001, recuperacion, pacing, nutricion]
+    hipotesis_nucleo: [H004, H008]
 
   - codigo: LP002
     texto: Me falta el aire en las cuestas
     tipo: subida
     grupo: Subidas, piernas y potencia
     areas_iniciales: [C001, pacing, composicion-corporal, C004, intensidad]
+    hipotesis_nucleo: [H004, H005, H010]
 
   - codigo: LP003
     texto: Se me queman las piernas
     tipo: fatiga-muscular-metabolica
     grupo: Subidas, piernas y potencia
     areas_iniciales: [C002, C004, pacing, nutricion, tecnica]
+    hipotesis_nucleo: [H005, H011, H015]
 
   - codigo: LP010
     texto: Se me cargan mucho ciertos músculos (p. ej. el cuádriceps)
     tipo: sobrecarga-muscular
     grupo: Subidas, piernas y potencia
     areas_iniciales: [tecnica, dolor-localizado, F007, fuerza]
+    hipotesis_nucleo: [H015, H011]
 
   - codigo: LP004
     texto: No puedo responder ataques
     tipo: cambio-de-ritmo
     grupo: Explosividad y cambios de ritmo
     areas_iniciales: [C003, C005, C004, tecnica, recuperacion]
+    hipotesis_nucleo: [H006, H011]
 
   - codigo: LP008
     texto: Se me sube mucho el pulso (más que a mis compañeros)
     tipo: respuesta-cardiaca
     grupo: Pulso, calor y ambiente
     areas_iniciales: [C001, pulso, calor, recuperacion, respiracion]
+    hipotesis_nucleo: [H013, H004]
 
   - codigo: LP007
     texto: Rindo mucho peor en calor
     tipo: ambiente
     grupo: Pulso, calor y ambiente
     areas_iniciales: [hidratacion, calor, D003, sodio, pacing]
+    hipotesis_nucleo: [H007]
 
   - codigo: LP009
     texto: Entreno pero siento que no mejoro
     tipo: estancamiento
     grupo: Progreso y entrenamiento
     areas_iniciales: [F005, F003, intensidad, recuperacion, dolor-localizado]
+    hipotesis_nucleo: [H008, H009, H012]
 
 # Clasificación mínima requerida por limitación (esquema completo, a llenar):
 #   codigo, texto_usuario, tipo_esfuerzo, duracion, momento_aparicion,
