@@ -537,8 +537,11 @@ function pasoBateria() {
   permitirAtras = true; snap(pasoBateria);
   const q = colaBateria.shift();
   pantallaPregunta(q, "Caracterizando tu caso", r => {
+    const ef = efectos(r);   // las baterías también pueden aportar evidencia
+    for (const [k, v] of Object.entries(ef)) estado[k] = (estado[k] || 0) + v;
     (r.metadatos || []).forEach(m => metadatos.add(m));
-    if (DEBUG) debugLog.push(`${q.codigo}${r.id} → ${(r.metadatos || []).join(", ") || "sin metadatos"}`);
+    if (Object.keys(ef).length) evidencia.push({ q: q.texto, r: r.texto, ef });
+    if (DEBUG) debugLog.push(`${q.codigo}${r.id} → ${[...Object.entries(ef).map(([k, v]) => k + (v > 0 ? "+" : "") + v), ...(r.metadatos || [])].join(", ") || "sin efecto"}`);
     respondidas.add(q.codigo); recorrido.push(q.codigo.substring(1) + r.id); nRespuestas++; prog();
     pasoBateria();
   });

@@ -144,9 +144,12 @@ def evaluacion_completa(limitacion, responder, contexto=None, verbose=True):
     for q in sorted(bateria, key=lambda x: x["codigo"]):
         rid = responder(q)
         r = next(x for x in q["respuestas"] if x["id"] == rid)
+        ef = _efectos(r, contexto)   # las baterías también pueden aportar evidencia
+        for k, v in ef.items():
+            estado[k] = estado.get(k, 0) + v
         metadatos.update(r.get("metadatos", []))
         respondidas.add(q["codigo"])
-        traza.append(("batería", q, r, {}))
+        traza.append(("batería", q, r, ef))
 
     # Fase afinación adaptativa (D9 + D4)
     while len(respondidas) < MAX_PREGUNTAS:

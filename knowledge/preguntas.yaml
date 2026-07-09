@@ -1034,7 +1034,7 @@ preguntas:
       - id: A
         texto: Nunca
         metadatos: [tecnica]
-        puntos: {}
+        puntos: {F007: 2}
       - id: B
         texto: Hace mucho tiempo
         metadatos: [tecnica]
@@ -1053,7 +1053,7 @@ preguntas:
       - id: A
         texto: No, hay algo que no me termina de cuadrar
         metadatos: [tecnica]
-        puntos: {}
+        puntos: {F007: 3}
       - id: B
         texto: Sí, cómodo
         metadatos: []
@@ -1068,7 +1068,7 @@ preguntas:
       - id: A
         texto: Sí, muchas horas sentado
         metadatos: [tecnica]
-        puntos: {}
+        puntos: {F007: 2}
       - id: B
         texto: No, me muevo bastante
         metadatos: []
@@ -1083,7 +1083,7 @@ preguntas:
       - id: A
         texto: Sí, casi siempre en rodillo
         metadatos: [tecnica]
-        puntos: {}
+        puntos: {F007: 2}
       - id: B
         texto: Mayormente al aire libre
         metadatos: []
