@@ -99,13 +99,21 @@ hipotesis:
   - codigo: H007
     nombre: Hidratación / estrés térmico
     texto: >
-      El rendimiento cae principalmente en calor; hidratación, sodio y
-      adaptación térmica parecen los limitantes.
+      El rendimiento cae principalmente en calor. Al sudar mucho pierdes agua y
+      sodio y baja tu volumen de plasma: el corazón bombea menos sangre por
+      latido, así que el pulso sube para el mismo esfuerzo, cuesta más sostener
+      la fuerza y aparece la sensación de "hundirse". Hidratación, reposición de
+      sodio y adaptación al calor parecen los limitantes.
     elementos: [F002, D003, F009]
     condiciones:
       - {elemento: D003, confianza_minima: media}
     recomendacion: >
-      Protocolo de hidratación con sodio y exposición progresiva al calor.
+      Bebe según tu tasa de sudoración (pésate antes y después para estimarla) y
+      repón sodio, no solo agua: en salidas largas o de calor, una bebida con
+      sales sostiene mejor el plasma y el rendimiento que el agua sola. Adáptate
+      al calor de forma progresiva. Señal de alarma: si en pleno calor te dan
+      escalofríos o piel de gallina, dejas de sudar o te mareas, para y enfríate
+      — pueden ser signos de golpe de calor, valóralo con un profesional.
     informacion_faltante:
       - Líquido y sodio por hora, tasa de sudoración estimada
 

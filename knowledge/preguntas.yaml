@@ -851,6 +851,70 @@ preguntas:
         metadatos: []
         puntos: {D003: -3}
 
+  # --- Ruta hidratación / sodio / deshidratación (alimenta H007) ---
+  - codigo: Q091
+    texto: En salidas exigentes o de calor, ¿cuánto sudas?
+    tema: Hidratación
+    contexto: general
+    tipo: afinacion
+    condiciones_aparicion:
+      metadatos_requeridos: [hidratacion]
+    respuestas:
+      - id: A
+        texto: Muchísimo, termino empapado y a veces con sal en la piel/ropa
+        metadatos: [sodio]
+        puntos: {F002: 3, D003: 2}
+      - id: B
+        texto: Lo normal para el esfuerzo
+        metadatos: []
+        puntos: {}
+      - id: C
+        texto: Sudo poco, incluso con calor
+        metadatos: []
+        puntos: {}
+
+  - codigo: Q092
+    texto: Cuando bebes en salidas largas o de calor, ¿repones sales/sodio o tomas solo agua?
+    tema: Hidratación
+    contexto: general
+    tipo: afinacion
+    condiciones_aparicion:
+      metadatos_requeridos: [sodio]
+    respuestas:
+      - id: A
+        texto: Solo agua
+        metadatos: []
+        puntos: {F002: 3, D003: 1}
+      - id: B
+        texto: A veces bebida deportiva o sales
+        metadatos: []
+        puntos: {F002: 1}
+      - id: C
+        texto: Sí, repongo electrolitos/sodio de forma habitual
+        metadatos: []
+        puntos: {F002: -1}
+
+  - codigo: Q093
+    texto: En esfuerzos largos o de calor, ¿has notado alguno de estos? Se te cae la fuerza, escalofríos o piel de gallina, dejas de sudar, mareo, o el pulso se dispara sin subir el ritmo.
+    tema: Hidratación
+    contexto: general
+    tipo: afinacion
+    condiciones_aparicion:
+      metadatos_requeridos: [hidratacion]
+    respuestas:
+      - id: A
+        texto: Sí, varios de esos
+        metadatos: [sodio]
+        puntos: {D003: 5, F002: 2}
+      - id: B
+        texto: Alguno, de forma leve
+        metadatos: []
+        puntos: {D003: 2}
+      - id: C
+        texto: No, nada de eso
+        metadatos: []
+        puntos: {D003: -1}
+
   # --- Ruta sprint (H006 requiere C003 media: Q024A+Q046A = 6) ---
   - codigo: Q046
     texto: Tu sprint corto (5-10 s), comparado con compañeros de tu nivel, es…
