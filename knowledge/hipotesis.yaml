@@ -221,16 +221,19 @@ hipotesis:
     nombre: Entrenamiento poco estructurado, faltan estímulos específicos
     texto: >
       No aparece una limitación fisiológica dominante; tu mayor margen está en
-      cómo entrenas. Salir a rodar sin trabajos específicos de intensidad y
-      fuerza deja rendimiento sobre la mesa: el cuerpo se adapta a lo que le
-      pides, y si siempre es lo mismo, deja de mejorar.
+      cómo (y cuánto) entrenas. Entrenar pocos días o sin trabajos específicos
+      deja mucho rendimiento sobre la mesa: el cuerpo se adapta a lo que le
+      pides, y con poco volumen o siempre el mismo estímulo, deja de mejorar.
     elementos: [F005, C004, C001]
     condiciones:
       - {elemento: F005, confianza_minima: alta}
     recomendacion: >
-      Estructurar la semana con intención: base aeróbica suave de verdad, uno
-      o dos trabajos de intensidad según tu objetivo y fuerza 1-2 veces por
-      semana. Progresión y variedad, no repetir siempre la misma salida.
+      Primero, si entrenas pocos días, sube el volumen de forma gradual: añade
+      una salida o alarga las que ya haces (sin más de un 10 % por semana) para
+      construir base. Luego dale estructura: la mayoría del tiempo en aeróbico
+      suave de verdad, uno o dos trabajos de intensidad según tu objetivo y
+      fuerza 1-2 veces por semana. Progresión y variedad, no repetir siempre la
+      misma salida. Si puedes, un plan o un entrenador acelera mucho esto.
     informacion_faltante:
       - Distribución actual de intensidades en una semana típica
       - Si haces fuerza y con qué frecuencia

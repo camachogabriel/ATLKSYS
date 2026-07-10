@@ -42,6 +42,10 @@
     color: var(--acc); border: 1px solid var(--border); border-radius: 999px; padding: 3px 11px; margin-bottom: 12px; }
   .ilus { margin: 2px 0 16px; text-align: center; }
   .ilus svg { max-width: 240px; height: auto; }
+  .antro-row { display: flex; gap: 12px; margin-bottom: 8px; }
+  .antro-row input { flex: 1; min-width: 0; background: #1c2129; border: 1px solid var(--border);
+    color: var(--txt); padding: 14px 16px; border-radius: 10px; font-size: 16px; }
+  @media (max-width: 480px) { .antro-row { flex-direction: column; } }
   .spinner { width: 46px; height: 46px; border: 4px solid var(--border); border-top-color: var(--acc);
     border-radius: 50%; margin: 26px auto; animation: spin 0.9s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
@@ -300,6 +304,7 @@ function revisarCodigo() {
     if (ctx.imc >= 27) metadatos.add("composicion-corporal");
     else if (ctx.imc && ctx.imc < 20) ["disponibilidad-energetica", "nutricion", "carbohidratos"].forEach(m => metadatos.add(m));
     if (ctx.usa_hr) metadatos.add("pulso");
+    cargaBajaContexto();
     revision = { ver: p[5] || "?", traza: [] };
     for (const tok of p[4].split(".").filter(Boolean)) {
       const q = KB.preguntas.find(x => x.codigo === "Q" + tok.slice(0, 3));
@@ -384,11 +389,9 @@ function pasoContexto(i) {
       <h2>${c.texto}</h2>
       <p class="sub">Nos sirve para valorar la relación peso-potencia y ajustar las
       recomendaciones a tu tamaño. Puedes omitirlo si prefieres.</p>
-      <div style="display:flex;gap:12px;margin-bottom:8px">
-        <input type="number" id="peso" inputmode="numeric" placeholder="Peso (kg)"
-          value="${ctx.peso_kg || ""}" style="flex:1;background:#1c2129;border:1px solid var(--border);color:var(--txt);padding:14px 16px;border-radius:10px;font-size:16px">
-        <input type="number" id="estatura" inputmode="numeric" placeholder="Estatura (cm)"
-          value="${ctx.estatura_cm || ""}" style="flex:1;background:#1c2129;border:1px solid var(--border);color:var(--txt);padding:14px 16px;border-radius:10px;font-size:16px">
+      <div class="antro-row">
+        <input type="number" id="peso" inputmode="numeric" placeholder="Peso (kg)" value="${ctx.peso_kg || ""}">
+        <input type="number" id="estatura" inputmode="numeric" placeholder="Estatura (cm)" value="${ctx.estatura_cm || ""}">
       </div>
       <p id="antro-err" style="color:#f87171;font-size:13px;min-height:16px;margin-bottom:4px"></p>
       <div class="center">
@@ -502,12 +505,20 @@ function elegirObjetivo(cod) {
   elegirLimitacion(objetivo.limitacion_asociada);
 }
 
+// D25.1: carga de entrenamiento baja (poca frecuencia / poca experiencia) sube
+// el indicador de estructura/volumen (F005). Cuaja solo si además no hay plan.
+function cargaBajaContexto() {
+  if ((ctx.frecuencia_sem ?? 99) <= 2) { estado.F005 = (estado.F005 || 0) + 3; metadatos.add("carga-baja"); }
+  if ((ctx.experiencia_anios ?? 99) < 1) { estado.F005 = (estado.F005 || 0) + 2; metadatos.add("carga-baja"); }
+}
+
 function elegirLimitacion(lp) {
   limitacion = lp; nRespuestas++; prog();
   // D12/D14: el IMC abre rutas de investigación (señal, no conclusión)
   if (ctx.imc >= 27) metadatos.add("composicion-corporal");
   else if (ctx.imc && ctx.imc < 20) ["disponibilidad-energetica", "nutricion", "carbohidratos"].forEach(m => metadatos.add(m));
   if (ctx.usa_hr) metadatos.add("pulso");   // D17: habilita la capa de pulso
+  cargaBajaContexto();
   const tipoLim = KB.limitaciones.find(l => l.codigo === lp).tipo;
   colaBateria = KB.preguntas.filter(q => q.tipo === "bateria-inicial" &&
     (q.tipos || []).includes(tipoLim)).sort((a, b) => a.codigo.localeCompare(b.codigo));

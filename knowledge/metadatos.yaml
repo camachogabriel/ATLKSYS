@@ -40,6 +40,9 @@ metadatos:
   # Lo generan Q074 A/B (sigue plan / entrenador). Sirve para EXCLUIR las
   # preguntas de estructura (Q025, Q062): si ya dijo que tiene plan, no repetir.
   - plan-estructurado
+  # Señal de contexto (D25.1): poca frecuencia (≤2/sem) o poca experiencia (<1 año).
+  # Sube F005 (estructura/volumen). Marca el perfil de carga baja / sub-entrenamiento.
+  - carga-baja
 
 # Regla de crecimiento (D3): un metadato nuevo requiere al menos una pregunta
 # que lo genere y al menos una pregunta que se active con él.

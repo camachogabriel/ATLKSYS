@@ -124,6 +124,17 @@ def evaluacion_completa(limitacion, responder, contexto=None, verbose=True):
     if contexto and contexto.get("usa_hr"):
         metadatos.add("pulso")   # D17: habilita la capa de pulso
 
+    # D25.1: carga de entrenamiento baja (señal de contexto). Entrenar muy poco
+    # o llevar poco tiempo eleva el indicador de estructura/volumen (F005). Solo
+    # cuaja en hipótesis si además NO hay plan (Q074C suma; Q074A/B restan).
+    if contexto:
+        if (contexto.get("frecuencia_sem") or 99) <= 2:
+            estado["F005"] = estado.get("F005", 0) + 3
+            metadatos.add("carga-baja")
+        if (contexto.get("experiencia_anios") or 99) < 1:
+            estado["F005"] = estado.get("F005", 0) + 2
+            metadatos.add("carga-baja")
+
     # Fase perfil general (D20): puntos + metadatos, para todos
     for q in sorted([x for x in preguntas if x["tipo"] == "perfil"],
                     key=lambda x: x["codigo"]):
