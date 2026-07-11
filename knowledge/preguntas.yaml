@@ -189,6 +189,29 @@ preguntas:
         metadatos: [intensidad, respiracion, fuerza]   # escape: abre rutas para seguir investigando (D16)
         puntos: {}
 
+  # D25.2: pacing/zona en el fondo. Ir agitado la mayor parte = fondo fuera de
+  # zona -> el freno es aeróbico (C001). Ir cómodo y aun así apagarse -> apunta
+  # a durabilidad (E001), que H002 confirma solo si la nutrición no explica.
+  - codigo: Q095
+    texto: Durante el fondo, ¿la mayor parte del tiempo vas cómodo (podrías conversar) o vas agitado, a un ritmo fuerte?
+    tema: Fondo y esfuerzo
+    contexto: fondos-largos
+    tipo: bateria-inicial
+    tipos: [fondo-largo, distribucion-de-esfuerzo]
+    respuestas:
+      - id: A
+        texto: Agitado o fuerte buena parte del fondo; me cuesta ir de verdad suave
+        metadatos: [pacing, intensidad]
+        puntos: {C001: 3}
+      - id: B
+        texto: Cómodo, a un ritmo que sostengo y podría conversar
+        metadatos: []
+        puntos: {E001: 1}
+      - id: C
+        texto: No lo sé / no controlo el esfuerzo
+        metadatos: []
+        puntos: {}
+
   - codigo: Q002
     texto: ¿Cuántos gramos de carbohidratos consumes por hora durante un fondo largo?
     tema: Nutrición

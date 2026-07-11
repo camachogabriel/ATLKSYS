@@ -16,7 +16,7 @@ limitaciones:
     tipo: fondo-largo
     grupo: Fondos y resistencia
     areas_iniciales: [nutricion, hidratacion, E001, pacing, recuperacion, calor]
-    hipotesis_nucleo: [H001, H002, H007]
+    hipotesis_nucleo: [H001, H002, H004, H007]
 
   - codigo: LP006
     texto: Me siento fuerte al inicio y exploto al final
