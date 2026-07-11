@@ -1400,15 +1400,15 @@ preguntas:
       - id: A
         texto: Cortas y empinadas
         metadatos: [fuerza, intensidad]
-        puntos: {}
+        puntos: {}   # corta y empinada = fuerza/anaeróbico, no base aeróbica
       - id: B
         texto: Largas, de 20 minutos o más
         metadatos: [subidas-largas, respiracion]
-        puntos: {}
+        puntos: {C001: 1}
       - id: C
         texto: En todas
         metadatos: [respiracion, intensidad]
-        puntos: {}
+        puntos: {C001: 2}
 
   - codigo: Q033
     texto: ¿Cuándo aparece el problema?
@@ -1420,7 +1420,7 @@ preguntas:
       - id: A
         texto: Desde la primera cuesta del día
         metadatos: [respiracion, intensidad]
-        puntos: {}
+        puntos: {C001: 3}   # desde la 1ª cuesta = base aeróbica, no durabilidad/nutrición
       - id: B
         texto: Solo al final de salidas largas
         metadatos: [nutricion, carbohidratos, durabilidad, fondos-largos]
@@ -1439,15 +1439,15 @@ preguntas:
       - id: A
         texto: La respiración
         metadatos: [respiracion]
-        puntos: {}
+        puntos: {C001: 2}   # se ahoga antes que las piernas = aeróbico
       - id: B
         texto: Las piernas
         metadatos: [piernas, fatiga-muscular, fuerza]
-        puntos: {}
+        puntos: {C004: 1}
       - id: C
         texto: Ambas a la vez
         metadatos: [respiracion, fatiga-muscular]
-        puntos: {}
+        puntos: {C001: 1}
 
   - codigo: Q035
     texto: ¿Cómo entras a las subidas?
@@ -1455,10 +1455,12 @@ preguntas:
     tipo: bateria-inicial
     tipos: [subida]
     respuestas:
+      # D25.3: el pacing en cuestas suele ser síntoma de nivel aeróbico bajo
+      # (intentar un ritmo por encima del propio). Suma a C001; Q094 discrimina.
       - id: A
         texto: Fuerte, y me voy apagando
         metadatos: [pacing]
-        puntos: {}
+        puntos: {C001: 1}
       - id: B
         texto: A ritmo constante
         metadatos: []
@@ -1466,7 +1468,7 @@ preguntas:
       - id: C
         texto: Siguiendo a otros más fuertes que yo
         metadatos: [pacing, intensidad]
-        puntos: {}
+        puntos: {C001: 3}
 
   - codigo: Q036
     texto: ¿Sientes que tu peso actual te penaliza al subir?
@@ -1477,13 +1479,35 @@ preguntas:
       - id: A
         texto: Sí, claramente
         metadatos: [composicion-corporal]
-        puntos: {}
+        puntos: {F004: 3}
       - id: B
         texto: No especialmente
         metadatos: []
         puntos: {}
       - id: C
         texto: No lo sé
+        metadatos: []
+        puntos: {}
+
+  # D25.3: discriminador dosificación recuperable vs techo aeróbico
+  - codigo: Q094
+    texto: En plena cuesta, si bajas el ritmo, ¿la respiración se te normaliza y puedes seguir bien?
+    tema: Subida y respiración
+    contexto: subida
+    tipo: afinacion
+    condiciones_aparicion:
+      metadatos_requeridos: [pacing]
+    respuestas:
+      - id: A
+        texto: Sí, si aflojo me recupero y sigo
+        metadatos: []
+        puntos: {F006: 3}
+      - id: B
+        texto: No, sigo ahogado aunque afloje
+        metadatos: []
+        puntos: {C001: 3}
+      - id: C
+        texto: No lo he probado / no sé
         metadatos: []
         puntos: {}
 

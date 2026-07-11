@@ -60,13 +60,20 @@ hipotesis:
   - codigo: H004
     nombre: Base aeróbica insuficiente
     texto: >
-      La evidencia apunta a una capacidad aeróbica por debajo de lo que exige
-      el tipo de esfuerzo.
+      Te falta el aire desde temprano y en casi cualquier cuesta: la capacidad
+      aeróbica está por debajo de lo que pide el esfuerzo. Ir "a rueda" de gente
+      más fuerte o entrar duro suele delatar lo mismo — intentas un ritmo por
+      encima de tu nivel y te ahogas. No es que dosifiques mal por descuido: el
+      techo aeróbico es el que manda.
     elementos: [C001, D004, F005]
     condiciones:
       - {elemento: C001, confianza_minima: alta}
     recomendacion: >
-      Bloque de base aeróbica con volumen progresivo y control de intensidad.
+      Construye base aeróbica: mucho volumen a intensidad suave de verdad (poder
+      conversar, zona 2), de forma progresiva. En las cuestas, dosifica por tu
+      propio esfuerzo y no por seguir a otros: sube a un ritmo que puedas
+      sostener sin ahogarte. Con la base construida, subir a tu ritmo deja de
+      ser un problema y ya puedes meter algo de intensidad estructurada.
     informacion_faltante:
       - Frecuencia y duración típica de entrenamientos suaves
 

@@ -150,6 +150,10 @@ def evaluacion_completa(limitacion, responder, contexto=None, verbose=True):
     # Fase batería inicial: seleccionada por el tipo de la limitación (D10)
     lim = next(x for x in cargar("limitaciones")["limitaciones"]
                if x["codigo"] == limitacion)
+    # D25.3: en subida, un IMC alto suma evidencia de peso-potencia (F004);
+    # la gravedad tira de todos los kilos. Se complementa con el autoreporte (Q036).
+    if lim["tipo"] == "subida" and (contexto or {}).get("imc", 0) >= 27:
+        estado["F004"] = estado.get("F004", 0) + 2
     bateria = [q for q in preguntas if q["tipo"] == "bateria-inicial"
                and lim["tipo"] in (q.get("tipos") or [])]
     for q in sorted(bateria, key=lambda x: x["codigo"]):

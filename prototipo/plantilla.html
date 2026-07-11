@@ -305,6 +305,8 @@ function revisarCodigo() {
     else if (ctx.imc && ctx.imc < 20) ["disponibilidad-energetica", "nutricion", "carbohidratos"].forEach(m => metadatos.add(m));
     if (ctx.usa_hr) metadatos.add("pulso");
     cargaBajaContexto();
+    if ((KB.limitaciones.find(l => l.codigo === limitacion) || {}).tipo === "subida" && ctx.imc >= 27)
+      estado.F004 = (estado.F004 || 0) + 2;
     revision = { ver: p[5] || "?", traza: [] };
     for (const tok of p[4].split(".").filter(Boolean)) {
       const q = KB.preguntas.find(x => x.codigo === "Q" + tok.slice(0, 3));
@@ -520,6 +522,8 @@ function elegirLimitacion(lp) {
   if (ctx.usa_hr) metadatos.add("pulso");   // D17: habilita la capa de pulso
   cargaBajaContexto();
   const tipoLim = KB.limitaciones.find(l => l.codigo === lp).tipo;
+  // D25.3: en subida, IMC alto suma evidencia de peso-potencia (F004)
+  if (tipoLim === "subida" && ctx.imc >= 27) estado.F004 = (estado.F004 || 0) + 2;
   colaBateria = KB.preguntas.filter(q => q.tipo === "bateria-inicial" &&
     (q.tipos || []).includes(tipoLim)).sort((a, b) => a.codigo.localeCompare(b.codigo));
   colaPerfil = KB.preguntas.filter(q => q.tipo === "perfil").sort((a, b) => a.codigo.localeCompare(b.codigo));
