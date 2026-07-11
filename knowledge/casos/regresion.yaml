@@ -1,0 +1,96 @@
+# Suite de regresión del motor ATL.
+# Corre con: python3 engine/regresion.py
+# Cada caso fija un recorrido (guion) y afirma el resultado esperado tras el
+# reordenamiento por núcleo (D26). Las preguntas no listadas toman su 1ª opción.
+#   - titular: código de hipótesis que debe quedar de titular
+#   - activada: código que debe haber disparado (aunque no sea titular)
+#   - preliminar: true/false esperado
+# Grounded en las validaciones del 2026-07-08/09.
+
+casos:
+  # ---- LP001 "se apaga el motor" (D25.2): 3 ramas ----
+  - id: LP001-nutricion
+    desc: Come mal -> disponibilidad energética
+    limitacion: LP001
+    contexto: {edad: 38, experiencia_anios: 3, frecuencia_sem: 3, duracion_fondo: 4, peso_kg: 74, estatura_cm: 178, sexo: m}
+    guion: {Q001: A, Q002: A, Q095: B, Q060: A, Q003: A, Q009: A}
+    titular: H001
+    preliminar: false
+
+  - id: LP001-aerobico
+    desc: Come bien pero va fuera de zona -> base aeróbica
+    limitacion: LP001
+    contexto: {edad: 38, experiencia_anios: 3, frecuencia_sem: 3, duracion_fondo: 4, peso_kg: 74, estatura_cm: 178, sexo: m}
+    guion: {Q001: C, Q002: E, Q095: A, Q060: B, Q009: B, Q003: D}
+    titular: H004
+    preliminar: false
+
+  - id: LP001-durabilidad
+    desc: Come bien, en zona, y aun así se apaga -> durabilidad
+    limitacion: LP001
+    contexto: {edad: 38, experiencia_anios: 3, frecuencia_sem: 3, duracion_fondo: 4, peso_kg: 74, estatura_cm: 178, sexo: m}
+    guion: {Q001: C, Q002: E, Q095: B, Q012: A, Q060: B, Q009: A, Q003: B}
+    titular: H002
+    preliminar: false
+
+  # ---- LP002 "falta el aire en cuestas" (D25.3) ----
+  - id: LP002-aerobico
+    desc: Aeróbico bajo (primera cuesta, en todas, respiración, sigue a otros)
+    limitacion: LP002
+    contexto: {edad: 35, experiencia_anios: 3, frecuencia_sem: 4, duracion_fondo: 4, peso_kg: 68, estatura_cm: 178, sexo: m}
+    guion: {Q032: C, Q033: A, Q034: A, Q035: C, Q036: B, Q094: B, Q073: B, Q074: B, Q075: B}
+    titular: H004
+    preliminar: false
+
+  - id: LP002-peso
+    desc: IMC alto + peso penaliza -> peso-potencia dispara
+    limitacion: LP002
+    contexto: {edad: 45, experiencia_anios: 4, frecuencia_sem: 4, duracion_fondo: 4, peso_kg: 90, estatura_cm: 177, sexo: m}
+    guion: {Q032: A, Q033: B, Q034: B, Q035: B, Q036: A, Q073: B, Q074: B, Q075: B}
+    activada: H010
+    preliminar: false
+
+  - id: LP002-principiante
+    desc: Poca experiencia/frecuencia sin plan -> aeróbico + estructura
+    limitacion: LP002
+    contexto: {edad: 45, experiencia_anios: 0.5, frecuencia_sem: 1.5, duracion_fondo: 3, peso_kg: 80, estatura_cm: 167, sexo: m}
+    guion: {Q073: D, Q074: C, Q075: A, Q032: C, Q033: A, Q034: A, Q035: A, Q036: C, Q002: B}
+    titular: H004
+    activada: H012
+    preliminar: false
+
+  # ---- LP010 sobrecarga muscular / técnica (postura) ----
+  - id: LP010-tecnica
+    desc: Cuádriceps + sin bike fit + incómodo + horas sentado -> técnica
+    limitacion: LP010
+    contexto: {edad: 45, experiencia_anios: 3, frecuencia_sem: 2.5, duracion_fondo: 4, peso_kg: 80, estatura_cm: 167, sexo: m, usa_hr: 1}
+    guion: {Q073: B, Q074: A, Q075: C, Q084: A, Q085: A, Q086: A, Q087: A, Q088: B, Q090: A, Q020: A}
+    titular: H015
+    preliminar: false
+
+  # ---- LP009 estancamiento -> recuperación ----
+  - id: LP009-recuperacion
+    desc: Poco sueño + estrés alto -> recuperación insuficiente
+    limitacion: LP009
+    contexto: {edad: 45, experiencia_anios: 3, frecuencia_sem: 2.5, duracion_fondo: 4, peso_kg: 80, estatura_cm: 167, sexo: m}
+    guion: {Q074: A, Q075: C, Q077: A, Q078: B, Q020: A, Q021: B, Q022: A, Q081: A, Q058: B, Q015: C}
+    titular: H008
+    preliminar: false
+
+  # ---- LP007 ambiente -> hidratación / estrés térmico ----
+  - id: LP007-hidratacion
+    desc: Suda mucho, solo agua, síntomas de deshidratación -> H007
+    limitacion: LP007
+    contexto: {edad: 40, experiencia_anios: 5, frecuencia_sem: 4, duracion_fondo: 4, peso_kg: 72, estatura_cm: 178, sexo: m, usa_hr: 1}
+    guion: {Q091: A, Q092: A, Q093: A, Q053: A, Q055: A, Q052: A, Q031: B, Q023: A, Q064: A}
+    titular: H007
+    preliminar: false
+
+  # ---- Control: carga baja PERO con entrenador -> NO estructura ----
+  - id: control-coach-no-estructura
+    desc: Poca frecuencia pero con entrenador -> H012 no debe disparar
+    limitacion: LP002
+    contexto: {edad: 45, experiencia_anios: 0.5, frecuencia_sem: 1.5, duracion_fondo: 3, peso_kg: 68, estatura_cm: 178, sexo: m}
+    guion: {Q074: A, Q032: A, Q033: B, Q034: B, Q035: B, Q036: B, Q073: B, Q075: B}
+    no_activada: H012
+    preliminar: false

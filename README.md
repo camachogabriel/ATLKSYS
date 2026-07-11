@@ -13,8 +13,16 @@ Consulta → Clasificación → Batería inicial → Metadatos → Afinación �
 |---|---|
 | `docs/` | Especificación v1.0 (11 capítulos + documento maestro) |
 | `knowledge/` | Base de conocimiento estructurada (YAML): capacidades, factores, emergentes, metadatos, limitaciones, preguntas, puntos |
-| `knowledge/casos/` | Casos de validación (MHV-###) |
-| `engine/` | Motor de razonamiento (Fase 3, pendiente) |
+| `knowledge/casos/` | Casos de validación (MHV-###) y suite de regresión (`regresion.yaml`) |
+| `engine/` | Motor de razonamiento (`simulador.py`) y suite de regresión (`regresion.py`) |
+
+## Pruebas de regresión
+
+```bash
+python3 engine/regresion.py      # corre knowledge/casos/regresion.yaml, sale != 0 si algo falla
+```
+
+Cada caso fija un recorrido (`guion`) y afirma el resultado tras el reordenamiento por núcleo (D26): `titular`, `activada` (hipótesis que debe disparar), `no_activada` o `preliminar`. Correr tras cualquier cambio en preguntas, puntos o hipótesis.
 
 ## Principios de diseño
 

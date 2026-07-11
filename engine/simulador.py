@@ -96,6 +96,25 @@ def evaluar_hipotesis(estado):
     return activadas
 
 
+def rankear_nucleo(activadas, limitacion):
+    """D26: sube al frente la hipótesis núcleo de la limitación declarada (la de
+    mayor score que haya disparado). El resto queda como 'además notamos'.
+    Espejo de rankearNucleo() del quiz."""
+    if not activadas or not limitacion:
+        return activadas
+    if limitacion.startswith("O"):
+        limitacion = resolver_objetivo(limitacion)
+    lim = next((x for x in cargar("limitaciones")["limitaciones"]
+                if x["codigo"] == limitacion), None)
+    nucleo = (lim or {}).get("hipotesis_nucleo", [])
+    if not nucleo:
+        return activadas
+    i = next((k for k, (_, h) in enumerate(activadas) if h["codigo"] in nucleo), None)
+    if i and i > 0:
+        activadas.insert(0, activadas.pop(i))
+    return activadas
+
+
 def resolver_objetivo(codigo):
     """Traduce un objetivo O### a su limitación asociada (D7)."""
     o = next(x for x in cargar("objetivos")["objetivos"] if x["codigo"] == codigo)
