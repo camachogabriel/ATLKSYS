@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ATL · Panel</title>
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #f6f7f9; color: #1a1a2e;
+    font-family: -apple-system, "Segoe UI", Roboto, Arial, sans-serif; font-size: 14px; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 20px 18px 48px; }
+  h1 { font-size: 20px; margin: 0 0 2px; }
+  .muted { color: #6b7280; font-size: 12.5px; }
+  .gate { max-width: 360px; margin: 60px auto; background: #fff; border: 1px solid #e6e8eb; border-radius: 14px; padding: 24px; }
+  input[type=password], input[type=text] { width: 100%; padding: 12px 14px; border: 1px solid #d5d9de; border-radius: 10px; font-size: 15px; margin: 10px 0; }
+  button { cursor: pointer; border: none; border-radius: 9px; font-weight: 700; font-size: 14px; padding: 11px 18px; }
+  .btn { background: #0d1117; color: #fff; }
+  .cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 16px 0 6px; }
+  @media (max-width: 640px) { .cards { grid-template-columns: repeat(2, 1fr); } }
+  .card { background: #fff; border: 1px solid #e6e8eb; border-radius: 12px; padding: 14px 16px; }
+  .card .n { font-size: 24px; font-weight: 700; } .card .l { color: #6b7280; font-size: 12px; }
+  h2 { font-size: 15px; margin: 24px 0 8px; }
+  table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid #e6e8eb; border-radius: 12px; overflow: hidden; }
+  th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid #eef0f2; font-size: 13px; vertical-align: top; }
+  th { background: #fafbfc; color: #6b7280; font-weight: 600; font-size: 11px; text-transform: uppercase; }
+  tr:last-child td { border-bottom: none; }
+  .badge { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; }
+  .b-prelim { background: #fdf1d6; color: #8a6d1a; } .b-ok { background: #e6f4ec; color: #1f7a44; }
+  .b-lead { background: #e7effd; color: #1f4fb0; }
+  .lead-row { background: #f3f8ff; }
+  .del { background: #fdeaea; color: #a12b2b; padding: 5px 10px; font-size: 12px; }
+  .bar { display: flex; gap: 10px; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+  .err { background: #fdeaea; color: #a12b2b; border: 1px solid #f3c2c2; border-radius: 10px; padding: 10px 14px; margin: 12px 0; }
+  .empty { color: #6b7280; padding: 14px; background: #fff; border: 1px dashed #d5d9de; border-radius: 12px; }
+</style>
+</head>
+<body>
+<div id="gate" class="gate">
+  <h1>Panel ATL</h1>
+  <div class="muted">Ingresá el token de acceso.</div>
+  <input type="password" id="tok" placeholder="Token" autocomplete="off">
+  <button class="btn" style="width:100%" onclick="entrar()">Entrar</button>
+  <div id="gate-err" class="muted" style="color:#a12b2b;margin-top:8px"></div>
+</div>
+
+<div id="app" class="wrap" style="display:none">
+  <div class="bar">
+    <div><h1>AthleteTrainLab · Panel de evaluaciones</h1><div class="muted" id="stamp"></div></div>
+    <div><button class="btn" onclick="cargar()">Recargar</button> <button onclick="salir()" style="background:#eef0f2;color:#1a1a2e">Salir</button></div>
+  </div>
+  <div id="err"></div>
+  <div class="cards" id="cards"></div>
+  <h2>Leads · pidieron contacto</h2><div id="leads"></div>
+  <h2>Evaluaciones</h2><div id="evals"></div>
+  <h2>Casos propios sugeridos</h2><div id="sugs"></div>
+</div>
+
+<script>
+const FN = "https://wmmfsblgrusvbaugcihp.supabase.co/functions/v1/admin-datos";
+const ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndtbWZzYmxncnVzdmJhdWdjaWhwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5MjcxMDMsImV4cCI6MjA5MDUwMzEwM30.uJZdzPyQ0rQMhqRZ3GenfOTE7vQRn9eT4Xia3k_sstg";
+const LIM = {LP001:"Se apaga el motor (fondos)",LP002:"Falta el aire en cuestas",LP003:"Se queman las piernas",LP004:"No responde ataques",LP005:"Recupero lento",LP006:"Explota al final",LP007:"Peor en calor",LP008:"Pulso muy alto",LP009:"Entreno pero no mejoro",LP010:"Se cargan los músculos"};
+const HIP = {H001:"Nutrición / energía",H002:"Durabilidad",H003:"Dosificación (pacing)",H004:"Base aeróbica",H005:"Umbral (glucolítica)",H006:"Explosividad",H007:"Hidratación / calor",H008:"Recuperación / sobrecarga",H009:"Sin estructura",H010:"Peso-potencia",H011:"Fuerza",H012:"Poco estructurado",H013:"Respuesta cardíaca",H015:"Sobrecarga localizada (técnica)"};
+let TOKEN = sessionStorage.getItem("atl_tok") || "";
+
+const esc = s => (s==null?"":String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const lim = c => LIM[c]||c||"—";
+const hip = c => c ? (HIP[c]||c) : null;
+const fecha = s => { const d=new Date(s); return isNaN(d)?s:d.toLocaleDateString("es",{day:"2-digit",month:"short"})+" "+d.toLocaleTimeString("es",{hour:"2-digit",minute:"2-digit"}); };
+
+async function api(body){
+  const r = await fetch(FN, { method:"POST", headers:{ "Content-Type":"application/json", apikey: ANON, Authorization: "Bearer "+ANON, "x-token": TOKEN }, body: JSON.stringify(body) });
+  const j = await r.json().catch(()=>({error:"respuesta inválida"}));
+  if(!r.ok) throw new Error(j.error || ("HTTP "+r.status));
+  return j;
+}
+function entrar(){
+  TOKEN = document.getElementById("tok").value.trim();
+  sessionStorage.setItem("atl_tok", TOKEN);
+  cargar(true);
+}
+function salir(){ sessionStorage.removeItem("atl_tok"); location.reload(); }
+
+function resultado(e){
+  if(e.hipotesis_principal && !e.preliminar){
+    const otras=(Array.isArray(e.hipotesis_otras)?e.hipotesis_otras:[]).map(hip).filter(Boolean);
+    return `<span class="badge b-ok">${esc(hip(e.hipotesis_principal))}</span>`+(otras.length?`<div class="muted">+ ${esc(otras.join(", "))}</div>`:"");
+  }
+  if(e.preliminar) return `<span class="badge b-prelim">preliminar</span>`;
+  return `<span class="muted">sin hipótesis</span>`;
+}
+function fila(e, lead){
+  return `<tr class="${lead?'lead-row':''}">
+    <td>${fecha(e.created_at)}</td>
+    <td>${esc(e.nombre||"—")}${lead?`<div class="muted">${esc(e.email||"")}${e.telefono?" · "+esc(e.telefono):""}</div>`:""}</td>
+    <td>${esc(lim(e.limitacion))}</td>
+    <td>${resultado(e)}${lead?' <span class="badge b-lead">contactar</span>':''}</td>
+    <td><button class="del" onclick="borrar('evaluaciones','${e.id}', this)">Borrar</button></td>
+  </tr>`;
+}
+function tabla(rows, lead){
+  if(!rows.length) return `<div class="empty">Nada por ahora.</div>`;
+  return `<table><thead><tr><th>Fecha</th><th>${lead?'Persona / contacto':'Nombre'}</th><th>Limitación</th><th>Resultado</th><th></th></tr></thead>
+    <tbody>${rows.map(e=>fila(e,lead)).join("")}</tbody></table>`;
+}
+const card = (n,l) => `<div class="card"><div class="n">${n}</div><div class="l">${l}</div></div>`;
+
+async function borrar(tabla, id, btn){
+  if(!confirm("¿Borrar este registro? No se puede deshacer.")) return;
+  btn.disabled = true; btn.textContent = "…";
+  try { await api({ action:"delete", tabla, id }); cargar(); }
+  catch(e){ alert("No se pudo borrar: "+e.message); btn.disabled=false; btn.textContent="Borrar"; }
+}
+
+async function cargar(desdeGate){
+  try {
+    const d = await api({ action:"list" });
+    document.getElementById("gate").style.display = "none";
+    document.getElementById("app").style.display = "block";
+    document.getElementById("err").innerHTML = "";
+    const evals = d.evaluaciones || [], sugs = d.sugerencias || [];
+    const leads = evals.filter(e=>e.quiere_info);
+    const prelim = evals.filter(e=>e.preliminar || !e.hipotesis_principal).length;
+    document.getElementById("stamp").textContent = "En vivo · " + new Date().toLocaleString("es");
+    document.getElementById("cards").innerHTML =
+      card(evals.length,"Evaluaciones") + card(leads.length,"Leads (contacto)") +
+      card(prelim+" · "+(evals.length?Math.round(prelim/evals.length*100):0)+"%","Sin resultado") + card(sugs.length,"Casos sugeridos");
+    document.getElementById("leads").innerHTML = tabla(leads, true);
+    document.getElementById("evals").innerHTML = tabla(evals, false);
+    document.getElementById("sugs").innerHTML = sugs.length
+      ? `<table><thead><tr><th>Fecha</th><th>Tipo</th><th>Texto</th><th>Correo</th><th></th></tr></thead><tbody>${
+          sugs.map(s=>`<tr><td>${fecha(s.created_at)}</td><td>${esc(s.tipo)}</td><td>${esc(s.texto)}</td><td>${esc(s.email||"—")}</td><td><button class="del" onclick="borrar('sugerencias','${s.id}',this)">Borrar</button></td></tr>`).join("")}</tbody></table>`
+      : `<div class="empty">Nadie ha enviado un caso propio todavía.</div>`;
+  } catch(e){
+    if(desdeGate){ document.getElementById("gate-err").textContent = "Token incorrecto o error: "+e.message; }
+    else { document.getElementById("err").innerHTML = `<div class="err">Error: ${esc(e.message)}</div>`; }
+  }
+}
+if (TOKEN) cargar(true);
+</script>
+</body>
+</html>
