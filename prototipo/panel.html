@@ -30,6 +30,13 @@
   .b-lead { background: #e7effd; color: #1f4fb0; }
   .lead-row { background: #f3f8ff; }
   .del { background: #fdeaea; color: #a12b2b; padding: 5px 10px; font-size: 12px; }
+  details.grupo { background: #fff; border: 1px solid #e6e8eb; border-radius: 10px; margin: 6px 0; }
+  details.grupo > summary { cursor: pointer; padding: 10px 14px; font-size: 13.5px; list-style: none; }
+  details.grupo > summary::-webkit-details-marker { display: none; }
+  details.grupo > summary::before { content: "▸"; color: #6b7280; margin-right: 8px; }
+  details.grupo[open] > summary::before { content: "▾"; }
+  details.grupo table { margin: 0 6px 8px; border: none; }
+  .cnt { display: inline-block; background: #eef0f2; color: #444; border-radius: 999px; padding: 1px 8px; font-size: 11px; font-weight: 700; margin-left: 6px; }
   .bar { display: flex; gap: 10px; align-items: center; justify-content: space-between; margin-bottom: 6px; }
   .err { background: #fdeaea; color: #a12b2b; border: 1px solid #f3c2c2; border-radius: 10px; padding: 10px 14px; margin: 12px 0; }
   .empty { color: #6b7280; padding: 14px; background: #fff; border: 1px dashed #d5d9de; border-radius: 12px; }
@@ -54,7 +61,7 @@
   <h2 style="margin-top:26px">Evaluación de limitaciones</h2>
   <div class="cards" id="cards"></div>
   <h3 style="font-size:14px;margin:16px 0 6px">Leads · pidieron contacto</h3><div id="leads"></div>
-  <h3 style="font-size:14px;margin:16px 0 6px">Evaluaciones</h3><div id="evals"></div>
+  <h3 style="font-size:14px;margin:16px 0 6px">Evaluaciones <span class="muted">· por persona (clic para expandir)</span></h3><div id="evals"></div>
   <h3 style="font-size:14px;margin:16px 0 6px">Casos propios sugeridos</h3><div id="sugs"></div>
   <h2 style="margin-top:26px">Nutrición para eventos</h2>
   <div id="nutricion"></div>
@@ -132,6 +139,30 @@ function nutTabla(rows){
   return `<table><thead><tr><th>Fecha</th><th>Persona</th><th>Ride</th><th>Plan (carbos·líquido·sodio)</th><th></th></tr></thead><tbody>${rows.map(nutFila).join("")}</tbody></table>`;
 }
 
+function porCorreo(rows){
+  const m = new Map();
+  for(const r of rows){ const k = r.email || "(sin correo)"; if(!m.has(k)) m.set(k,[]); m.get(k).push(r); }
+  return [...m.entries()].sort((a,b)=> new Date(b[1][0].created_at) - new Date(a[1][0].created_at));
+}
+function evalsAgrupadas(rows){
+  if(!rows.length) return `<div class="empty">Nada por ahora.</div>`;
+  return porCorreo(rows).map(([email, rs])=>{
+    const nombre = rs.map(x=>x.nombre).find(Boolean) || "—";
+    const u = rs[0];
+    return `<details class="grupo"><summary><b>${esc(nombre)}</b> · ${esc(email)}<span class="cnt">${rs.length}</span>
+      <span class="muted"> · última ${fecha(u.created_at)} · ${esc(lim(u.limitacion))}</span></summary>${tabla(rs, false)}</details>`;
+  }).join("");
+}
+function nutAgrupados(rows){
+  if(!rows.length) return `<div class="empty">Sin reportes de nutrición todavía.</div>`;
+  return porCorreo(rows).map(([email, rs])=>{
+    const nombre = rs.map(x=>x.nombre).find(Boolean) || "—";
+    const u = rs[0];
+    return `<details class="grupo"><summary><b>${esc(nombre)}</b> · ${esc(email)}<span class="cnt">${rs.length}</span>
+      <span class="muted"> · último ${fecha(u.created_at)} · ${esc(String(u.duracion_h||"—"))} h ${esc(u.intensidad||"")}</span></summary>${nutTabla(rs)}</details>`;
+  }).join("");
+}
+
 async function borrar(tabla, id, btn){
   if(!confirm("¿Borrar este registro? No se puede deshacer.")) return;
   btn.disabled = true; btn.textContent = "…";
@@ -150,12 +181,12 @@ async function cargar(desdeGate){
     const prelim = evals.filter(e=>e.preliminar || !e.hipotesis_principal).length;
     document.getElementById("stamp").textContent = "En vivo · " + new Date().toLocaleString("es");
     document.getElementById("stats").innerHTML = statsTabla(stats);
-    document.getElementById("nutricion").innerHTML = nutTabla(nut);
+    document.getElementById("nutricion").innerHTML = nutAgrupados(nut);
     document.getElementById("cards").innerHTML =
       card(evals.length,"Evaluaciones") + card(leads.length,"Leads (contacto)") +
       card(prelim+" · "+(evals.length?Math.round(prelim/evals.length*100):0)+"%","Sin resultado") + card(nut.length,"Reportes nutrición");
     document.getElementById("leads").innerHTML = tabla(leads, true);
-    document.getElementById("evals").innerHTML = tabla(evals, false);
+    document.getElementById("evals").innerHTML = evalsAgrupadas(evals);
     document.getElementById("sugs").innerHTML = sugs.length
       ? `<table><thead><tr><th>Fecha</th><th>Tipo</th><th>Texto</th><th>Correo</th><th></th></tr></thead><tbody>${
           sugs.map(s=>`<tr><td>${fecha(s.created_at)}</td><td>${esc(s.tipo)}</td><td>${esc(s.texto)}</td><td>${esc(s.email||"—")}</td><td><button class="del" onclick="borrar('sugerencias','${s.id}',this)">Borrar</button></td></tr>`).join("")}</tbody></table>`
