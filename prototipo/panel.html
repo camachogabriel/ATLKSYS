@@ -46,14 +46,18 @@
 
 <div id="app" class="wrap" style="display:none">
   <div class="bar">
-    <div><h1>AthleteTrainLab · Panel de evaluaciones</h1><div class="muted" id="stamp"></div></div>
+    <div><h1>AthleteTrainLab · Panel</h1><div class="muted" id="stamp"></div></div>
     <div><button class="btn" onclick="cargar()">Recargar</button> <button onclick="salir()" style="background:#eef0f2;color:#1a1a2e">Salir</button></div>
   </div>
   <div id="err"></div>
+  <h2>Estadísticas · embudo por app</h2><div id="stats"></div>
+  <h2 style="margin-top:26px">Evaluación de limitaciones</h2>
   <div class="cards" id="cards"></div>
-  <h2>Leads · pidieron contacto</h2><div id="leads"></div>
-  <h2>Evaluaciones</h2><div id="evals"></div>
-  <h2>Casos propios sugeridos</h2><div id="sugs"></div>
+  <h3 style="font-size:14px;margin:16px 0 6px">Leads · pidieron contacto</h3><div id="leads"></div>
+  <h3 style="font-size:14px;margin:16px 0 6px">Evaluaciones</h3><div id="evals"></div>
+  <h3 style="font-size:14px;margin:16px 0 6px">Casos propios sugeridos</h3><div id="sugs"></div>
+  <h2 style="margin-top:26px">Nutrición para eventos</h2>
+  <div id="nutricion"></div>
 </div>
 
 <script>
@@ -104,6 +108,29 @@ function tabla(rows, lead){
     <tbody>${rows.map(e=>fila(e,lead)).join("")}</tbody></table>`;
 }
 const card = (n,l) => `<div class="card"><div class="n">${n}</div><div class="l">${l}</div></div>`;
+const APP = { evaluacion:"Evaluación", nutricion:"Nutrición" };
+
+function statsTabla(stats){
+  if(!stats || !stats.length) return `<div class="empty">Sin visitas registradas todavía.</div>`;
+  return `<table><thead><tr><th>App</th><th>Visitas</th><th>Completadas</th><th>Conversión</th></tr></thead><tbody>${
+    stats.map(s=>{ const v=+s.visitas||0, c=+s.completadas||0; const pct=v?Math.round(100*c/v):0;
+      return `<tr><td>${esc(APP[s.app]||s.app)}</td><td>${v}</td><td>${c}</td><td><b>${pct}%</b></td></tr>`; }).join("")}</tbody></table>`;
+}
+function nutFila(n){
+  const R = n.recomendacion || {};
+  const plan = R.carbos_gh ? `${esc(R.carbos_gh)} g/h · ${esc(String(R.liquido_mlh||"—"))} ml/h · ${esc(String(R.sodio_mgh||"—"))} mg/h` : "—";
+  return `<tr>
+    <td>${fecha(n.created_at)}</td>
+    <td>${esc(n.nombre||"—")}<div class="muted">${esc(n.email||"")}</div></td>
+    <td>${esc(String(n.duracion_h||"—"))} h · ${esc(n.intensidad||"—")} · ${esc(n.clima||"—")}</td>
+    <td>${plan}</td>
+    <td><button class="del" onclick="borrar('nutricion_reportes','${n.id}',this)">Borrar</button></td>
+  </tr>`;
+}
+function nutTabla(rows){
+  if(!rows.length) return `<div class="empty">Sin reportes de nutrición todavía.</div>`;
+  return `<table><thead><tr><th>Fecha</th><th>Persona</th><th>Ride</th><th>Plan (carbos·líquido·sodio)</th><th></th></tr></thead><tbody>${rows.map(nutFila).join("")}</tbody></table>`;
+}
 
 async function borrar(tabla, id, btn){
   if(!confirm("¿Borrar este registro? No se puede deshacer.")) return;
@@ -118,13 +145,15 @@ async function cargar(desdeGate){
     document.getElementById("gate").style.display = "none";
     document.getElementById("app").style.display = "block";
     document.getElementById("err").innerHTML = "";
-    const evals = d.evaluaciones || [], sugs = d.sugerencias || [];
+    const evals = d.evaluaciones || [], sugs = d.sugerencias || [], nut = d.nutricion || [], stats = d.stats || [];
     const leads = evals.filter(e=>e.quiere_info);
     const prelim = evals.filter(e=>e.preliminar || !e.hipotesis_principal).length;
     document.getElementById("stamp").textContent = "En vivo · " + new Date().toLocaleString("es");
+    document.getElementById("stats").innerHTML = statsTabla(stats);
+    document.getElementById("nutricion").innerHTML = nutTabla(nut);
     document.getElementById("cards").innerHTML =
       card(evals.length,"Evaluaciones") + card(leads.length,"Leads (contacto)") +
-      card(prelim+" · "+(evals.length?Math.round(prelim/evals.length*100):0)+"%","Sin resultado") + card(sugs.length,"Casos sugeridos");
+      card(prelim+" · "+(evals.length?Math.round(prelim/evals.length*100):0)+"%","Sin resultado") + card(nut.length,"Reportes nutrición");
     document.getElementById("leads").innerHTML = tabla(leads, true);
     document.getElementById("evals").innerHTML = tabla(evals, false);
     document.getElementById("sugs").innerHTML = sugs.length
