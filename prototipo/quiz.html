@@ -286,8 +286,8 @@ function pasoCodigoRevision() {
     <button class="link" onclick="bienvenida()">Volver</button>`);
 }
 
-function revisarCodigo() {
-  const code = document.getElementById("cod").value.trim();
+function revisarCodigo(codeArg) {
+  const code = codeArg || document.getElementById("cod").value.trim();
   try {
     const p = atob(code.replace(/^ATL1-/, "").replace(/-/g, "+").replace(/_/g, "/")).split("|");
     modo = p[0] === "o" ? "objetivo" : "limitacion";
@@ -324,7 +324,8 @@ function revisarCodigo() {
     document.getElementById("pf").style.width = "100%";
     pasoResultado();
   } catch (e) {
-    document.getElementById("cod").style.borderColor = "#f87171";
+    if (codeArg) { bienvenida(); }
+    else { document.getElementById("cod").style.borderColor = "#f87171"; }
   }
 }
 
@@ -802,7 +803,10 @@ function pasoResultado() {
 }
 
 evento("visita");
-bienvenida();
+// Revision directa por link: ?rev=ATL1-...
+const REV_CODE = (() => { try { return new URLSearchParams(location.search).get("rev"); } catch (e) { return null; } })();
+if (REV_CODE && REV_CODE.indexOf("ATL1-") === 0) { evento("revision_link"); revisarCodigo(REV_CODE.trim()); }
+else { bienvenida(); }
 </script>
 </body>
 </html>
