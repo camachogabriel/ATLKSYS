@@ -639,6 +639,8 @@ const SB_URL = "https://wmmfsblgrusvbaugcihp.supabase.co";
 const SB_KEY = "sb_publishable_iC4xe9jDAnxnn5Dwj-XARw_3nvPFhGf";
 
 // Analítica anónima: id de sesión aleatorio (sin datos personales)
+// Cliente ATL: si el link viene con ?atl=<id>, la evaluación queda ligada a su ficha
+const ATL_CLIENTE = (() => { try { const v = new URLSearchParams(location.search).get("atl"); return v && /^[0-9a-f-]{36}$/i.test(v) ? v : null; } catch (e) { return null; } })();
 const SESION = (() => { try { let s = sessionStorage.getItem("atl_sid"); if (!s) { s = Math.random().toString(36).slice(2) + Date.now().toString(36); sessionStorage.setItem("atl_sid", s); } return s; } catch (e) { return "anon"; } })();
 function evento(evt, meta) { try { fetch(SB_URL + "/rest/v1/eventos", { method: "POST", headers: { "Content-Type": "application/json", apikey: SB_KEY, Authorization: "Bearer " + SB_KEY, Prefer: "return=minimal" }, body: JSON.stringify({ app: "evaluacion", evento: evt, sesion: SESION, referrer: document.referrer || null, user_agent: navigator.userAgent, meta: meta || null }) }).catch(() => {}); } catch (e) {} }
 
@@ -650,6 +652,7 @@ function guardarEvaluacion() {
     const otras = act.slice(1, 3).map(([, h]) => h.codigo);  // hallazgos secundarios (D26)
     const fila = {
       codigo: generarCodigo(),
+      cliente_id: ATL_CLIENTE,
       email: ctx.email || null,
       nombre: ctx.nombre || null,
       telefono: ctx.telefono || null,
