@@ -30,6 +30,7 @@
   .b-lead { background: #e7effd; color: #1f4fb0; }
   .lead-row { background: #f3f8ff; }
   .del { background: #fdeaea; color: #a12b2b; padding: 5px 10px; font-size: 12px; }
+  .verlink { display: inline-block; background: #e7effd; color: #1f4fb0; padding: 5px 10px; border-radius: 8px; font-size: 12px; font-weight: 700; text-decoration: none; margin-right: 4px; }
   details.grupo { background: #fff; border: 1px solid #e6e8eb; border-radius: 10px; margin: 6px 0; }
   details.grupo > summary { cursor: pointer; padding: 10px 14px; font-size: 13.5px; list-style: none; }
   details.grupo > summary::-webkit-details-marker { display: none; }
@@ -106,7 +107,7 @@ function fila(e, lead){
     <td>${esc(e.nombre||"—")}${lead?`<div class="muted">${esc(e.email||"")}${e.telefono?" · "+esc(e.telefono):""}</div>`:""}</td>
     <td>${esc(lim(e.limitacion))}</td>
     <td>${resultado(e)}${lead?' <span class="badge b-lead">contactar</span>':''}</td>
-    <td><button class="del" onclick="borrar('evaluaciones','${e.id}', this)">Borrar</button></td>
+    <td>${e.codigo?`<a class="verlink" href="quiz.html?rev=${encodeURIComponent(e.codigo)}" target="_blank" rel="noopener">Ver</a>`:""}<button class="del" onclick="borrar('evaluaciones','${e.id}', this)">Borrar</button></td>
   </tr>`;
 }
 function tabla(rows, lead){

@@ -286,8 +286,9 @@ function pasoCodigoRevision() {
     <button class="link" onclick="bienvenida()">Volver</button>`);
 }
 
-function revisarCodigo() {
-  const code = document.getElementById("cod").value.trim();
+function revisarCodigo(codeArg) {
+  const el = document.getElementById("cod");
+  const code = (codeArg != null ? codeArg : (el ? el.value : "")).trim();
   try {
     const p = atob(code.replace(/^ATL1-/, "").replace(/-/g, "+").replace(/_/g, "/")).split("|");
     modo = p[0] === "o" ? "objetivo" : "limitacion";
@@ -324,7 +325,8 @@ function revisarCodigo() {
     document.getElementById("pf").style.width = "100%";
     pasoResultado();
   } catch (e) {
-    document.getElementById("cod").style.borderColor = "#f87171";
+    if (el) el.style.borderColor = "#f87171";
+    else { alert("El código de evaluación no es válido."); bienvenida(); }
   }
 }
 
@@ -798,8 +800,10 @@ function pasoResultado() {
     No es un diagnóstico médico ni fisiológico.</p>`);
 }
 
-evento("visita");
-bienvenida();
+// ?rev=CODIGO reproduce una evaluación directamente (usado desde el panel)
+const _rev = new URLSearchParams(location.search).get("rev");
+if (_rev) { revisarCodigo(_rev); }
+else { evento("visita"); bienvenida(); }
 </script>
 </body>
 </html>
