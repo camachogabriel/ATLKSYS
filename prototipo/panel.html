@@ -72,7 +72,7 @@
 const FN = "https://wmmfsblgrusvbaugcihp.supabase.co/functions/v1/admin-datos";
 const ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndtbWZzYmxncnVzdmJhdWdjaWhwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5MjcxMDMsImV4cCI6MjA5MDUwMzEwM30.uJZdzPyQ0rQMhqRZ3GenfOTE7vQRn9eT4Xia3k_sstg";
 const LIM = {LP001:"Se apaga el motor (fondos)",LP002:"Falta el aire en cuestas",LP003:"Se queman las piernas",LP004:"No responde ataques",LP005:"Recupero lento",LP006:"Explota al final",LP007:"Peor en calor",LP008:"Pulso muy alto",LP009:"Entreno pero no mejoro",LP010:"Se cargan los músculos"};
-const HIP = {H001:"Nutrición / energía",H002:"Durabilidad",H003:"Dosificación (pacing)",H004:"Base aeróbica",H005:"Umbral (glucolítica)",H006:"Explosividad",H007:"Hidratación / calor",H008:"Recuperación / sobrecarga",H009:"Sin estructura",H010:"Peso-potencia",H011:"Fuerza",H012:"Poco estructurado",H013:"Respuesta cardíaca",H015:"Sobrecarga localizada (técnica)"};
+const HIP = {H001:"Nutrición / energía",H002:"Durabilidad",H003:"Dosificación (pacing)",H004:"Base aeróbica",H005:"Umbral (glucolítica)",H006:"Explosividad",H007:"Hidratación / calor",H008:"Recuperación / sobrecarga",H009:"Sin estructura",H010:"Peso-potencia",H011:"Fuerza",H012:"Poco estructurado",H013:"Respuesta cardíaca",H015:"Sobrecarga localizada (técnica)",H016:"Falta de estímulo máximo (Z2)"};
 let TOKEN = sessionStorage.getItem("atl_tok") || "";
 
 const esc = s => (s==null?"":String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));

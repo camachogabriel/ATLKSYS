@@ -266,6 +266,27 @@ hipotesis:
     informacion_faltante:
       - Valoración fisiológica y cardíaca con un profesional
 
+  - codigo: H016
+    nombre: Falta de estímulo máximo (mucho Z2, poca intensidad)
+    texto: >
+      Tienes un plan estructurado y tu límite parece aeróbico, pero casi todo tu
+      entrenamiento es rodar suave (zona 2) y faltan esfuerzos máximos muy
+      cortos. Sin esos estímulos a tope, no reclutas las fibras rápidas ni subes
+      el techo: el problema no es solo "más base", es que falta la parte de
+      arriba. Es un ajuste fino, no la causa principal.
+    elementos: [F011, C001]
+    condiciones:
+      - {elemento: F011, confianza_minima: media}
+    recomendacion: >
+      Sobre tu base aeróbica, añade trabajo de intensidad máxima corto: sprints
+      o arrancadas de menos de 30 s, a tope de verdad, con recuperación completa
+      entre repeticiones. Reclutan fibras rápidas y suben el techo. Coméntalo con
+      tu entrenador para encajarlo sin romper tu plan; poco volumen bien hecho
+      rinde mucho. No reemplaza la base, la complementa.
+    informacion_faltante:
+      - Distribución real de zonas en la semana
+      - Si los esfuerzos máximos se hacen realmente a tope
+
 # Ranking (D6): principal = mayor score; secundarias = score >= 50% del
 # principal o confianza media en su elemento núcleo (primera condición).
 # H009 es la primera hipótesis combinada (dos condiciones en media, ninguna

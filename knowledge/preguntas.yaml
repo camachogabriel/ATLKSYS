@@ -938,6 +938,29 @@ preguntas:
         metadatos: []
         puntos: {D003: -1}
 
+  # D27: afinado fino. En un deportista CON plan estructurado cuya limitación
+  # apunta a lo aeróbico, ¿falta estímulo máximo/neuromuscular? -> F011 -> H016.
+  - codigo: Q096
+    texto: ¿Tu plan de entrenamiento incluye esfuerzos máximos muy cortos, de menos de 30 segundos (sprints o arrancadas a tope)?
+    tema: Intensidad y estímulo
+    contexto: general
+    tipo: afinacion
+    condiciones_aparicion:
+      metadatos_requeridos: [plan-estructurado, intensidad]
+    respuestas:
+      - id: A
+        texto: No, casi todo es rodar suave (mucho Z2)
+        metadatos: []
+        puntos: {F011: 5}
+      - id: B
+        texto: A veces, pero sin ir realmente al máximo
+        metadatos: []
+        puntos: {F011: 2}
+      - id: C
+        texto: Sí, con regularidad y a tope
+        metadatos: []
+        puntos: {F011: -3}
+
   # --- Ruta sprint (H006 requiere C003 media: Q024A+Q046A = 6) ---
   - codigo: Q046
     texto: Tu sprint corto (5-10 s), comparado con compañeros de tu nivel, es…

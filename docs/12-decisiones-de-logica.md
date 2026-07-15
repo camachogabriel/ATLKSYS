@@ -306,3 +306,11 @@ Refina D25 con una observación del 2026-07-08: que el motor detecte una segunda
 **Pasada extendida opcional.** La evaluación base se mantiene **corta y enfocada** en la limitación declarada (D25: no perseguir rutas ajenas). Al final, un botón *"Ver qué más podría estar frenándome"* abre una tanda de **preguntas genéricas transversales** (base aeróbica, carga, nutrición, recuperación, fuerza) que buscan co-limitaciones fuera del foco inicial. Así, quien solo quiere respuesta a su queja la obtiene rápido; quien quiere el panorama completo, opta por profundizar. Los resultados de esta pasada alimentan la sección "además notamos".
 
 **Estado:** principio aprobado 2026-07-08; se implementa junto con D25 (la prioridad y las dos secciones son baratas; la pasada extendida es una fase aparte).
+
+## D27. Afinado fino: falta de estímulo máximo en plan estructurado con límite aeróbico
+
+Para deportistas que YA tienen plan estructurado (metadato `plan-estructurado`) y cuya limitación apunta a lo aeróbico, un límite "aeróbico" puede no ser solo de base sino de **falta de estímulo máximo/neuromuscular**: mucho Z2, pocos esfuerzos a tope (<30 s) que recluten fibras rápidas y suban el techo.
+
+- **Pregunta Q096** (afinación, gateada en `plan-estructurado` + `intensidad`, o sea avanzada, no inicial): "¿tu plan incluye esfuerzos máximos muy cortos (<30 s)?" con matiz de si los hace y si los hace a tope. Alimenta el factor nuevo **F011** (estímulo de intensidad máxima; positivo = déficit).
+- **Hipótesis H016** (secundaria, "además notamos"; no es núcleo de ninguna limitación): dispara con F011 ≥ media. No le roba el titular a lo aeróbico (H004) ni a recuperación; aparece como ajuste fino con la recomendación de añadir sprints máximos cortos sin romper el plan.
+- Sincronizado a `config_correo` (H016) y al mapa del panel. Nace del caso planteado el 2026-07-14.

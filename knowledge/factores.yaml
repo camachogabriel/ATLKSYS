@@ -104,5 +104,13 @@ factores:
     descripcion: >
       Bicicleta, posición, desarrollos, presión de llantas y material.
 
+  - codigo: F011
+    nombre: Estímulo de intensidad máxima / neuromuscular
+    descripcion: >
+      Si el entrenamiento incluye esfuerzos máximos muy cortos (<30 s) que
+      recluten fibras rápidas y suban el techo. Positivo = déficit: mucho Z2 y
+      poco estímulo máximo. Solo se evalúa en deportistas con plan estructurado
+      cuya limitación apunta a lo aeróbico (afinado fino, D27).
+
 # Regla de intervención: la intervención se dirige al factor limitante
 # identificado, no a la capacidad de forma aislada.
