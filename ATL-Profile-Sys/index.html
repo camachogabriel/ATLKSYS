@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AthleteTrainLab · Perfil del deportista</title>
+<style>
+  :root { --bg:#0d1117; --card:#161b22; --border:#30363d; --acc:#2dd4bf; --acc2:#0ea5e9; --txt:#e6edf3; --dim:#8b949e; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background: radial-gradient(1200px 600px at 70% -10%, #12303a 0%, var(--bg) 55%);
+    color:var(--txt); font-family:-apple-system,"Segoe UI",Roboto,sans-serif; min-height:100vh;
+    display:flex; align-items:center; justify-content:center; padding:20px; }
+  .app { width:100%; max-width:560px; }
+  .card { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:32px 28px; animation:in .35s ease; }
+  @keyframes in { from{opacity:0;transform:translateY(14px);} to{opacity:1;transform:none;} }
+  .logo { text-align:center; margin-bottom:16px; }
+  .logo img { width:70%; max-width:220px; height:auto; border-radius:10px; }
+  .fase { color:var(--acc); font-size:12px; letter-spacing:2px; text-transform:uppercase; margin-bottom:12px; }
+  h1 { font-size:23px; line-height:1.3; margin-bottom:10px; }
+  h2 { font-size:20px; line-height:1.35; margin-bottom:8px; font-weight:600; }
+  p.sub { color:var(--dim); font-size:15px; line-height:1.55; margin-bottom:20px; }
+  input[type=text], input[type=email] { width:100%; background:#1c2129; border:1px solid var(--border); color:var(--txt);
+    padding:13px 15px; border-radius:10px; font-size:16px; margin-bottom:12px; }
+  .opts { display:flex; flex-direction:column; gap:10px; }
+  .opt { text-align:left; background:#1c2129; border:1px solid var(--border); color:var(--txt);
+    padding:14px 16px; border-radius:10px; font-size:15.5px; cursor:pointer; transition:all .15s; }
+  .opt:hover { border-color:var(--acc); background:#20303280; }
+  .opt.sel { border-color:var(--acc); background:#12403a; }
+  .btn { display:inline-block; background:linear-gradient(90deg,var(--acc2),var(--acc)); color:#04252b;
+    font-weight:700; border:none; padding:14px 30px; border-radius:10px; font-size:16px; cursor:pointer; width:100%; margin-top:6px; }
+  .btn:disabled { opacity:.4; }
+  .link { background:none; border:none; color:var(--acc); cursor:pointer; font-size:14px; margin-top:12px; text-decoration:underline; }
+  .disclaimer { color:var(--dim); font-size:12px; margin-top:14px; line-height:1.5; }
+  .prog { height:4px; background:var(--border); border-radius:2px; margin-bottom:22px; overflow:hidden; }
+  .prog-fill { height:100%; width:0; background:linear-gradient(90deg,var(--acc2),var(--acc)); transition:width .4s ease; }
+  /* escala */
+  .escala-val { text-align:center; font-size:44px; font-weight:800; color:var(--acc); line-height:1; margin:6px 0 2px; }
+  input[type=range] { width:100%; margin:14px 0 4px; accent-color:var(--acc); height:6px; }
+  .escala-labels { display:flex; justify-content:space-between; color:var(--dim); font-size:12.5px; margin-bottom:6px; }
+  /* gauges */
+  .gauges { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:6px 0 4px; }
+  @media (max-width:460px){ .gauges { grid-template-columns:1fr 1fr; } }
+  .gauge { background:#12161d; border:1px solid var(--border); border-radius:12px; padding:8px 6px 4px; text-align:center; }
+  .gauge-lbl { font-size:12px; color:var(--dim); margin-top:-6px; }
+  .meta { color:var(--dim); font-size:12px; margin-bottom:10px; }
+  select { background:#1c2129; color:var(--txt); border:1px solid var(--border); border-radius:8px; padding:8px 10px; font-size:14px; }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="prog"><div class="prog-fill" id="pf"></div></div>
+  <div class="card" id="card"></div>
+</div>
+<script>
+const SB_URL="https://wmmfsblgrusvbaugcihp.supabase.co";
+const SB_KEY="sb_publishable_iC4xe9jDAnxnn5Dwj-XARw_3nvPFhGf";
+const WA="https://wa.me/50688445505";
+
+const SCORE_LABELS = {
+  experiencia:"Experiencia", volumen:"Volumen", nutricion:"Nutrición", hidratacion:"Hidratación",
+  flexibilidad:"Flexibilidad", fuerza:"Fuerza", tecnica_ruta:"Técnica ruta", tecnica_mtb:"Técnica MTB",
+  recuperacion:"Recuperación", adherencia:"Adherencia", animo:"Ánimo", fatiga:"Frescura",
+  sueno:"Sueño", estres:"Manejo estrés", satisfaccion:"Satisfacción"
+};
+
+// e = escala {t,min,max,score,si?}; o = opción {t,score,op:[{t,v}]}; m = multi {t,op:[{t,flag}]}
+const e=(t,min,max,score,si)=>({tipo:"escala",t,min,max,score,si});
+const o=(t,score,op,si)=>({tipo:"opcion",t,score,op,si});
+
+const INTERVIEWS = {
+  inicial: { titulo:"Entrevista inicial", intro:"Unas preguntas simples para conocer tu punto de partida en cada área. Respondé según cómo te sentís hoy — no hay respuestas correctas.", preguntas:[
+    {tipo:"multi", t:"¿Qué disciplinas practicás?", op:[{t:"Ruta",flag:"ruta"},{t:"MTB",flag:"mtb"},{t:"Gravel",flag:"gravel"},{t:"Atletismo",flag:"run"},{t:"Natación",flag:"swim"},{t:"Gimnasio / fuerza",flag:"gym"}]},
+    e("Tu nivel general como deportista","Principiante","Elite","experiencia"),
+    o("¿Hace cuánto entrenás de forma constante?","experiencia",[{t:"Menos de 6 meses",v:2},{t:"6 meses a 1 año",v:4},{t:"1 a 2 años",v:6},{t:"2 a 4 años",v:8},{t:"Más de 4 años",v:10}]),
+    e("¿Cuánto entrenás por semana? (volumen)","Poco (1–2 días)","Mucho (casi diario)","volumen"),
+    e("Tu conocimiento de nutrición (dentro y fuera del deporte)","Nulo","Experto","nutricion"),
+    e("Tu flexibilidad y movilidad","Muy rígido","Muy flexible","flexibilidad"),
+    e("Tu trabajo de fuerza / gimnasio","Nunca","Regular y estructurado","fuerza"),
+    e("Tu técnica en RUTA (grupeta, curvas, descensos)","Insegura","Muy sólida","tecnica_ruta","ruta"),
+    e("Tu técnica en MTB (descensos, obstáculos)","Insegura","Muy sólida","tecnica_mtb","mtb"),
+    e("Tu descanso y recuperación","Muy pobre","Excelente","recuperacion"),
+  ]},
+  nutricion: { titulo:"Entrevista de nutrición", intro:"Para entender cómo comés e hidratás, dentro y fuera del entrenamiento.", preguntas:[
+    e("Estrategia de carbohidratos en rides/entrenos largos","No consumo","Planificada (g/h)","nutricion"),
+    e("Hidratación y electrolitos durante el esfuerzo","Solo agua / cuando me acuerdo","Con sodio y plan","hidratacion"),
+    e("Tu alimentación diaria (fuera del deporte)","Desordenada","Muy cuidada","nutricion"),
+    e("Comida antes del entreno o evento","La improviso","Planeada y probada","nutricion"),
+    e("Recuperación nutricional después del esfuerzo","No le presto atención","Siempre repongo bien","nutricion"),
+    o("¿Cuántos carbohidratos por hora en un fondo largo?","nutricion",[{t:"No sé / no consumo",v:2},{t:"~30 g/h",v:5},{t:"~60 g/h",v:8},{t:"90 g/h o más, planificado",v:10}]),
+  ]},
+  tecnica_ruta: { titulo:"Entrevista de técnica · Ruta", intro:"Autoevaluación de tu manejo en ruta.", preguntas:[
+    e("Curvas a velocidad (cornering)","Freno de más, inseguro","Fluido y confiado","tecnica_ruta"),
+    e("Descensos","Me tenso","Rápido y relajado","tecnica_ruta"),
+    e("Ir a rueda / rodar en grupeta","Me cuesta, dejo huecos","Cómodo y eficiente","tecnica_ruta"),
+    e("Pedaleo (redondez, cadencia)","Irregular","Eficiente y redondo","tecnica_ruta"),
+    e("Posición aerodinámica sostenida","Incómoda","Cómoda y aero","tecnica_ruta"),
+  ]},
+  tecnica_mtb: { titulo:"Entrevista de técnica · MTB", intro:"Autoevaluación de tu manejo en montaña.", preguntas:[
+    e("Curvas técnicas y peraltes (berms)","Inseguro","Fluido","tecnica_mtb"),
+    e("Descensos técnicos","Me tenso, freno de más","Rápido y en control","tecnica_mtb"),
+    e("Obstáculos (raíces, piedras, escalones)","Los evito","Los paso con confianza","tecnica_mtb"),
+    e("Subidas técnicas","Pierdo tracción/equilibrio","Sólidas","tecnica_mtb"),
+    e("Manejo del cuerpo y equilibrio","Rígido","Suelto y balanceado","tecnica_mtb"),
+    e("Confianza general en terreno difícil","Baja","Alta","tecnica_mtb"),
+  ]},
+  flexibilidad_fuerza: { titulo:"Entrevista de flexibilidad y fuerza", intro:"Para ubicar tu movilidad y tu fuerza actual.", preguntas:[
+    e("De pie y sin doblar rodillas, ¿te tocás los pies?","No llego","Con facilidad","flexibilidad"),
+    e("Movilidad de cadera","Rígida","Amplia","flexibilidad"),
+    e("Movilidad de tobillo","Limitada","Buena","flexibilidad"),
+    e("Fuerza de tren inferior (piernas)","Baja","Alta","fuerza"),
+    e("Fuerza de core (abdomen/lumbar)","Débil","Fuerte","fuerza"),
+    o("¿Con qué frecuencia hacés fuerza/gym?","fuerza",[{t:"Nunca",v:1},{t:"A veces, sin plan",v:4},{t:"1 vez por semana",v:6},{t:"2 veces por semana",v:8},{t:"3+ veces, estructurado",v:10}]),
+  ]},
+  seguimiento_semanal: { titulo:"Seguimiento semanal", intro:"Un chequeo rápido de cómo te fue esta semana.", preguntas:[
+    e("¿Cumpliste el plan de la semana?","Casi nada","Todo","adherencia"),
+    e("¿Cómo te sentiste en los entrenos?","Muy mal","Excelente","animo"),
+    e("Tu nivel de energía / frescura","Agotado","Con mucha energía","fatiga"),
+    e("Calidad de tu sueño esta semana","Muy mala","Excelente","sueno"),
+    e("Tu motivación","Baja","Alta","animo"),
+    e("Molestias o dolores","Muchas","Ninguna","recuperacion"),
+  ]},
+  estres_descanso: { titulo:"Entrevista de estrés y descanso", intro:"Para entender cómo estás recuperando fuera del entrenamiento.", preguntas:[
+    e("Horas de sueño en promedio","Menos de 6","8 o más","sueno"),
+    e("Calidad del sueño","Mala","Excelente","sueno"),
+    e("Nivel de estrés (trabajo / vida)","Muy alto","Muy bajo","estres"),
+    e("¿Cómo despertás?","Cansado","Descansado","recuperacion"),
+    e("¿Qué tan bien manejás el estrés? (pausas, hábitos)","No lo manejo","Muy bien","estres"),
+  ]},
+  post_evento: { titulo:"Entrevista post-evento", intro:"Justo después de una competencia o reto, mientras está fresco.", preguntas:[
+    e("Resultado respecto a tu expectativa","Muy por debajo","Superó lo esperado","satisfaccion"),
+    e("¿Cómo ejecutaste la nutrición e hidratación?","Mal","Perfecto","nutricion"),
+    e("Sensaciones físicas durante","Me fundí","Fuerte todo el tiempo","satisfaccion"),
+    e("Dosificación del esfuerzo (pacing)","Mal repartido","Perfecto","tecnica_ruta"),
+    e("Tu recuperación después del evento","Muy lenta","Rápida","recuperacion"),
+  ]},
+};
+const TIPO_NOMBRES = {inicial:"Entrevista inicial",nutricion:"Nutrición",tecnica_ruta:"Técnica ruta",tecnica_mtb:"Técnica MTB",flexibilidad_fuerza:"Flexibilidad y fuerza",seguimiento_semanal:"Seguimiento semanal",estres_descanso:"Estrés y descanso",post_evento:"Post-evento"};
+
+const params = new URLSearchParams(location.search);
+let tipo = params.get("tipo"); if(!INTERVIEWS[tipo]) tipo="inicial";
+const ATL_ID = params.get("atl_id") || null;
+const ctx = { atl_id:ATL_ID, tipo, respuestas:{}, flags:{}, nombre:null, email:null };
+let idx = 0;
+
+const $ = h => { document.getElementById("card").innerHTML = h; };
+const activas = () => INTERVIEWS[tipo].preguntas.filter(q => !q.si || ctx.flags[q.si]);
+function prog(){ const n=activas().length; document.getElementById("pf").style.width = Math.min(100, (idx/(n+1))*100) + "%"; }
+const esc = s => (s==null?"":String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+function bienvenida(){
+  idx=0; document.getElementById("pf").style.width="0%";
+  const iv = INTERVIEWS[tipo];
+  const ident = ATL_ID
+    ? `<p class="meta">Cliente ATL: <b>${esc(ATL_ID)}</b></p>`
+    : `<input type="text" id="nombre" placeholder="Nombre del deportista (opcional)">
+       <input type="email" id="email" placeholder="Correo (opcional)">`;
+  const sel = Object.keys(INTERVIEWS).map(k=>`<option value="${k}" ${k===tipo?"selected":""}>${TIPO_NOMBRES[k]}</option>`).join("");
+  $(`<div class="logo"><img src="../knowledge/img/ATLLogoColor.jpg" alt="AthleteTrainLab"></div>
+    <div class="fase">Perfil del deportista</div>
+    <h1>${esc(iv.titulo)}</h1>
+    <p class="sub">${esc(iv.intro)}</p>
+    ${ident}
+    <button class="btn" onclick="empezar()">Comenzar</button>
+    <div style="margin-top:16px" class="disclaimer">Tipo de entrevista (para pruebas):
+      <select onchange="cambiarTipo(this.value)">${sel}</select></div>`);
+}
+function cambiarTipo(t){ tipo=t; ctx.tipo=t; ctx.respuestas={}; ctx.flags={}; bienvenida(); }
+function empezar(){
+  if(!ATL_ID){ const n=document.getElementById("nombre"); const e=document.getElementById("email"); ctx.nombre=(n&&n.value.trim())||null; ctx.email=(e&&e.value.trim())||null; }
+  idx=0; pregunta();
+}
+
+function pregunta(){
+  const qs = activas();
+  if(idx>=qs.length) return resultado();
+  prog();
+  const q = qs[idx]; const faseTxt = `Pregunta ${idx+1} de ${qs.length}`;
+  if(q.tipo==="escala"){
+    const val = ctx.respuestas["i"+idx] ?? 5;
+    $(`<div class="fase">${faseTxt}</div><h2>${esc(q.t)}</h2>
+      <div class="escala-val" id="ev">${val}</div>
+      <input type="range" min="1" max="10" step="1" value="${val}" id="rg" oninput="document.getElementById('ev').textContent=this.value">
+      <div class="escala-labels"><span>1 · ${esc(q.min)}</span><span>${esc(q.max)} · 10</span></div>
+      <button class="btn" onclick="respEscala()">Continuar</button>
+      ${idx>0?'<button class="link" onclick="atras()">Atrás</button>':''}`);
+  } else if(q.tipo==="opcion"){
+    $(`<div class="fase">${faseTxt}</div><h2>${esc(q.t)}</h2>
+      <div class="opts">${q.op.map((op,i)=>`<button class="opt" onclick="respOpcion(${i})">${esc(op.t)}</button>`).join("")}</div>
+      ${idx>0?'<button class="link" onclick="atras()">Atrás</button>':''}`);
+  } else { // multi
+    const cur = ctx.respuestas["i"+idx] || {};
+    $(`<div class="fase">${faseTxt}</div><h2>${esc(q.t)}</h2>
+      <div class="opts">${q.op.map((op,i)=>`<button class="opt ${cur[op.flag]?'sel':''}" id="m${i}" onclick="toggleMulti(${i})">${esc(op.t)}</button>`).join("")}</div>
+      <button class="btn" onclick="respMulti()">Continuar</button>
+      ${idx>0?'<button class="link" onclick="atras()">Atrás</button>':''}`);
+  }
+}
+function respEscala(){ ctx.respuestas["i"+idx]=Number(document.getElementById("rg").value); idx++; pregunta(); }
+function respOpcion(i){ ctx.respuestas["i"+idx]=i; idx++; pregunta(); }
+function toggleMulti(i){
+  const q=activas()[idx]; const op=q.op[i]; const cur=ctx.respuestas["i"+idx]||{};
+  cur[op.flag]=!cur[op.flag]; ctx.respuestas["i"+idx]=cur;
+  document.getElementById("m"+i).classList.toggle("sel");
+}
+function respMulti(){
+  const q=activas()[idx]; const cur=ctx.respuestas["i"+idx]||{};
+  q.op.forEach(op=>{ ctx.flags[op.flag]=!!cur[op.flag]; });
+  idx++; pregunta();
+}
+function atras(){ if(idx>0){ idx--; pregunta(); } }
+
+function calcularScores(){
+  const acc={};
+  activas().forEach((q,i)=>{
+    const r=ctx.respuestas["i"+i]; if(r==null) return;
+    if(q.tipo==="escala" && q.score){ (acc[q.score]=acc[q.score]||[]).push(Number(r)); }
+    else if(q.tipo==="opcion" && q.score){ const op=q.op[r]; if(op&&op.v!=null)(acc[q.score]=acc[q.score]||[]).push(op.v); }
+  });
+  const scores={};
+  for(const s in acc){ const a=acc[s]; scores[s]=Math.round(a.reduce((x,y)=>x+y,0)/a.length*10)/10; }
+  return scores;
+}
+
+// Tacómetro SVG (0-10)
+function polar(cx,cy,r,deg){ const a=Math.PI*deg/180; return [cx+r*Math.cos(a), cy-r*Math.sin(a)]; }
+function arcPath(cx,cy,r,d1,d2){ const [x1,y1]=polar(cx,cy,r,d1),[x2,y2]=polar(cx,cy,r,d2); const large=Math.abs(d2-d1)>180?1:0; const sweep=d1>d2?1:0; return `M${x1.toFixed(1)} ${y1.toFixed(1)} A${r} ${r} 0 ${large} ${sweep} ${x2.toFixed(1)} ${y2.toFixed(1)}`; }
+function color(v){ return v<4?"#e0457b":(v<7?"#e7c13c":"#4fa96e"); }
+function gauge(v,label){
+  const ang = 180 - (v/10)*180;
+  const [nx,ny] = polar(100,100,66,ang);
+  return `<div class="gauge"><svg viewBox="0 0 200 116" width="100%">
+    <path d="${arcPath(100,100,80,180,0)}" fill="none" stroke="#2a3038" stroke-width="14" stroke-linecap="round"/>
+    <path d="${arcPath(100,100,80,180,ang)}" fill="none" stroke="${color(v)}" stroke-width="14" stroke-linecap="round"/>
+    <line x1="100" y1="100" x2="${nx.toFixed(1)}" y2="${ny.toFixed(1)}" stroke="#e6edf3" stroke-width="3"/>
+    <circle cx="100" cy="100" r="5" fill="#e6edf3"/>
+    <text x="100" y="90" text-anchor="middle" fill="${color(v)}" font-size="30" font-weight="800" font-family="Arial">${v}</text>
+  </svg><div class="gauge-lbl">${esc(label)}</div></div>`;
+}
+
+function resultado(){
+  document.getElementById("pf").style.width="100%";
+  const scores = calcularScores();
+  ctx.scores = scores;
+  guardar();
+  const claves = Object.keys(scores);
+  const gauges = claves.length ? `<div class="gauges">${claves.map(s=>gauge(scores[s], SCORE_LABELS[s]||s)).join("")}</div>`
+    : `<p class="sub">No se generaron scores.</p>`;
+  const disc = Object.keys(ctx.flags).filter(f=>ctx.flags[f]);
+  $(`<div class="fase">Perfil · ${esc(TIPO_NOMBRES[tipo])}</div>
+    <h2>${ctx.nombre?esc(ctx.nombre)+", ":""}este es tu perfil actual</h2>
+    <p class="meta">${ATL_ID?"Cliente ATL: <b>"+esc(ATL_ID)+"</b> · ":""}${disc.length?"Disciplinas: "+disc.join(", "):""}</p>
+    ${gauges}
+    <p class="disclaimer">Cada tacómetro es un score de 0 a 10 según tus respuestas. Guardamos este perfil para tu seguimiento con AthleteTrainLab; se irá afinando con las próximas entrevistas.</p>
+    <div style="margin-top:14px;text-align:center"><a class="btn" style="text-decoration:none;display:inline-block;width:auto;padding:12px 24px" href="${WA}" target="_blank" rel="noopener">Hablar con tu entrenador</a></div>`);
+}
+
+function guardar(){
+  try{
+    fetch(SB_URL+"/rest/v1/perfil_evaluaciones",{method:"POST",
+      headers:{"Content-Type":"application/json",apikey:SB_KEY,Authorization:"Bearer "+SB_KEY,Prefer:"return=minimal"},
+      body:JSON.stringify({atl_id:ctx.atl_id,tipo:ctx.tipo,nombre:ctx.nombre,email:ctx.email,
+        scores:ctx.scores||null,flags:ctx.flags||null,respuestas:ctx.respuestas||null,user_agent:navigator.userAgent})
+    }).catch(()=>{});
+  }catch(e){}
+}
+bienvenida();
+</script>
+</body>
+</html>
