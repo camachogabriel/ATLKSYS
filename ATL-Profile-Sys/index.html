@@ -61,7 +61,7 @@ const WA="https://wa.me/50688445505";
 
 const SCORE_LABELS = {
   experiencia:"Experiencia", volumen:"Volumen", nutricion:"Nutrición", hidratacion:"Hidratación",
-  flexibilidad:"Flexibilidad", fuerza:"Fuerza",
+  flexibilidad:"Flexibilidad", fuerza:"Fuerza", mecanica:"Mecánica básica",
   tecnica_ruta:"Técnica ruta (general)", tr_corner:"Ruta · Cornering", tr_freno:"Ruta · Frenado", tr_equil:"Ruta · Equilibrio",
   tecnica_mtb:"Técnica MTB (general)", tm_desc:"MTB · Descensos", tm_curva:"MTB · Curvas/berms", tm_obst:"MTB · Obstáculos", tm_subida:"MTB · Subidas técnicas", tm_equil:"MTB · Equilibrio",
   recuperacion:"Recuperación", adherencia:"Adherencia", animo:"Ánimo", fatiga:"Frescura",
@@ -73,7 +73,7 @@ const DERIV = {
   tecnica_mtb:["tm_desc","tm_curva","tm_obst","tm_subida","tm_equil"]
 };
 const GENERALES = Object.keys(DERIV);
-const ORDEN = ["experiencia","volumen","nutricion","hidratacion","flexibilidad","fuerza",
+const ORDEN = ["experiencia","volumen","nutricion","hidratacion","flexibilidad","fuerza","mecanica",
   "tecnica_ruta","tr_corner","tr_freno","tr_equil","tecnica_mtb","tm_desc","tm_curva","tm_obst","tm_subida","tm_equil",
   "recuperacion","sueno","estres","adherencia","animo","fatiga","satisfaccion"];
 
@@ -93,6 +93,7 @@ const INTERVIEWS = {
     e("nut","Tu conocimiento de nutrición (dentro y fuera del deporte)","Nulo","Experto","nutricion"),
     e("flex","Tu flexibilidad y movilidad","Muy rígido","Muy flexible","flexibilidad"),
     e("fue","Tu trabajo de fuerza / gimnasio","Nunca","Regular y estructurado","fuerza"),
+    e("mec","Tu conocimiento de mecánica básica (pinchazos, ajustes)","Nulo","Me arreglo solo con todo","mecanica"),
     e("tr","Tu técnica en RUTA (grupeta, curvas, descensos)","Insegura","Muy sólida","tecnica_ruta","ruta"),
     e("tm","Tu técnica en MTB (descensos, obstáculos)","Insegura","Muy sólida","tecnica_mtb","mtb"),
     e("rec","Tu descanso y recuperación","Muy pobre","Excelente","recuperacion"),
@@ -155,6 +156,18 @@ const INTERVIEWS = {
     txt("dolor_txt","Describí el dolor: dónde está y cómo se siente"),
     e("fondo","¿Cómo te fue en el fondo del fin de semana?","1 · No lo hice","Excelente · 10","satisfaccion"),
     cap("fondo_por","El fondo salió flojo, ¿por qué creés?",[{t:"Fui más fuerte/intenso de lo que debía",key:"intenso"},{t:"Solo fue un mal día",key:"maldia"},{t:"Me faltó nutrición / energía",key:"nutri"},{t:"Llegué cansado de antes",key:"cansado"},{t:"Clima o mecánico",key:"externo"},{t:"Otro",key:"otro"}]),
+  ]},
+  mecanica: { titulo:"Quiz de mecánica básica", intro:"Preguntas simples de mecánica de ciclismo para ver qué tanto te defendés solo. Elegí la mejor opción.", preguntas:[
+    op("me1","Se te pincha en ruta. ¿Qué necesitás para resolverlo vos mismo?","mecanica",[{t:"Cámara o parches, palancas e inflador/CO2",key:"a",v:10},{t:"Solo el celular para pedir ayuda",key:"b",v:0},{t:"Una botella de agua",key:"c",v:0},{t:"No sabría qué hacer",key:"d",v:0}]),
+    op("me2","Antes de poner la cámara nueva, ¿qué es clave revisar?","mecanica",[{t:"La cubierta por dentro, para sacar lo que causó el pinchazo",key:"a",v:10},{t:"Nada, la pongo y listo",key:"b",v:2},{t:"El color de la cámara",key:"c",v:0}]),
+    op("me3","La presión correcta de las llantas depende sobre todo de:","mecanica",[{t:"Tu peso, el ancho de la cubierta y el terreno",key:"a",v:10},{t:"Siempre el máximo que diga la cubierta",key:"b",v:3},{t:"Lo que se vea bien al apretarla",key:"c",v:1}]),
+    op("me4","En MTB, comparada con ruta, la presión suele ser:","mecanica",[{t:"Más baja (más agarre y control)",key:"a",v:10},{t:"Más alta",key:"b",v:0},{t:"Exactamente igual",key:"c",v:2}]),
+    op("me5","¿Qué componente cambia las marchas en la rueda trasera?","mecanica",[{t:"El desviador / cambio trasero",key:"a",v:10},{t:"Los frenos",key:"b",v:0},{t:"La potencia (stem)",key:"c",v:0},{t:"El sillín",key:"d",v:0}]),
+    op("me6","¿Cómo cuidás la cadena?","mecanica",[{t:"La limpio y lubrico seguido, con lubricante específico",key:"a",v:10},{t:"Le echo cualquier aceite cuando chirría",key:"b",v:3},{t:"No hace falta mantenerla",key:"c",v:0}]),
+    op("me7","Si los frenos rozan o frenan poco, lo primero es:","mecanica",[{t:"Revisar pastillas/zapatas, desgaste y centrado",key:"a",v:10},{t:"Seguir usándola así",key:"b",v:0},{t:"Cambiar la bici",key:"c",v:0}]),
+    op("me8","El chequeo rápido antes de salir incluye:","mecanica",[{t:"Presión de llantas, frenos y ruedas bien fijadas",key:"a",v:10},{t:"Solo mirar a ojo que tenga aire",key:"b",v:4},{t:"Nada, salgo directo",key:"c",v:0}]),
+    op("me9","El 'cross-chaining' (plato grande + piñón grande) conviene:","mecanica",[{t:"Evitarlo: fuerza y desgasta la transmisión",key:"a",v:10},{t:"Usarlo siempre, no pasa nada",key:"b",v:2},{t:"No sé qué es",key:"c",v:1}]),
+    op("me10","En un sistema tubeless, el líquido sellante sirve para:","mecanica",[{t:"Sellar solo los pinchazos pequeños",key:"a",v:10},{t:"Lubricar la cadena",key:"b",v:0},{t:"No sé / no uso tubeless",key:"c",v:3}]),
   ]},
   post_evento: { titulo:"Entrevista post-evento", intro:"Justo después de una competencia o reto, mientras está fresco.", preguntas:[
     e("pe1","Resultado respecto a tu expectativa","Muy por debajo","Superó lo esperado","satisfaccion"),
