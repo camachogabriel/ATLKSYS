@@ -633,8 +633,8 @@ function verResultado() {
 }
 
 // ---------- persistencia en Supabase (insert-only, no bloquea el flujo) ----------
-const SB_URL = "https://wmmfsblgrusvbaugcihp.supabase.co";
-const SB_KEY = "sb_publishable_iC4xe9jDAnxnn5Dwj-XARw_3nvPFhGf";
+const SB_URL = "https://cejgurbaweucfpuzvdpw.supabase.co";
+const SB_KEY = "sb_publishable_qXqEI0bVkwXtH8eqByoPqQ_9dVp8KTI";
 
 // Analítica anónima: id de sesión aleatorio (sin datos personales)
 const SESION = (() => { try { let s = sessionStorage.getItem("atl_sid"); if (!s) { s = Math.random().toString(36).slice(2) + Date.now().toString(36); sessionStorage.setItem("atl_sid", s); } return s; } catch (e) { return "anon"; } })();
