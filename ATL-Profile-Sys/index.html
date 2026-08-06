@@ -225,7 +225,12 @@ let orden = [];
 const $ = h => { document.getElementById("card").innerHTML = h; };
 const esc = s => (s==null?"":String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 let curEsc = {max:10, unidad:null};
-function escalaTxt(v){ v=Number(v); if(curEsc.unidad) return v+" "+curEsc.unidad; const f=v/curEsc.max; return f<=.2?"Muy bajo":f<=.4?"Bajo":f<=.6?"Medio":f<=.8?"Alto":"Muy alto"; }
+function escalaTxt(v){ v=Number(v);
+  if(curEsc.unidad) return v+" "+curEsc.unidad;
+  const f=(v-1)/((curEsc.max||10)-1);           // 0 = extremo izquierdo, 1 = derecho
+  if(f<=0.33) return curEsc.lo||"Bajo";          // usa la etiqueta real del extremo
+  if(f>=0.67) return curEsc.hi||"Alto";
+  return "Punto medio"; }
 function flags(){ const f={}; INTERVIEWS[tipo].preguntas.forEach(q=>{ if(q.tipo==="multi"){ const a=ctx.respuestas[q.id]; if(a) q.op.forEach(o=>{ if(a[o.flag]) f[o.flag]=true; }); } }); return f; }
 function activas(){ const fl=flags();
   let qs = INTERVIEWS[tipo].preguntas.filter(q => (!q.si || fl[q.si]) && (!q.showIf || q.showIf(ctx.respuestas)));
@@ -266,7 +271,7 @@ function pregunta(){
   if(q.tipo==="escala"){
     const mx = q.esc_max || 10;
     const val = ctx.respuestas[q.id] ?? Math.round(mx/2);
-    curEsc = { max:mx, unidad:q.unidad||null };
+    curEsc = { max:mx, unidad:q.unidad||null, lo:q.min, hi:q.max };
     $(`<div class="fase">Perfil · ${esc(TIPO_NOMBRES[tipo])}</div><h2>${esc(q.t)}</h2>${ayudaHtml}
       <div class="escala-val" id="ev">${val}</div>
       <div class="escala-word" id="ew">${escalaTxt(val)}</div>
