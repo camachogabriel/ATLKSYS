@@ -33,6 +33,9 @@
     font-weight:700; border:none; padding:14px 30px; border-radius:10px; font-size:16px; cursor:pointer; width:100%; margin-top:6px; }
   .link { background:none; border:none; color:var(--acc); cursor:pointer; font-size:14px; margin-top:12px; text-decoration:underline; }
   .disclaimer { color:var(--dim); font-size:12px; margin-top:14px; line-height:1.5; }
+  .ayuda { background:#12212a; border:1px solid #1f3a44; border-left:3px solid var(--acc); color:#c7d3da;
+    font-size:13.5px; line-height:1.55; padding:10px 13px; border-radius:9px; margin:2px 0 16px; }
+  .ayuda b { color:var(--acc); }
   .prog { height:4px; background:var(--border); border-radius:2px; margin-bottom:22px; overflow:hidden; }
   .prog-fill { height:100%; width:0; background:linear-gradient(90deg,var(--acc2),var(--acc)); transition:width .4s ease; }
   .escala-val { text-align:center; font-size:44px; font-weight:800; color:var(--acc); line-height:1; margin:6px 0 2px; }
@@ -192,6 +195,24 @@ INTERVIEWS.seguimiento_semanal.preguntas.find(q=>q.id==="dolor_post").showIf = r
 INTERVIEWS.seguimiento_semanal.preguntas.find(q=>q.id==="dolor_txt").showIf  = r => r.dolor_tipo==="puntual" && r.dolor_post==="NO";
 INTERVIEWS.seguimiento_semanal.preguntas.find(q=>q.id==="fondo_por").showIf  = r => r.fondo!=null && Number(r.fondo)<5;
 
+// Ayudas (explicación + ejemplo) para las preguntas más difíciles de entender. Lenguaje de Costa Rica (voseo).
+const AYUDA = {
+  exp:"Ubicate con sinceridad: principiante = apenas empezando; élite = competís a nivel nacional o internacional. Casi todos estamos en el medio. <b>Ejemplo:</b> si rodás fuerte los fines de semana pero no competís, andás como en 5–6.",
+  tr:"Tu manejo rodando en grupo (grupeta), tomando curvas y en bajadas. <b>Ejemplo:</b> si en una bajada con curvas vas suelto y confiado, alto; si vas clavando freno por nervios, bajo.",
+  n1:"Es si tenés un plan de cuánta comida o azúcar metés por hora en las salidas largas, no solo comer cuando ya te está dando la pájara. <b>Ejemplo:</b> 'un gel y medio banano cada hora' es una estrategia; 'como cuando ya no aguanto' no lo es.",
+  n2:"Electrolitos = las sales (sobre todo sodio) que botás en el sudor. <b>Ejemplo:</b> llevar bebida con sales o pastillas de electrolitos, no solo agua pura.",
+  trc1:"El 'cornering' es entrar y salir de las curvas. Fijate si frenás de más por miedo o si entrás fluido. <b>Ejemplo:</b> en una bajada con curvas, ¿las tomás sueltas o vas frenando toda la curva?",
+  tre1:"Ir 'a rueda' es rodar pegadito a la rueda del de adelante para descansar (chupar rueda); la grupeta es rodar en grupo. <b>Ejemplo:</b> ¿vas cómodo pegado sin dejar huecos, o te da nervios y te quedás cortado?",
+  tmcu:"Un peralte (berm) es esa curva con pared de tierra inclinada que te ayuda a girar sin frenar. <b>Ejemplo:</b> ¿la aprovechás para salir rápido o entrás frenando inseguro?",
+  tmo2:"Un 'drop' es un escalón donde la rueda cae a un nivel más bajo. <b>Ejemplo:</b> bajar de una piedra o una grada; ¿lo hacés tranquilo o te bajás de la bici?",
+  ff5:"El 'core' es la zona del abdomen y la espalda baja que te mantiene firme sobre la bici. <b>Ejemplo:</b> si aguantás mucho rato agachado sin que se te canse la espalda, tenés buen core.",
+  dolor_esf:"Pensá si el dolor sale justo cuando apretás fuerte (subidas, sprints) y se calma al bajar el ritmo. <b>Ejemplo:</b> 'solo me arde cuando voy a tope, apenas aflojo se quita'.",
+  dolor_desc:"Fijate si después de descansar 2–3 días seguís igual. Si NO se quita con el descanso, marcá Sí. <b>Ejemplo:</b> 'descansé todo el finde y el lunes seguía doliendo'.",
+  dolor_post:"¿Sale siempre en la misma parte y creés que es por cómo estás sentado o por el ajuste de la bici? <b>Ejemplo:</b> siempre la misma rodilla, o la espalda baja después de un rato en la misma posición.",
+  fondo:"El 'fondo' es tu salida larga del fin de semana. Ponete 1 si no lo hiciste y 10 si te sentiste excelente.",
+  me9:"El 'cross-chaining' es usar el plato grande de adelante con el piñón más grande de atrás (o al revés): la cadena queda muy cruzada. <b>Ejemplo:</b> plato grande + piñón más grande = la cadena jala torcida y hace ruido."
+};
+
 const TIPO_NOMBRES = {inicial:"Entrevista inicial",nutricion:"Nutrición",tecnica_ruta:"Técnica ruta",tecnica_mtb:"Técnica MTB",flexibilidad_fuerza:"Flexibilidad y fuerza",seguimiento_semanal:"Seguimiento semanal",estres_descanso:"Estrés y descanso",post_evento:"Post-evento"};
 
 const params = new URLSearchParams(location.search);
@@ -234,12 +255,13 @@ function pregunta(){
   const q = siguiente();
   if(!q) return resultado();
   prog();
+  const ayudaHtml = AYUDA[q.id] ? `<p class="ayuda">${AYUDA[q.id]}</p>` : "";
   const back = orden.length ? '<button class="link" onclick="atras()">Atrás</button>' : '';
   if(q.tipo==="escala"){
     const mx = q.esc_max || 10;
     const val = ctx.respuestas[q.id] ?? Math.round(mx/2);
     curEsc = { max:mx, unidad:q.unidad||null };
-    $(`<div class="fase">Perfil · ${esc(TIPO_NOMBRES[tipo])}</div><h2>${esc(q.t)}</h2>
+    $(`<div class="fase">Perfil · ${esc(TIPO_NOMBRES[tipo])}</div><h2>${esc(q.t)}</h2>${ayudaHtml}
       <div class="escala-val" id="ev">${val}</div>
       <div class="escala-word" id="ew">${escalaTxt(val)}</div>
       <input type="range" min="1" max="${mx}" step="1" value="${val}" id="rg" oninput="document.getElementById('ev').textContent=this.value;document.getElementById('ew').textContent=escalaTxt(this.value)">
@@ -247,15 +269,15 @@ function pregunta(){
       <button class="btn" onclick="responder('${q.id}',Number(document.getElementById('rg').value))">Continuar</button>${back}`);
   } else if(q.tipo==="opcion"){
     const cls = q.sino ? "opts sino" : "opts";
-    $(`<div class="fase">Perfil · ${esc(TIPO_NOMBRES[tipo])}</div><h2>${esc(q.t)}</h2>
+    $(`<div class="fase">Perfil · ${esc(TIPO_NOMBRES[tipo])}</div><h2>${esc(q.t)}</h2>${ayudaHtml}
       <div class="${cls}">${q.op.map(o=>`<button class="opt" onclick="responder('${q.id}','${o.key}')">${esc(o.t)}</button>`).join("")}</div>${back}`);
   } else if(q.tipo==="texto"){
-    $(`<div class="fase">Perfil · ${esc(TIPO_NOMBRES[tipo])}</div><h2>${esc(q.t)}</h2>
+    $(`<div class="fase">Perfil · ${esc(TIPO_NOMBRES[tipo])}</div><h2>${esc(q.t)}</h2>${ayudaHtml}
       <textarea id="tx" placeholder="Escribí aquí...">${esc(ctx.respuestas[q.id]||"")}</textarea>
       <button class="btn" onclick="responder('${q.id}',(document.getElementById('tx').value||'').trim())">Continuar</button>${back}`);
   } else { // multi
     const cur = ctx.respuestas[q.id] || {};
-    $(`<div class="fase">Perfil · ${esc(TIPO_NOMBRES[tipo])}</div><h2>${esc(q.t)}</h2>
+    $(`<div class="fase">Perfil · ${esc(TIPO_NOMBRES[tipo])}</div><h2>${esc(q.t)}</h2>${ayudaHtml}
       <div class="opts">${q.op.map((o,i)=>`<button class="opt ${cur[o.flag]?'sel':''}" id="m${i}" onclick="toggleMulti('${q.id}',${i})">${esc(o.t)}</button>`).join("")}</div>
       <button class="btn" onclick="responder('${q.id}',ctx.respuestas['${q.id}']||{})">Continuar</button>${back}`);
   }
@@ -317,9 +339,20 @@ function resultado(){
     <p class="meta">${disc.length?"Disciplinas: "+disc.join(", "):""}</p>
     ${gauges}${notasBlock}
     <p class="disclaimer">Cada tacómetro es un score de 0 a 10 según tus respuestas. Los generales son el promedio de sus subáreas. Guardamos este perfil para tu seguimiento con AthleteTrainLab.</p>
-    ${ATL_ID?"":`<div style="margin-top:14px;text-align:center"><a class="btn" style="text-decoration:none;display:inline-block;width:auto;padding:12px 24px" href="${WA}" target="_blank" rel="noopener">Hablar con tu entrenador</a></div>`}`);
+    <div style="margin-top:14px;text-align:center">${ATL_ID
+      ? `<button class="btn" style="width:auto;padding:12px 30px" onclick="cerrar()">Cerrar</button>`
+      : `<a class="btn" style="text-decoration:none;display:inline-block;width:auto;padding:12px 24px" href="${WA}" target="_blank" rel="noopener">Hablar con tu entrenador</a>`}</div>`);
 }
 
+function cerrar(){
+  // Avisar a la app de miembros (si está embebida en iframe) para que cierre/oculte el quiz.
+  try{ if(window.parent && window.parent!==window) window.parent.postMessage({type:"atl-perfil-cerrado",atl_id:ctx.atl_id,tipo:ctx.tipo},"*"); }catch(e){}
+  try{ window.close(); }catch(e){}
+  // Fallback si no hay app padre ni se pudo cerrar la ventana.
+  $(`<div class="logo"><img src="../knowledge/img/ATLLogoColor.jpg" alt="AthleteTrainLab"></div>
+     <h2 style="text-align:center">¡Listo! Tu perfil quedó guardado</h2>
+     <p class="sub" style="text-align:center;margin-bottom:0">Ya podés cerrar esta ventana y volver a tu app.</p>`);
+}
 function guardar(){
   try{
     fetch(SB_URL+"/rest/v1/perfil_evaluaciones",{method:"POST",
