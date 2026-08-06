@@ -36,6 +36,8 @@
   .ayuda { background:#12212a; border:1px solid #1f3a44; border-left:3px solid var(--acc); color:#c7d3da;
     font-size:13.5px; line-height:1.55; padding:10px 13px; border-radius:9px; margin:2px 0 16px; }
   .ayuda b { color:var(--acc); }
+  .ilus { text-align:center; margin:-2px 0 16px; }
+  .ilus svg { width:150px; max-width:55%; height:auto; }
   .prog { height:4px; background:var(--border); border-radius:2px; margin-bottom:22px; overflow:hidden; }
   .prog-fill { height:100%; width:0; background:linear-gradient(90deg,var(--acc2),var(--acc)); transition:width .4s ease; }
   .escala-val { text-align:center; font-size:44px; font-weight:800; color:var(--acc); line-height:1; margin:6px 0 2px; }
@@ -205,6 +207,10 @@ const AYUDA = {
   tre1:"Ir 'a rueda' es rodar pegadito a la rueda del de adelante para descansar (chupar rueda); la grupeta es rodar en grupo. <b>Ejemplo:</b> ¿vas cómodo pegado sin dejar huecos, o te da nervios y te quedás cortado?",
   tmcu:"Un peralte (berm) es esa curva con pared de tierra inclinada que te ayuda a girar sin frenar. <b>Ejemplo:</b> ¿la aprovechás para salir rápido o entrás frenando inseguro?",
   tmo2:"Un 'drop' es un escalón donde la rueda cae a un nivel más bajo. <b>Ejemplo:</b> bajar de una piedra o una grada; ¿lo hacés tranquilo o te bajás de la bici?",
+  ff1:"Parate derecho, piernas juntas y estiradas (sin doblar las rodillas) y bajá las manos hacia el suelo. Fijate hasta dónde llegás. <b>Ejemplo:</b> palmas planas en el piso = muy flexible (9–10); dedos a los tobillos = 5–6; si apenas pasás las rodillas = 1–3.",
+  ff2:"La movilidad de cadera es qué tan profundo y cómodo te agachás sin que la espalda se redondee. <b>Prueba:</b> ponete en cuclillas bien abajo con los talones pegados al piso y la espalda recta. <b>Ejemplo:</b> si te quedás abajo tranquilo y estable = 8–10; si te vas de espaldas, se te despegan los talones o sentís que 'topás' arriba = 2–4.",
+  ff3:"La movilidad de tobillo es cuánto podés llevar la rodilla hacia adelante sin despegar el talón. <b>Prueba (rodilla a la pared):</b> pie a un palmo de la pared, doblá la rodilla al frente y tratá de tocar la pared con la rodilla sin levantar el talón. <b>Ejemplo:</b> si tocás con el pie a ~10 cm o más de la pared = buena (8–10); si el talón se despega enseguida = limitada (2–4).",
+  ff4:"Es cuánto empujan tus piernas. Pensá en sentadillas, subir gradas o levantarte de una silla con una sola pierna. <b>Ejemplo:</b> si hacés sentadillas con buen peso o aguantás muchas repeticiones sin fundirte = alto (8–10); si te cuesta pararte de una silla baja = 2–3.",
   ff5:"El 'core' es la zona del abdomen y la espalda baja que te mantiene firme sobre la bici. <b>Ejemplo:</b> si aguantás mucho rato agachado sin que se te canse la espalda, tenés buen core.",
   dolor_esf:"Pensá si el dolor sale justo cuando apretás fuerte (subidas, sprints) y se calma al bajar el ritmo. <b>Ejemplo:</b> 'solo me arde cuando voy a tope, apenas aflojo se quita'.",
   dolor_desc:"Fijate si después de descansar 2–3 días seguís igual. Si NO se quita con el descanso, marcá Sí. <b>Ejemplo:</b> 'descansé todo el finde y el lunes seguía doliendo'.",
@@ -212,6 +218,13 @@ const AYUDA = {
   energia:"La frescura es qué tan descansado y con pilas te sentís para entrenar, aparte de las horas de sueño. 10 = con baterías y ganas de salir; 1 = arrastrando las piernas, sin energía. <b>Ejemplo:</b> si subís unas gradas y sentís las piernas pesadas y flojas todo el día, andás bajo de frescura.",
   fondo:"El 'fondo' es tu salida larga del fin de semana. Ponete 1 si no lo hiciste y 10 si te sentiste excelente.",
   me9:"El 'cross-chaining' es usar el plato grande de adelante con el piñón más grande de atrás (o al revés): la cadena queda muy cruzada. <b>Ejemplo:</b> plato grande + piñón más grande = la cadena jala torcida y hace ruido."
+};
+
+// Ilustraciones simples (SVG) para las pruebas de flexibilidad/movilidad.
+const ILUS = {
+  ff1: "<svg viewBox='0 0 140 130'><line x1='18' y1='122' x2='122' y2='122' stroke='#3a434d' stroke-width='2'/><line x1='46' y1='122' x2='70' y2='122' stroke='#e6edf3' stroke-width='4' stroke-linecap='round'/><line x1='58' y1='120' x2='60' y2='74' stroke='#e6edf3' stroke-width='4' stroke-linecap='round'/><line x1='60' y1='74' x2='74' y2='88' stroke='#e6edf3' stroke-width='4' stroke-linecap='round'/><circle cx='80' cy='96' r='7' fill='#2dd4bf'/><line x1='74' y1='88' x2='64' y2='115' stroke='#2dd4bf' stroke-width='3.5' stroke-linecap='round'/></svg>",
+  ff2: "<svg viewBox='0 0 140 130'><line x1='18' y1='122' x2='122' y2='122' stroke='#3a434d' stroke-width='2'/><line x1='44' y1='122' x2='74' y2='122' stroke='#e6edf3' stroke-width='4' stroke-linecap='round'/><line x1='52' y1='120' x2='82' y2='92' stroke='#2dd4bf' stroke-width='4' stroke-linecap='round'/><line x1='82' y1='92' x2='58' y2='98' stroke='#2dd4bf' stroke-width='4' stroke-linecap='round'/><line x1='58' y1='98' x2='60' y2='62' stroke='#e6edf3' stroke-width='4' stroke-linecap='round'/><circle cx='61' cy='52' r='7' fill='#e6edf3'/><line x1='60' y1='66' x2='80' y2='74' stroke='#e6edf3' stroke-width='3' stroke-linecap='round'/></svg>",
+  ff3: "<svg viewBox='0 0 140 130'><line x1='18' y1='122' x2='108' y2='122' stroke='#3a434d' stroke-width='2'/><line x1='104' y1='30' x2='104' y2='122' stroke='#3a434d' stroke-width='3'/><line x1='60' y1='122' x2='92' y2='122' stroke='#e6edf3' stroke-width='4' stroke-linecap='round'/><line x1='66' y1='120' x2='92' y2='86' stroke='#2dd4bf' stroke-width='4' stroke-linecap='round'/><line x1='92' y1='86' x2='80' y2='58' stroke='#e6edf3' stroke-width='4' stroke-linecap='round'/><line x1='93' y1='86' x2='101' y2='86' stroke='#2dd4bf' stroke-width='2'/></svg>"
 };
 
 const TIPO_NOMBRES = {inicial:"Entrevista inicial",nutricion:"Nutrición",tecnica_ruta:"Técnica ruta",tecnica_mtb:"Técnica MTB",flexibilidad_fuerza:"Flexibilidad y fuerza",seguimiento_semanal:"Seguimiento semanal",estres_descanso:"Estrés y descanso",post_evento:"Post-evento"};
@@ -267,12 +280,13 @@ function pregunta(){
   if(!q) return resultado();
   prog();
   const ayudaHtml = AYUDA[q.id] ? `<p class="ayuda">${AYUDA[q.id]}</p>` : "";
+  const ilusHtml = ILUS[q.id] ? `<div class="ilus">${ILUS[q.id]}</div>` : "";
   const back = orden.length ? '<button class="link" onclick="atras()">Atrás</button>' : '';
   if(q.tipo==="escala"){
     const mx = q.esc_max || 10;
     const val = ctx.respuestas[q.id] ?? Math.round(mx/2);
     curEsc = { max:mx, unidad:q.unidad||null, lo:q.min, hi:q.max };
-    $(`<div class="fase">Perfil · ${esc(TIPO_NOMBRES[tipo])}</div><h2>${esc(q.t)}</h2>${ayudaHtml}
+    $(`<div class="fase">Perfil · ${esc(TIPO_NOMBRES[tipo])}</div><h2>${esc(q.t)}</h2>${ayudaHtml}${ilusHtml}
       <div class="escala-val" id="ev">${val}</div>
       <div class="escala-word" id="ew">${escalaTxt(val)}</div>
       <input type="range" min="1" max="${mx}" step="1" value="${val}" id="rg" oninput="document.getElementById('ev').textContent=this.value;document.getElementById('ew').textContent=escalaTxt(this.value)">
@@ -280,15 +294,15 @@ function pregunta(){
       <button class="btn" onclick="responder('${q.id}',Number(document.getElementById('rg').value))">Continuar</button>${back}`);
   } else if(q.tipo==="opcion"){
     const cls = q.sino ? "opts sino" : "opts";
-    $(`<div class="fase">Perfil · ${esc(TIPO_NOMBRES[tipo])}</div><h2>${esc(q.t)}</h2>${ayudaHtml}
+    $(`<div class="fase">Perfil · ${esc(TIPO_NOMBRES[tipo])}</div><h2>${esc(q.t)}</h2>${ayudaHtml}${ilusHtml}
       <div class="${cls}">${q.op.map(o=>`<button class="opt" onclick="responder('${q.id}','${o.key}')">${esc(o.t)}</button>`).join("")}</div>${back}`);
   } else if(q.tipo==="texto"){
-    $(`<div class="fase">Perfil · ${esc(TIPO_NOMBRES[tipo])}</div><h2>${esc(q.t)}</h2>${ayudaHtml}
+    $(`<div class="fase">Perfil · ${esc(TIPO_NOMBRES[tipo])}</div><h2>${esc(q.t)}</h2>${ayudaHtml}${ilusHtml}
       <textarea id="tx" placeholder="Escribí aquí...">${esc(ctx.respuestas[q.id]||"")}</textarea>
       <button class="btn" onclick="responder('${q.id}',(document.getElementById('tx').value||'').trim())">Continuar</button>${back}`);
   } else { // multi
     const cur = ctx.respuestas[q.id] || {};
-    $(`<div class="fase">Perfil · ${esc(TIPO_NOMBRES[tipo])}</div><h2>${esc(q.t)}</h2>${ayudaHtml}
+    $(`<div class="fase">Perfil · ${esc(TIPO_NOMBRES[tipo])}</div><h2>${esc(q.t)}</h2>${ayudaHtml}${ilusHtml}
       <div class="opts">${q.op.map((o,i)=>`<button class="opt ${cur[o.flag]?'sel':''}" id="m${i}" onclick="toggleMulti('${q.id}',${i})">${esc(o.t)}</button>`).join("")}</div>
       <button class="btn" onclick="responder('${q.id}',ctx.respuestas['${q.id}']||{})">Continuar</button>${back}`);
   }
