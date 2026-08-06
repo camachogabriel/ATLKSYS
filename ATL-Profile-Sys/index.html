@@ -314,10 +314,10 @@ function resultado(){
   const disc = Object.keys(flags()).filter(f=>flags()[f]);
   $(`<div class="fase">Perfil · ${esc(TIPO_NOMBRES[tipo])}</div>
     <h2>${ctx.nombre?esc(ctx.nombre)+", ":""}este es tu perfil</h2>
-    <p class="meta">${ATL_ID?"Cliente ATL: <b>"+esc(ATL_ID)+"</b>":""}${disc.length?(ATL_ID?" · ":"")+"Disciplinas: "+disc.join(", "):""}</p>
+    <p class="meta">${disc.length?"Disciplinas: "+disc.join(", "):""}</p>
     ${gauges}${notasBlock}
     <p class="disclaimer">Cada tacómetro es un score de 0 a 10 según tus respuestas. Los generales son el promedio de sus subáreas. Guardamos este perfil para tu seguimiento con AthleteTrainLab.</p>
-    <div style="margin-top:14px;text-align:center"><a class="btn" style="text-decoration:none;display:inline-block;width:auto;padding:12px 24px" href="${WA}" target="_blank" rel="noopener">Hablar con tu entrenador</a></div>`);
+    ${ATL_ID?"":`<div style="margin-top:14px;text-align:center"><a class="btn" style="text-decoration:none;display:inline-block;width:auto;padding:12px 24px" href="${WA}" target="_blank" rel="noopener">Hablar con tu entrenador</a></div>`}`);
 }
 
 function guardar(){
@@ -329,7 +329,7 @@ function guardar(){
     }).catch(()=>{});
   }catch(e){}
 }
-bienvenida();
+if(ATL_ID){ empezar(); } else { bienvenida(); }
 </script>
 </body>
 </html>
