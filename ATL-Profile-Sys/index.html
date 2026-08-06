@@ -209,6 +209,7 @@ const AYUDA = {
   dolor_esf:"Pensá si el dolor sale justo cuando apretás fuerte (subidas, sprints) y se calma al bajar el ritmo. <b>Ejemplo:</b> 'solo me arde cuando voy a tope, apenas aflojo se quita'.",
   dolor_desc:"Fijate si después de descansar 2–3 días seguís igual. Si NO se quita con el descanso, marcá Sí. <b>Ejemplo:</b> 'descansé todo el finde y el lunes seguía doliendo'.",
   dolor_post:"¿Sale siempre en la misma parte y creés que es por cómo estás sentado o por el ajuste de la bici? <b>Ejemplo:</b> siempre la misma rodilla, o la espalda baja después de un rato en la misma posición.",
+  energia:"La frescura es qué tan descansado y con pilas te sentís para entrenar, aparte de las horas de sueño. 10 = con baterías y ganas de salir; 1 = arrastrando las piernas, sin energía. <b>Ejemplo:</b> si subís unas gradas y sentís las piernas pesadas y flojas todo el día, andás bajo de frescura.",
   fondo:"El 'fondo' es tu salida larga del fin de semana. Ponete 1 si no lo hiciste y 10 si te sentiste excelente.",
   me9:"El 'cross-chaining' es usar el plato grande de adelante con el piñón más grande de atrás (o al revés): la cadena queda muy cruzada. <b>Ejemplo:</b> plato grande + piñón más grande = la cadena jala torcida y hace ruido."
 };
@@ -226,7 +227,12 @@ const esc = s => (s==null?"":String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'
 let curEsc = {max:10, unidad:null};
 function escalaTxt(v){ v=Number(v); if(curEsc.unidad) return v+" "+curEsc.unidad; const f=v/curEsc.max; return f<=.2?"Muy bajo":f<=.4?"Bajo":f<=.6?"Medio":f<=.8?"Alto":"Muy alto"; }
 function flags(){ const f={}; INTERVIEWS[tipo].preguntas.forEach(q=>{ if(q.tipo==="multi"){ const a=ctx.respuestas[q.id]; if(a) q.op.forEach(o=>{ if(a[o.flag]) f[o.flag]=true; }); } }); return f; }
-function activas(){ const fl=flags(); return INTERVIEWS[tipo].preguntas.filter(q => (!q.si || fl[q.si]) && (!q.showIf || q.showIf(ctx.respuestas))); }
+function activas(){ const fl=flags();
+  let qs = INTERVIEWS[tipo].preguntas.filter(q => (!q.si || fl[q.si]) && (!q.showIf || q.showIf(ctx.respuestas)));
+  // Seguimiento: si NO entrenó, preguntamos el motivo + lo que NO depende de haber entrenado
+  // (motivación, sueño, estrés). Saltamos sensación de entrenos, frescura, dolores y fondo.
+  if(tipo==="seguimiento_semanal" && ctx.respuestas.cumplio==="NO") qs = qs.filter(q => ["cumplio","dif","motiv","suenoSem","estresSem"].includes(q.id));
+  return qs; }
 function siguiente(){ for(const q of activas()){ if(ctx.respuestas[q.id]===undefined) return q; } return null; }
 function prog(){ const act=activas(); const rest=act.filter(q=>ctx.respuestas[q.id]===undefined).length; const done=act.length-rest; document.getElementById("pf").style.width=Math.min(100,(done/(done+rest+0.001))*100)+"%"; }
 
@@ -320,6 +326,17 @@ function gauge(v,label,gen){
 
 function resultado(){
   document.getElementById("pf").style.width="100%";
+  // Seguimiento sin entrenar: guardamos lo preguntado (ánimo/sueño/estrés) y ponemos frescura y fondo en 0.
+  // El trigger, al ver "no cumplió", sube +1 la recuperación (venís de descanso).
+  if(tipo==="seguimiento_semanal" && ctx.respuestas.cumplio==="NO"){
+    const s = calcularScores(); s.fatiga = 0; s.satisfaccion = 0;
+    ctx.scores = s; guardar();
+    const cerrarBtn = ATL_ID ? `<button class="btn" style="width:auto;padding:12px 30px" onclick="cerrar()">Cerrar</button>` : "";
+    return $(`<div class="fase">Perfil · ${esc(TIPO_NOMBRES[tipo])}</div>
+      <h2>Gracias por contarnos</h2>
+      <p class="sub">Registramos tu semana (sueño, estrés y ánimo). Como no entrenaste, la frescura y el fondo quedan en 0 y tu recuperación sube, porque venís de descanso. Lo importante es retomar.</p>
+      <div style="margin-top:6px;text-align:center">${cerrarBtn}</div>`);
+  }
   const scores = calcularScores(); ctx.scores = scores;
   guardar();
   const claves = ORDEN.filter(k=>scores[k]!=null).concat(Object.keys(scores).filter(k=>!ORDEN.includes(k)));
